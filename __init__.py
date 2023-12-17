@@ -10,9 +10,32 @@ app = Flask(__name__)
 def home():
     return render_template("home.html")
 
-@app.route('/contactUs')
-def contact_us():
-    return render_template('contactUs.html')
+
+@app.route('/recommended')
+def recommended():
+    return render_template("recommended.html")
+
+@app.route('/appetizers')
+def appetizers():
+    return render_template('appetizers.html')
+
+@app.route('/breakfast')
+def breakfast():
+    return render_template('breakfast.html')
+
+@app.route('/lunch')
+def lunch():
+    return render_template('lunch.html')
+
+@app.route('/dinner')
+def dinner():
+    return render_template('dinner.html')
+
+@app.route('/dessert')
+def dessert():
+    return render_template('dessert.html')
+
+
 
 @app.route('/createUser', methods = ['GET', 'POST'])
 def create_user():
