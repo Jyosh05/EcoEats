@@ -1,14 +1,27 @@
+<!-- font for the nav bar -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/nav_bar.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<!-- font for the welcome bar -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<div class="welcome-bar">
+        <img src="static/img/Logo.png">
+        <span>Welcome to EcoEats</span>
+</div>
+
+
+<nav class="navbar navbar-expand-sm bg-custom navbar-custom">
   <div class="container-fluid">
-    <a class="navbar-brand" href="/home">EcoEats</a>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
       <ul class="navbar-nav">
         <li class="nav-item">
