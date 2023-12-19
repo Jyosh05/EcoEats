@@ -2,6 +2,12 @@
 {% block title %}EcoEats - Home{% endblock %} <!--when calling parent class,parent class title block will look for this code to get the title to display on the browser-->
 
 {% block content %}
-<h1 class="display-4">Home</h1>
-<p>Hello world!</p>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<div class="container-h1">
+<h1>December Promotions</h1>
+</div>
 {% endblock %}

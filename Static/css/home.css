@@ -1,0 +1,26 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Khula', sans serif;
+}
+
+.container-h1{
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/home_bg_pic.png");
+    background-size: cover;
+    background-position: center;
+    width: 104vw;
+    height: 40vh;
+    margin-left: -20px;
+}
+
+h1{
+   text-align: center;
+   padding-top: 60px;
+   font-size: 80px;
+   font-weight: normal;
+
+}

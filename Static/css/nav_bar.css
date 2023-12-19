@@ -12,34 +12,43 @@ nav{
 
 .dropdown-menu{
     text-align: center;
+    padding: 0;
+    border-radius: 3px;
+
 }
 
 #recommended{
     background-color: #FFD8C2;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
 
 #appetizers{
     background-color: #FCA878;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
 
 #breakfast{
     background-color: #FFD8C2;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
 
 #lunch{
     background-color: #FCA878;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
 
 #dinner{
     background-color: #FFD8C2;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
 
 #dessert{
     background-color: #FCA878;
     font-weight: bold;
+    border-bottom: 1px solid #000;
 }
