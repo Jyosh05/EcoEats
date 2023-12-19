@@ -1,6 +1,11 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nav_bar.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">EcoEats</a>
+    <a class="navbar-brand" href="/home">EcoEats</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,12 +17,12 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Menu</a>
           <ul class="dropdown-menu">
-            <a class="dropdown-item" href="/recommended">Recommended</a>
-            <a class="dropdown-item" href="/appetizers">Appetizers</a>
-            <a class="dropdown-item" href="/breakfast">Breakfast</a>
-            <a class="dropdown-item" href="/lunch">Lunch</a>
-            <a class="dropdown-item" href="/dinner">Dinner</a>
-            <a class="dropdown-item" href="/dessert">Dessert</a>
+            <a class="dropdown-item" id="recommended" href="/recommended">Recommended</a>
+            <a class="dropdown-item" id="appetizers" href="/appetizers">Appetizers</a>
+            <a class="dropdown-item" id="breakfast" href="/breakfast">Breakfast</a>
+            <a class="dropdown-item" id="lunch" href="/lunch">Lunch</a>
+            <a class="dropdown-item" id="dinner" href="/dinner">Dinner</a>
+            <a class="dropdown-item" id="dessert" href="/dessert">Dessert</a>
           </ul>
         </li>
         <li class="nav-item">

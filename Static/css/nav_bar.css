@@ -1,0 +1,45 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Khula', sans-serif;
+}
+
+nav{
+    position: relative;
+}
+
+
+.dropdown-menu{
+    text-align: center;
+}
+
+#recommended{
+    background-color: #FFD8C2;
+    font-weight: bold;
+}
+
+#appetizers{
+    background-color: #FCA878;
+    font-weight: bold;
+}
+
+#breakfast{
+    background-color: #FFD8C2;
+    font-weight: bold;
+}
+
+#lunch{
+    background-color: #FCA878;
+    font-weight: bold;
+}
+
+#dinner{
+    background-color: #FFD8C2;
+    font-weight: bold;
+}
+
+#dessert{
+    background-color: #FCA878;
+    font-weight: bold;
+}
