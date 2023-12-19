@@ -5,9 +5,49 @@
   font-family: 'Khula', sans-serif;
 }
 
+.welcome-bar{
+    background-color: #032700;
+    width: 100%;
+}
+
+.welcome-bar img{
+    width: 70px;
+    height: 60px;
+    margin-top: -15px;
+}
+
+.welcome-bar span{
+    text-align: center; /* text align center doesnt work */
+    font-family: 'Marck Script', cursive;
+    font-size: 40px;
+    color: #fff;
+}
+
 nav{
     position: relative;
+    background-color: #D3EACC;
 }
+
+.navbar-custom .navbar-nav .nav-link{
+    color: #073100;
+    font-weight: bold;
+    padding-right: 50px;
+}
+
+
+.navbar-toggler {
+    border: none;
+    background-color: transparent;
+}
+
+.navbar-toggler:focus {
+    outline: none;
+}
+
+.navbar-toggler-icon {
+    background-color: #F6B328; /* Customize the color of the hamburger icon */
+}
+
 
 
 .dropdown-menu{

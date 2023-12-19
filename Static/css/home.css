@@ -5,6 +5,11 @@
   font-family: 'Khula', sans serif;
 }
 
+body {
+    overflow-x: hidden; /* initially there was a scroll bar horizontally at the bottom
+    due to the image stretching. to change that this code is needed */
+}
+
 .container-h1{
     margin: 0;
     padding: 0;

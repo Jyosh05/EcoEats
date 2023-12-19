@@ -9,9 +9,7 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     return render_template("home.html")
-@app.route('/home')
-def EcoEats():
-    return render_template("home.html")
+
 
 @app.route('/recommended')
 def recommended():
