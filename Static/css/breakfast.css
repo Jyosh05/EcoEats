@@ -29,8 +29,76 @@ h1{
    font-weight: bold;
 }
 
+.chicken_salad{
+    margin: 30px;
+
+}
+
+.chicken_salad p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.chicken_salad span{
+    margin-left: 60px;
+}
+
 .chicken_salad img{
-    width: 40px;
-    height: 40px;
+    width: 241px;
+    height: 202px;
     border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.roasted_veggie{
+    margin-left: 190px;
+}
+
+
+.roasted_veggie p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.roasted_veggie span{
+    margin-left: 60px;
+}
+
+.roasted_veggie img{
+    width: 223px;
+    height: 202px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.green_fruits{
+    margin-left: 190px;
+}
+
+.green_fruits p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.green_fruits span{
+    margin-left: 60px;
+}
+
+.green_fruits img{
+    width: 255px;
+    height: 202px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.chicken_salad, .roasted_veggie, .green_fruits{
+    display: inline-block;
+}
+
+img:hover{
+    box-shadow: 2px 4px 4px grey;
 }
