@@ -67,15 +67,21 @@ h1{
 }
 
 .roasted_veggie img{
-    width: 223px;
+    width: 240px;
     height: 202px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.green_fruits{
+.green_fruits {
     margin-left: 190px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
 }
+
 
 .green_fruits p{
     font-size: 16px;
@@ -102,3 +108,151 @@ h1{
 img:hover{
     box-shadow: 2px 4px 4px grey;
 }
+
+.fruit_salad{
+    margin-left: 30px;
+
+}
+
+.fruit_salad p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.fruit_salad span{
+    margin-left: 60px;
+}
+
+.fruit_salad img{
+    width: 241px;
+    height: 222px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.oatmeal{
+    margin-left: 210px;
+
+}
+
+.oatmeal p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.oatmeal span{
+    margin-left: 60px;
+}
+
+.oatmeal img{
+    width: 250px;
+    height: 222px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.blue_pancake{
+    margin-left: 200px;
+    margin-top: 0px;
+    vertical-align: top; /* Align the top of the element with the tallest one in the row */
+    clear: both; /* Clear previous floats to prevent them from affecting this element */
+
+}
+
+.blue_pancake p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.blue_pancake span{
+    margin-left: 60px;
+}
+
+.blue_pancake img{
+    width: 250px;
+    height: 225px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.fruit_salad, .oatmeal, .blue_pancake{
+    display: inline-block;
+}
+
+.strawberry_pancake{
+    margin: 30px;
+}
+
+
+.strawberry_pancake p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.strawberry_pancake span{
+    margin-left: 60px;
+}
+
+.strawberry_pancake img{
+    width: 241px;
+    height: 222px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.waffle{
+    margin-left: 180px;
+}
+
+.waffle p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.waffle span{
+    margin-left: 60px;
+}
+
+.waffle img{
+    width: 255px;
+    height: 222px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.egg_toast{
+    margin-left: 200px;
+}
+
+.egg_toast p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.egg_toast span{
+    margin-left: 60px;
+}
+
+.egg_toast img{
+    width: 247px;
+    height: 222px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.strawberry_pancake, .waffle, .egg_toast{
+    display: inline-block;
+}
+
