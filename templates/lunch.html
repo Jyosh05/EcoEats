@@ -2,5 +2,45 @@
 {% block title %}Lunch{% endblock %}
 
 {% block content %}
-<h1 class="display-4">Lunch</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lunch.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<div class="container-h1">
+<h1>Lunch</h1>
+</div>
+
+<div class="kale_pasta">
+<img src="static/img/lunch/kale_pasta.png" alt="Pesto Pasta With Kale">
+<p> Pesto Pasta  <span>S$ 6.60</span> <br> With Kale</p>
+</div>
+
+<div class="veg_bowl">
+<img src="static/img/lunch/veg_bowl.png" alt="Veg Bowl With Rice">
+<p> Veg Bowl With<span>S$ 6.20</span> <br>  Rice</p>
+</div>
+
+<div class="chickpeas">
+<img src="static/img/lunch/chickpeas.png" alt="Chickpeas & Green Beans With Rice">
+<p> Chickpeas & Green<span>S$ 6.50</span> <br> Beans With Rice</p>
+</div>
+
+<div class="mushroom_rice">
+<img src="static/img/lunch/mushroom_rice.png" alt="Glazed Mushroom With Rice">
+<p> Glazed Mushroom <span>S$ 5.90</span> <br> With Rice</p>
+</div>
+
+<div class="cauliflower_rice">
+<img src="static/img/lunch/cauliflower_rice.png" alt="Cauliflower Rice With Spicy Chipotle">
+<p> Cauliflower Rice <span>S$ 6.00</span> <br> With Spicy Chipotle</p>
+</div>
+
+<div class="nourish_bowl">
+<img src="static/img/lunch/nourish_bowl.png" alt="Veggie Nourish Bowl">
+<p> Veggie Nourish <span>S$ 5.70</span> <br> Bowl</p>
+</div>
+
+
+
 {% endblock %}

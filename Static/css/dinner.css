@@ -14,14 +14,13 @@ body {
     margin: 0;
     padding: 0;
     color: #fff;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/recommended_bg.jpg");
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/dinner_bg.png");
     background-size: cover;
     background-position: center;
     width: 104vw;
     height: 30vh;
     margin-left: -20px;
 }
-
 h1{
    text-align: center;
    padding-top: 60px;

@@ -1,6 +1,61 @@
 {% extends 'base.html' %}
 {% block title %}Appetizers{% endblock %}
 
+
 {% block content %}
-<h1 class="display-4">Appetizers</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/appetizer.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<div class="container-h1">
+<h1>Appetizers</h1>
+</div>
+
+<div class="burrata">
+<img src="static/img/appetizer/Burrata.png" alt="Burrata With Cherries and Sumac">
+<p>Burrata With <span>S$ 4.90</span><br>
+    Cherries and Sumac </p>
+</div>
+
+<div class="caprese_skewer">
+<img src="static/img/appetizer/caprese_skewer.png" alt=" Caprese Skewers ">
+<p> Caprese Skewers <span>S$ 4.00</span> </p>
+</div>
+
+<div class="rainbow_kebab">
+<img src="static/img/appetizer/rainbow_kebab.png" alt="Rainbow kebabs">
+<p> Rainbow Kebabs <span>S$ 4.00</span> </p>
+</div>
+
+<div class="dip">
+<img src="static/img/appetizer/artichoke_dip.png" alt="Artichoke Dip">
+<p> Artichoke Dip <span>S$ 4.00</span> </p>
+</div>
+
+<div class="mushroom">
+<img src="static/img/appetizer/marinated_mushroom.png" alt="Marinated Mushroom">
+<p> Marinated  <span>S$ 4.90</span> <br> Mushroom</p>
+</div>
+
+<div class="spring_roll">
+<img src="static/img/appetizer/spring_roll.png" alt="Veg Spring Roll">
+<p> Veg Spring Roll <span>S$ 5.50</span> </p>
+</div>
+
+<div class="crostini">
+<img src="static/img/appetizer/crostini.png" alt="Peach Crostini">
+<p> Peach Crostini <span>S$ 5.20</span> </p>
+</div>
+
+<div class="garlic_bread">
+<img src="static/img/appetizer/garlic_bread.png" alt="Garlic Bread">
+<p> Garlic Bread <span>S$ 3.90</span> </p>
+</div>
+
+<div class="tomato_toast">
+<img src="static/img/appetizer/tomato_toast.png" alt="Tomato Toast">
+<p> Tomato Toast <span>S$ 4.20</span> </p>
+</div>
+
 {% endblock %}

@@ -1,0 +1,199 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Khula', sans serif;
+}
+
+body {
+    overflow-x: hidden; /* initially there was a scroll bar horizontally at the bottom
+    due to the image stretching. to change that this code is needed */
+}
+
+.container-h1{
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/lunch_bg.png");
+    background-size: cover;
+    background-position: center;
+    width: 104vw;
+    height: 30vh;
+    margin-left: -20px;
+}
+
+h1{
+   text-align: center;
+   padding-top: 60px;
+   font-size: 80px;
+   font-weight: bold;
+}
+
+img:hover{
+    box-shadow: 2px 4px 4px grey;
+}
+
+.kale_pasta{
+    margin: 30px;
+
+}
+
+.kale_pasta p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.kale_pasta span{
+    margin-left: 80px;
+}
+
+.kale_pasta img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.veg_bowl {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.veg_bowl p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.veg_bowl span{
+    margin-left: 70px;
+}
+
+.veg_bowl img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.chickpeas {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.chickpeas p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.chickpeas span{
+    margin-left: 40px;
+}
+
+.chickpeas img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.kale_pasta, .veg_bowl, .chickpeas{
+    display: inline-block;
+}
+
+.mushroom_rice{
+    margin: 30px;
+
+}
+
+.mushroom_rice p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.mushroom_rice span{
+    margin-left: 40px;
+}
+
+.mushroom_rice img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.cauliflower_rice {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.cauliflower_rice p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.cauliflower_rice span{
+    margin-left: 60px;
+}
+
+.cauliflower_rice img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.nourish_bowl {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.nourish_bowl p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.nourish_bowl span{
+    margin-left: 40px;
+}
+
+.nourish_bowl img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.mushroom_rice, .cauliflower_rice, .nourish_bowl{
+    display: inline-block;
+}
+
