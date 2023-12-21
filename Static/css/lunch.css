@@ -183,7 +183,7 @@ img:hover{
 
 
 .nourish_bowl span{
-    margin-left: 40px;
+    margin-left: 60px;
 }
 
 .nourish_bowl img{
@@ -195,5 +195,104 @@ img:hover{
 
 .mushroom_rice, .cauliflower_rice, .nourish_bowl{
     display: inline-block;
+}
+
+.power_bowl{
+    margin: 30px;
+
+}
+
+.power_bowl p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.power_bowl span{
+    margin-left: 50px;
+}
+
+.power_bowl img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.avocado {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.avocado p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.avocado span{
+    margin-left: 50px;
+}
+
+.avocado img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.fried_rice {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.fried_rice p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.fried_rice span{
+    margin-left: 70px;
+}
+
+.fried_rice img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.power_bowl, .avocado, .fried_rice{
+    display: inline-block;
+}
+
+/* For scroll bar */
+/* Hide the track and buttons */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Style the thumb */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px; /* Set border-radius to round the edges */
+}
+
+/* Style the thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 

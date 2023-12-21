@@ -27,3 +27,21 @@ h1{
    font-size: 80px;
    font-weight: bold;
 }
+
+/* For scroll bar */
+/* Hide the track and buttons */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Style the thumb */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px; /* Set border-radius to round the edges */
+}
+
+/* Style the thumb on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
