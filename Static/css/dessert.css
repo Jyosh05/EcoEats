@@ -46,3 +46,252 @@ h1{
   background: #555;
 }
 
+img:hover{
+    box-shadow: 2px 4px 4px grey;
+}
+
+.vanilla_panna_cotta{
+    margin: 30px;
+
+}
+
+.vanilla_panna_cotta p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.vanilla_panna_cotta span{
+    margin-left: 60px;
+}
+
+.vanilla_panna_cotta img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.rasp_choco_mousse {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.rasp_choco_mousse p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.rasp_choco_mousse span{
+    margin-left: 30px;
+}
+
+.rasp_choco_mousse img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.mango_cake {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.mango_cake p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.mango_cake span{
+    margin-left: 25px;
+}
+
+.mango_cake img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.vanilla_panna_cotta, .rasp_choco_mousse, .mango_cake{
+    display: inline-block;
+}
+
+.berry_tart{
+    margin: 30px;
+
+}
+
+.berry_tart p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.berry_tart span{
+    margin-left: 60px;
+}
+
+.berry_tart img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.butterfly_pea_flower {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.butterfly_pea_flower p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.butterfly_pea_flower span{
+    margin-left: 80px;
+}
+
+.butterfly_pea_flower img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.pandan_cake {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.pandan_cake p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.pandan_cake span{
+    margin-left: 50px;
+}
+
+.pandan_cake img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.berry_tart, .butterfly_pea_flower, .pandan_cake{
+    display: inline-block;
+}
+
+.rose_tart{
+    margin: 30px;
+
+}
+
+.rose_tart p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.rose_tart span{
+    margin-left: 100px;
+}
+
+.rose_tart img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.mini_ice_cream {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.mini_ice_cream p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.mini_ice_cream span{
+    margin-left: 60px;
+}
+
+.mini_ice_cream img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.pistachio {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.pistachio p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.pistachio span{
+    margin-left: 70px;
+}
+
+.pistachio img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.rose_tart, .mini_ice_cream, .pistachio{
+    display: inline-block;
+}

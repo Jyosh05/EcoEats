@@ -45,3 +45,252 @@ h1{
   background: #555;
 }
 
+img:hover{
+    box-shadow: 2px 4px 4px grey;
+}
+
+.stir-fry{
+    margin: 30px;
+
+}
+
+.stir-fry p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.stir-fry span{
+    margin-left: 70px;
+}
+
+.stir-fry img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.zucchini {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.zucchini p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.zucchini span{
+    margin-left: 50px;
+}
+
+.zucchini img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.chickpeas {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.chickpeas p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.chickpeas span{
+    margin-left: 40px;
+}
+
+.chickpeas img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.stir-fry, .zucchini, .chickpeas{
+    display: inline-block;
+}
+
+.buddha_bowl{
+    margin: 30px;
+
+}
+
+.buddha_bowl p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.buddha_bowl span{
+    margin-left: 40px;
+}
+
+.buddha_bowl img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.turmeric_rice {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.turmeric_rice p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.turmeric_rice span{
+    margin-left: 20px;
+}
+
+.turmeric_rice img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.miso_mushroom {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.miso_mushroom p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.miso_mushroom span{
+    margin-left: 20px;
+}
+
+.miso_mushroom img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.buddha_bowl, .turmeric_rice, .miso_mushroom{
+    display: inline-block;
+}
+
+.veg_bibimbap{
+    margin: 30px;
+
+}
+
+.veg_bibimbap p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.veg_bibimbap span{
+    margin-left: 70px;
+}
+
+.veg_bibimbap img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.noodles {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.noodles p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.noodles span{
+    margin-left: 40px;
+}
+
+.noodles img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.vermicelli_noodle {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.vermicelli_noodle p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.vermicelli_noodle span{
+    margin-left: 20px;
+}
+
+.vermicelli_noodle img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.veg_bibimbap, .noodles, .vermicelli_noodle{
+    display: inline-block;
+}
