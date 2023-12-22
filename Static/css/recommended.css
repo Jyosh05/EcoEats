@@ -48,31 +48,32 @@ h1{
 
 img:hover{
     box-shadow: 2px 4px 4px grey;
+    cursor: pointer;
 }
 
-.burrata{
+#burrata{
     margin: 30px;
 
 }
 
-.burrata p{
+#burrata p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.burrata span{
+#burrata span{
     margin-left: 60px;
 }
 
-.burrata img{
+#burrata img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.crostini {
+#crostini {
     margin-left: 200px;
     margin-top: 30px;
     vertical-align: top;
@@ -82,25 +83,25 @@ img:hover{
 }
 
 
-.crostini p{
+#crostini p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.crostini span{
+#crostini span{
     margin-left: 60px;
 }
 
-.crostini img{
+#crostini img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.roasted_veggie {
+#roasted_veggie {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -110,51 +111,51 @@ img:hover{
 }
 
 
-.roasted_veggie p{
+#roasted_veggie p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.roasted_veggie span{
+#roasted_veggie span{
     margin-left: 40px;
 }
 
-.roasted_veggie img{
+#roasted_veggie img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.burrata, .crostini, .roasted_veggie{
+#burrata, #crostini, #roasted_veggie{
     display: inline-block;
 }
 
-.blue_pancake{
+#blue_pancake{
     margin: 30px;
 
 }
 
-.blue_pancake p{
+#blue_pancake p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.blue_pancake span{
+#blue_pancake span{
     margin-left: 20px;
 }
 
-.blue_pancake img{
+#blue_pancake img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.mushroom_rice {
+#mushroom_rice {
     margin-left: 200px;
     margin-top: 30px;
     vertical-align: top;
@@ -164,25 +165,25 @@ img:hover{
 }
 
 
-.mushroom_rice p{
+#mushroom_rice p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.mushroom_rice span{
+#mushroom_rice span{
     margin-left: 60px;
 }
 
-.mushroom_rice img{
+#mushroom_rice img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.avocado {
+#avocado {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -192,51 +193,51 @@ img:hover{
 }
 
 
-.avocado p{
+#avocado p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.avocado span{
+#avocado span{
     margin-left: 40px;
 }
 
-.avocado img{
+#avocado img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.blue_pancake, .mushroom_rice, .avocado{
+#blue_pancake, #mushroom_rice, #avocado{
     display: inline-block;
 }
 
-.chickpeas{
+#chickpeas{
     margin: 30px;
 
 }
 
-.chickpeas p{
+#chickpeas p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.chickpeas span{
+#chickpeas span{
     margin-left: 50px;
 }
 
-.chickpeas img{
+#chickpeas img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.miso_mushroom {
+#miso_mushroom {
     margin-left: 220px;
     margin-top: 30px;
     vertical-align: top;
@@ -246,25 +247,25 @@ img:hover{
 }
 
 
-.miso_mushroom p{
+#miso_mushroom p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.miso_mushroom span{
+#miso_mushroom span{
     margin-left: 20px;
 }
 
-.miso_mushroom img{
+#miso_mushroom img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.vanilla_panna_cotta {
+#vanilla_panna_cotta {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -274,46 +275,152 @@ img:hover{
 }
 
 
-.vanilla_panna_cotta p{
+#vanilla_panna_cotta p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.vanilla_panna_cotta span{
+#vanilla_panna_cotta span{
     margin-left: 70px;
 }
 
-.vanilla_panna_cotta img{
+#vanilla_panna_cotta img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.chickpeas, .miso_mushroom, .vanilla_panna_cotta{
+#chickpeas, #miso_mushroom, #vanilla_panna_cotta{
     display: inline-block;
 }
 
-.butterfly_pea_flower{
+#butterfly_pea_flower{
     margin: 30px;
 
 }
 
-.butterfly_pea_flower p{
+#butterfly_pea_flower p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.butterfly_pea_flower span{
+#butterfly_pea_flower span{
     margin-left: 70px;
 }
 
-.butterfly_pea_flower img{
+#butterfly_pea_flower img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
+
+/* codes for previewing food items and adding to cart*/
+.food-preview{
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    width: 100%;
+    background: transparent;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* Enable vertical scrollbar if content overflows */
+}
+
+.food-preview .preview{
+    display: none;
+    padding: 2rem;
+    background: #fff;
+    position: relative;
+    margin: 2rem;
+    width: 40rem;
+}
+
+.food-preview .preview.active{
+    display: inline-block;
+}
+
+.food-preview .preview img{
+    height: 50px;
+}
+
+.food-preview .preview .fa-times{
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    cursor: pointer;
+    color: #444;
+    font-size: 4rem;
+}
+
+.food-preview .preview .fa-times:hover{
+    transform: rotate(90deg);
+}
+
+.food-preview .preview .fa-times:hover{
+    transform: rotate(90deg);
+}
+
+.food-preview .preview span{
+    margin-left: 1050px;
+}
+
+.food-preview .preview .buttons{
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.food-preview .preview .buttons button, .food-preview .preview .buttons p{
+    margin: 0;
+    padding: 10px;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+
+
+.food-preview .preview .buttons button.reduce{
+    width: 54px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: #999999;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.increase{
+    width: 54px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: #9DC284;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart{
+    flex: 40 40 60px;
+    background: orange;
+    color: #fff;
+    border-radius: 25px;
+    border: none;
+    width: 50px;
+    height: 50px;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart:hover{
+    background: #96C087;
+    color: #fff;
+    border: none;
+}
+
