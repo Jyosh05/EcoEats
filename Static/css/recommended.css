@@ -46,3 +46,274 @@ h1{
   background: #555;
 }
 
+img:hover{
+    box-shadow: 2px 4px 4px grey;
+}
+
+.burrata{
+    margin: 30px;
+
+}
+
+.burrata p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.burrata span{
+    margin-left: 60px;
+}
+
+.burrata img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.crostini {
+    margin-left: 200px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.crostini p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.crostini span{
+    margin-left: 60px;
+}
+
+.crostini img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.roasted_veggie {
+    margin-left: 250px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.roasted_veggie p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.roasted_veggie span{
+    margin-left: 40px;
+}
+
+.roasted_veggie img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.burrata, .crostini, .roasted_veggie{
+    display: inline-block;
+}
+
+.blue_pancake{
+    margin: 30px;
+
+}
+
+.blue_pancake p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.blue_pancake span{
+    margin-left: 20px;
+}
+
+.blue_pancake img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.mushroom_rice {
+    margin-left: 200px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.mushroom_rice p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.mushroom_rice span{
+    margin-left: 60px;
+}
+
+.mushroom_rice img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.avocado {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.avocado p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.avocado span{
+    margin-left: 40px;
+}
+
+.avocado img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.blue_pancake, .mushroom_rice, .avocado{
+    display: inline-block;
+}
+
+.chickpeas{
+    margin: 30px;
+
+}
+
+.chickpeas p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.chickpeas span{
+    margin-left: 50px;
+}
+
+.chickpeas img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.miso_mushroom {
+    margin-left: 220px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.miso_mushroom p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.miso_mushroom span{
+    margin-left: 20px;
+}
+
+.miso_mushroom img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.vanilla_panna_cotta {
+    margin-left: 230px;
+    margin-top: 30px;
+    vertical-align: top;
+    display: block;
+    clear: both;
+    align-self: flex-start;
+}
+
+
+.vanilla_panna_cotta p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+.vanilla_panna_cotta span{
+    margin-left: 70px;
+}
+
+.vanilla_panna_cotta img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.chickpeas, .miso_mushroom, .vanilla_panna_cotta{
+    display: inline-block;
+}
+
+.butterfly_pea_flower{
+    margin: 30px;
+
+}
+
+.butterfly_pea_flower p{
+    font-size: 16px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.butterfly_pea_flower span{
+    margin-left: 70px;
+}
+
+.butterfly_pea_flower img{
+    width: 220px;
+    height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
