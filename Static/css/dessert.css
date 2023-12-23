@@ -50,29 +50,29 @@ img:hover{
     box-shadow: 2px 4px 4px grey;
 }
 
-.vanilla_panna_cotta{
+#vanilla_panna_cotta{
     margin: 30px;
 
 }
 
-.vanilla_panna_cotta p{
+#vanilla_panna_cotta p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.vanilla_panna_cotta span{
+#vanilla_panna_cotta span{
     margin-left: 60px;
 }
 
-.vanilla_panna_cotta img{
+#vanilla_panna_cotta img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.rasp_choco_mousse {
+#rasp_choco_mousse {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -82,25 +82,25 @@ img:hover{
 }
 
 
-.rasp_choco_mousse p{
+#rasp_choco_mousse p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.rasp_choco_mousse span{
+#rasp_choco_mousse span{
     margin-left: 30px;
 }
 
-.rasp_choco_mousse img{
+#rasp_choco_mousse img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.mango_cake {
+#mango_cake {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -110,51 +110,51 @@ img:hover{
 }
 
 
-.mango_cake p{
+#mango_cake p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.mango_cake span{
+#mango_cake span{
     margin-left: 25px;
 }
 
-.mango_cake img{
+#mango_cake img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.vanilla_panna_cotta, .rasp_choco_mousse, .mango_cake{
+#vanilla_panna_cotta, #rasp_choco_mousse, #mango_cake{
     display: inline-block;
 }
 
-.berry_tart{
+#berry_tart{
     margin: 30px;
 
 }
 
-.berry_tart p{
+#berry_tart p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.berry_tart span{
+#berry_tart span{
     margin-left: 60px;
 }
 
-.berry_tart img{
+#berry_tart img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.butterfly_pea_flower {
+#butterfly_pea_flower {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -164,25 +164,25 @@ img:hover{
 }
 
 
-.butterfly_pea_flower p{
+#butterfly_pea_flower p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.butterfly_pea_flower span{
+#butterfly_pea_flower span{
     margin-left: 80px;
 }
 
-.butterfly_pea_flower img{
+#butterfly_pea_flower img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.pandan_cake {
+#pandan_cake {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -192,51 +192,51 @@ img:hover{
 }
 
 
-.pandan_cake p{
+#pandan_cake p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.pandan_cake span{
+#pandan_cake span{
     margin-left: 50px;
 }
 
-.pandan_cake img{
+#pandan_cake img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.berry_tart, .butterfly_pea_flower, .pandan_cake{
+#berry_tart, #butterfly_pea_flower, #pandan_cake{
     display: inline-block;
 }
 
-.rose_tart{
+#rose_tart{
     margin: 30px;
 
 }
 
-.rose_tart p{
+#rose_tart p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.rose_tart span{
+#rose_tart span{
     margin-left: 100px;
 }
 
-.rose_tart img{
+#rose_tart img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.mini_ice_cream {
+#mini_ice_cream {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -246,25 +246,25 @@ img:hover{
 }
 
 
-.mini_ice_cream p{
+#mini_ice_cream p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.mini_ice_cream span{
+#mini_ice_cream span{
     margin-left: 60px;
 }
 
-.mini_ice_cream img{
+#mini_ice_cream img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.pistachio {
+#pistachio {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -274,24 +274,189 @@ img:hover{
 }
 
 
-.pistachio p{
+#pistachio p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.pistachio span{
+#pistachio span{
     margin-left: 70px;
 }
 
-.pistachio img{
+#pistachio img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.rose_tart, .mini_ice_cream, .pistachio{
+#rose_tart, #mini_ice_cream, #pistachio{
     display: inline-block;
+}
+
+/* codes for previewing food items and adding to cart*/
+.food-preview{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-preview .preview{
+    display: none;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    margin: 2rem;
+    width: 40rem;
+}
+
+.food-preview .preview.active{
+    display: inline-block;
+}
+
+.food-preview .preview img{
+    width: 103.3%;
+    height: 280px;
+    box-shadow: none;
+    cursor: auto;
+    padding: 0;
+    margin: -10px;
+}
+
+.food-preview .preview .btn-close{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 30px;
+    font-weight: bold;
+    right: 2px;
+    top: 2px;
+    position: absolute;
+    color: red;
+}
+
+.food-preview .preview .btn-close:hover{
+    opacity: 0.9px;
+    background-color: lightgray;
+
+
+}
+
+.food-preview .preview .name, .food-preview .preview .price{
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.food-preview .preview .price{
+    margin-left: 200px;
+}
+
+.food-preview .preview .buttons{
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    width: 103.2%;
+    border-radius: 0;
+    margin-left: -10px;
+    margin-bottom: -30px;
+    text-align: center;
+}
+
+.food-preview .preview .buttons button, .food-preview .preview .buttons p{
+    margin: 0;
+    padding: 10px;
+    font-size: 20px;
+}
+.food-preview .preview .buttons p{
+    margin-bottom: -10px;
+    margin-right: -20px;
+}
+
+
+.food-preview .preview .buttons button.reduce{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #999999;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.increase{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #9DC284;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 309px;
+    background: orange;
+    color: #fff;
+    border-radius: 25px;
+    border: none;
+    height: 40px;
+    margin-left: 20px;
+    margin-bottom: -18px;
+}
+
+
+.food-preview .preview .buttons button.cart:hover{
+    background: #96C087;
+    color: #fff;
+    border: none;
+}
+
+#f1 .price{
+    margin-left: 250px;
+}
+
+#f2 .price{
+    margin-left: 230px;
+}
+
+#f3 .price{
+    margin-left: 320px;
+}
+
+#f4 .price{
+    margin-left: 380px;
+}
+
+#f5 .price{
+    margin-left: 230px;
+}
+
+#f6 .price{
+    margin-left: 300px;
+}
+
+#f7 .price{
+    margin-left: 430px;
+}
+
+#f8 .price{
+    margin-left: 320px;
+}
+
+#f9 .price{
+    margin-left: 330px;
 }

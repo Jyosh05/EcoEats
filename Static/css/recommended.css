@@ -364,6 +364,7 @@ img:hover{
     right: 2px;
     top: 2px;
     position: absolute;
+    color: red;
 }
 
 .food-preview .preview .btn-close:hover{

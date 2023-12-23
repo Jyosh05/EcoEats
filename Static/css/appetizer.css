@@ -33,29 +33,29 @@ img:hover{
     box-shadow: 2px 4px 4px grey;
 }
 
-.burrata{
+#burrata{
     margin: 30px;
 
 }
 
-.burrata p{
+#burrata p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.burrata span{
+#burrata span{
     margin-left: 60px;
 }
 
-.burrata img{
+#burrata img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.caprese_skewer {
+#caprese_skewer {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -65,25 +65,25 @@ img:hover{
 }
 
 
-.caprese_skewer p{
+#caprese_skewer p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.caprese_skewer span{
+#caprese_skewer span{
     margin-left: 40px;
 }
 
-.caprese_skewer img{
+#caprese_skewer img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.rainbow_kebab {
+#rainbow_kebab {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -93,51 +93,51 @@ img:hover{
 }
 
 
-.rainbow_kebab p{
+#rainbow_kebab p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.rainbow_kebab span{
+#rainbow_kebab span{
     margin-left: 40px;
 }
 
-.rainbow_kebab img{
+#rainbow_kebab img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.burrata, .caprese_skewer, .rainbow_kebab{
+#burrata, #caprese_skewer, #rainbow_kebab{
     display: inline-block;
 }
 
-.dip{
+#dip{
     margin: 30px;
 
 }
 
-.dip p{
+#dip p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.dip span{
+#dip span{
     margin-left: 60px;
 }
 
-.dip img{
+#dip img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.mushroom {
+#mushroom {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -147,25 +147,25 @@ img:hover{
 }
 
 
-.mushroom p{
+#mushroom p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.mushroom span{
+#mushroom span{
     margin-left: 90px;
 }
 
-.mushroom img{
+#mushroom img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.spring_roll {
+#spring_roll {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -175,51 +175,51 @@ img:hover{
 }
 
 
-.spring_roll p{
+#spring_roll p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.spring_roll span{
+#spring_roll span{
     margin-left: 70px;
 }
 
-.spring_roll img{
+#spring_roll img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.dip, .mushroom, .spring_roll{
+#dip, #mushroom, #spring_roll{
     display: inline-block;
 }
 
-.crostini{
+#crostini{
     margin: 30px;
 
 }
 
-.crostini p{
+#crostini p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.crostini span{
+#crostini span{
     margin-left: 60px;
 }
 
-.crostini img{
+#crostini img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.garlic_bread {
+#garlic_bread {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -229,25 +229,25 @@ img:hover{
 }
 
 
-.garlic_bread p{
+#garlic_bread p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.garlic_bread span{
+#garlic_bread span{
     margin-left: 70px;
 }
 
-.garlic_bread img{
+#garlic_bread img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.tomato_toast {
+#tomato_toast {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -257,25 +257,25 @@ img:hover{
 }
 
 
-.tomato_toast p{
+#tomato_toast p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.tomato_toast span{
+#tomato_toast span{
     margin-left: 70px;
 }
 
-.tomato_toast img{
+#tomato_toast img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.crostini, .garlic_bread, .tomato_toast{
+#crostini, #garlic_bread, #tomato_toast{
     display: inline-block;
 }
 
@@ -296,3 +296,167 @@ img:hover{
   background: #555;
 }
 
+/* codes for previewing food items and adding to cart*/
+.food-preview{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-preview .preview{
+    display: none;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    margin: 2rem;
+    width: 40rem;
+}
+
+.food-preview .preview.active{
+    display: inline-block;
+}
+
+.food-preview .preview img{
+    width: 103.3%;
+    height: 280px;
+    box-shadow: none;
+    cursor: auto;
+    padding: 0;
+    margin: -10px;
+}
+
+.food-preview .preview .btn-close{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 30px;
+    font-weight: bold;
+    right: 2px;
+    top: 2px;
+    position: absolute;
+    color: red;
+}
+
+.food-preview .preview .btn-close:hover{
+    opacity: 0.9px;
+    background-color: lightgray;
+
+
+}
+
+.food-preview .preview .name, .food-preview .preview .price{
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.food-preview .preview .price{
+    margin-left: 200px;
+}
+
+.food-preview .preview .buttons{
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    width: 103.2%;
+    border-radius: 0;
+    margin-left: -10px;
+    margin-bottom: -30px;
+    text-align: center;
+}
+
+.food-preview .preview .buttons button, .food-preview .preview .buttons p{
+    margin: 0;
+    padding: 10px;
+    font-size: 20px;
+}
+.food-preview .preview .buttons p{
+    margin-bottom: -10px;
+    margin-right: -20px;
+}
+
+
+.food-preview .preview .buttons button.reduce{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #999999;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.increase{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #9DC284;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 309px;
+    background: orange;
+    color: #fff;
+    border-radius: 25px;
+    border: none;
+    height: 40px;
+    margin-left: 20px;
+    margin-bottom: -18px;
+}
+
+
+.food-preview .preview .buttons button.cart:hover{
+    background: #96C087;
+    color: #fff;
+    border: none;
+}
+
+#f1 .price{
+    margin-left: 170px;
+}
+
+#f2 .price{
+    margin-left: 340px;
+}
+
+#f3 .price{
+    margin-left: 350px;
+}
+
+#f4 .price{
+    margin-left: 380px;
+}
+
+#f5 .price{
+    margin-left: 300px;
+}
+
+#f6 .price{
+    margin-left: 370px;
+}
+
+#f7 .price{
+    margin-left: 380px;
+}
+
+#f8 .price{
+    margin-left: 400px;
+}
+
+#f9 .price{
+    margin-left: 390px;
+}

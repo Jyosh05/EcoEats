@@ -33,29 +33,29 @@ img:hover{
     box-shadow: 2px 4px 4px grey;
 }
 
-.kale_pasta{
+#kale_pasta{
     margin: 30px;
 
 }
 
-.kale_pasta p{
+#kale_pasta p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.kale_pasta span{
+#kale_pasta span{
     margin-left: 80px;
 }
 
-.kale_pasta img{
+#kale_pasta img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.veg_bowl {
+#veg_bowl {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -65,25 +65,25 @@ img:hover{
 }
 
 
-.veg_bowl p{
+#veg_bowl p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.veg_bowl span{
+#veg_bowl span{
     margin-left: 70px;
 }
 
-.veg_bowl img{
+#veg_bowl img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.chickpeas {
+#chickpeas {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -93,51 +93,51 @@ img:hover{
 }
 
 
-.chickpeas p{
+#chickpeas p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.chickpeas span{
+#chickpeas span{
     margin-left: 40px;
 }
 
-.chickpeas img{
+#chickpeas img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.kale_pasta, .veg_bowl, .chickpeas{
+#kale_pasta, #veg_bowl, #chickpeas{
     display: inline-block;
 }
 
-.mushroom_rice{
+#mushroom_rice{
     margin: 30px;
 
 }
 
-.mushroom_rice p{
+#mushroom_rice p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.mushroom_rice span{
+#mushroom_rice span{
     margin-left: 40px;
 }
 
-.mushroom_rice img{
+#mushroom_rice img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.cauliflower_rice {
+#cauliflower_rice {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -147,25 +147,25 @@ img:hover{
 }
 
 
-.cauliflower_rice p{
+#cauliflower_rice p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.cauliflower_rice span{
+#cauliflower_rice span{
     margin-left: 60px;
 }
 
-.cauliflower_rice img{
+#cauliflower_rice img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.nourish_bowl {
+#nourish_bowl {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -175,51 +175,51 @@ img:hover{
 }
 
 
-.nourish_bowl p{
+#nourish_bowl p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.nourish_bowl span{
+#nourish_bowl span{
     margin-left: 60px;
 }
 
-.nourish_bowl img{
+#nourish_bowl img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.mushroom_rice, .cauliflower_rice, .nourish_bowl{
+#mushroom_rice, #cauliflower_rice, #nourish_bowl{
     display: inline-block;
 }
 
-.power_bowl{
+#power_bowl{
     margin: 30px;
 
 }
 
-.power_bowl p{
+#power_bowl p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.power_bowl span{
+#power_bowl span{
     margin-left: 50px;
 }
 
-.power_bowl img{
+#power_bowl img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.avocado {
+#avocado {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -229,25 +229,25 @@ img:hover{
 }
 
 
-.avocado p{
+#avocado p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.avocado span{
+#avocado span{
     margin-left: 50px;
 }
 
-.avocado img{
+#avocado img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.fried_rice {
+#fried_rice {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -257,25 +257,25 @@ img:hover{
 }
 
 
-.fried_rice p{
+#fried_rice p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.fried_rice span{
+#fried_rice span{
     margin-left: 70px;
 }
 
-.fried_rice img{
+#fried_rice img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.power_bowl, .avocado, .fried_rice{
+#power_bowl, #avocado, #fried_rice{
     display: inline-block;
 }
 
@@ -296,3 +296,163 @@ img:hover{
   background: #555;
 }
 
+/* codes for previewing food items and adding to cart*/
+.food-preview{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-preview .preview{
+    display: none;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    margin: 2rem;
+    width: 40rem;
+}
+
+.food-preview .preview.active{
+    display: inline-block;
+}
+
+.food-preview .preview img{
+    width: 103.3%;
+    height: 280px;
+    box-shadow: none;
+    cursor: auto;
+    padding: 0;
+    margin: -10px;
+}
+
+.food-preview .preview .btn-close{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 30px;
+    font-weight: bold;
+    right: 2px;
+    top: 2px;
+    position: absolute;
+    color: red;
+}
+
+.food-preview .preview .btn-close:hover{
+    opacity: 0.9px;
+    background-color: lightgray;
+
+
+}
+
+.food-preview .preview .name, .food-preview .preview .price{
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.food-preview .preview .price{
+    margin-left: 200px;
+}
+
+.food-preview .preview .buttons{
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    width: 103.2%;
+    border-radius: 0;
+    margin-left: -10px;
+    margin-bottom: -30px;
+    text-align: center;
+}
+
+.food-preview .preview .buttons button, .food-preview .preview .buttons p{
+    margin: 0;
+    padding: 10px;
+    font-size: 20px;
+}
+.food-preview .preview .buttons p{
+    margin-bottom: -10px;
+    margin-right: -20px;
+}
+
+
+.food-preview .preview .buttons button.reduce{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #999999;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.increase{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #9DC284;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 309px;
+    background: orange;
+    color: #fff;
+    border-radius: 25px;
+    border: none;
+    height: 40px;
+    margin-left: 20px;
+    margin-bottom: -18px;
+}
+
+
+.food-preview .preview .buttons button.cart:hover{
+    background: #96C087;
+    color: #fff;
+    border: none;
+}
+
+#f1 .price{
+    margin-left: 300px;
+}
+
+#f2 .price{
+    margin-left: 330px;
+}
+
+#f3 .price{
+    margin-left: 150px;
+}
+
+#f4 .price{
+    margin-left: 230px;
+}
+
+#f5 .price{
+    margin-left: 160px;
+}
+
+#f6 .price{
+    margin-left: 320px;
+}
+
+#f7 .price{
+    margin-left: 140px;
+}
+
+#f8 .price{
+    margin-left: 160px;
+}

@@ -6,55 +6,200 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+<script src="{{ url_for('static', filename='javascript/recommended.js') }}" defer></script>
 
 <div class="container-h1">
 <h1>Breakfast</h1>
 </div>
 
-<div class="chicken_salad">
+<div class="food-container">
+
+<div class="food" id="chicken_salad" data-name="f-1">
 <img src="static/img/breakfast/chicken_salad.png" alt="Poached Chicken Salad">
 <p>Poached Chicken <span>S$ 6.00</span><br>
     Salad </p>
 </div>
 
-<div class="roasted_veggie">
+<div class="food" id="roasted_veggie" data-name="f-2">
     <img src="static/img/breakfast/roasted_veggie.png" alt="Egg & Roasted Veggie Salad">
     <p>Egg & Roasted <span>S$ 6.90</span> <br> Veggie Salad </p>
 </div>
 
-<div class="green_fruits">
+<div class="food" id="green_fruits" data-name="f-3">
     <img src="static/img/breakfast/green_fruits.png" alt="Green Fruits Salad">
     <p>Green Fruits Salad <span>S$ 6.90</span> </p>
 </div>
 
-<div class="fruit_salad">
+<div class="food" id="fruit_salad" data-name="f-4">
     <img src="static/img/breakfast/fruit_salad.png" alt="Classic Fruit Salad">
     <p>Classic Fruit Salad <span>S$ 6.60</span> </p>
 </div>
 
-<div class="oatmeal">
+<div class="food" id="oatmeal" data-name="f-5">
     <img src="static/img/breakfast/fruits_oatmeal.png" alt="Fruits & Oatmeal">
     <p>Fruits & Oatmeal <span>S$ 5.90</span> </p>
 </div>
 
-<div class="blue_pancake">
+<div class="food" id="blue_pancake" data-name="f-6">
     <img src="static/img/breakfast/blueberry_pancake.png" alt="Banana & Blueberry Pancakes">
     <p>Banana & Blueberry <span>S$ 6.00</span> <br> Pancakes </p>
 </div>
 
-<div class="strawberry_pancake">
-    <img src="static/img/breakfast/strawberry_pancake.png" alt="Strawberry Jam Pancakes">
+<div class="food" id="strawberry_pancake" data-name="f-7">
+    <img src="static/img/breakfast/strawberry_pancake.png" alt="Strawberry & Jam Pancakes">
     <p>Strawberry & Jam <span>S$ 6.00</span> <br> Pancakes </p>
 </div>
 
-<div class="waffle">
+<div class="food" id="waffle" data-name="f-8">
     <img src="static/img/breakfast/waffle.png" alt="Raspberries & Cream Waffles">
-    <p>Raspberries & <span>S$ 6.10</span> <br> Cream Waffles </p>
+    <p>Raspberries & Cream<span>S$ 6.10</span> <br>  Waffles </p>
 </div>
 
-<div class="egg_toast">
+<div class="food" id="egg_toast" data-name="f-9">
     <img src="static/img/breakfast/egg_toast.png" alt="Avocado & Egg Toast">
-    <p>Avocado & <span>S$ 5.50</span> <br> Egg Toast </p>
+    <p>Avocado & Egg<span>S$ 5.50</span> <br>  Toast </p>
+</div>
+
+    </div>
+
+<!-- codes for previewing food items adding to cart -->
+<div class="food-preview">
+    <div class="preview active" id="f1" data-target="f-1">
+        <img src="static/img/breakfast/chicken_salad.png" alt="Poached Chicken Salad">
+        <button class="btn-close">&times;</button>
+        <p class="name">Poached Chicken Salad</p>
+        <p class="price">S$ 6.00</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f2" data-target="f-2">
+        <img src="static/img/breakfast/roasted_veggie.png" alt="Egg & Roasted Veggie Salad">
+        <button class="btn-close">&times;</button>
+        <p class="name">Egg & Roasted Veggie Salad</p>
+        <p class="price">S$ 6.90</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f3" data-target="f-3">
+        <img src="static/img/breakfast/green_fruits.png" alt="Green Fruits Salad">
+        <button class="btn-close">&times;</button>
+        <p class="name">Green Fruits Salad</p>
+        <p class="price">S$ 6.90</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f4" data-target="f-4">
+        <img src="static/img/breakfast/fruit_salad.png" alt="Classic Fruit Salad">
+        <button class="btn-close">&times;</button>
+        <p class="name">Classic Fruit Salad</p>
+        <p class="price">S$ 6.60</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f5" data-target="f-5">
+        <img src="static/img/breakfast/fruits_oatmeal.png" alt="Fruits & Oatmeal">
+        <button class="btn-close">&times;</button>
+        <p class="name">Fruits & Oatmeal</p>
+        <p class="price">S$ 5.90</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f6" data-target="f-6">
+        <img src="static/img/breakfast/blueberry_pancake.png" alt="Banana & Blueberry Pancakes">
+        <button class="btn-close">&times;</button>
+        <p class="name">Banana & Blueberry Pancakes</p>
+        <p class="price">S$ 6.00</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+       <div class="preview active" id="f7" data-target="f-7">
+        <img src="static/img/breakfast/strawberry_pancake.png" alt="Strawberry & Jam Pancakes">
+        <button class="btn-close">&times;</button>
+        <p class="name">Strawberry & Jam Pancakes</p>
+        <p class="price">S$ 6.00</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f8" data-target="f-8">
+        <img src="static/img/breakfast/waffle.png" alt="Raspberries & Cream Waffles">
+        <button class="btn-close">&times;</button>
+        <p class="name">Raspberries & Cream Waffles</p>
+        <p class="price">S$ 6.10</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+    <div class="preview active" id="f9" data-target="f-9">
+        <img src="static/img/breakfast/egg_toast.png" alt="Avocado & Egg Toast">
+        <button class="btn-close">&times;</button>
+        <p class="name">Avocado & Egg Toast</p>
+        <p class="price">S$ 5.50</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        <div class="buttons">
+            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
+            <button class="cart">Add To Cart</button>
+        </div>
+
+    </div>
+
+
 </div>
 
 {% endblock %}

@@ -49,29 +49,29 @@ img:hover{
     box-shadow: 2px 4px 4px grey;
 }
 
-.stir-fry{
+#stir-fry{
     margin: 30px;
 
 }
 
-.stir-fry p{
+#stir-fry p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.stir-fry span{
+#stir-fry span{
     margin-left: 70px;
 }
 
-.stir-fry img{
+#stir-fry img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.zucchini {
+#zucchini {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -81,25 +81,25 @@ img:hover{
 }
 
 
-.zucchini p{
+#zucchini p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.zucchini span{
+#zucchini span{
     margin-left: 50px;
 }
 
-.zucchini img{
+#zucchini img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.chickpeas {
+#chickpeas {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -109,51 +109,51 @@ img:hover{
 }
 
 
-.chickpeas p{
+#chickpeas p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.chickpeas span{
+#chickpeas span{
     margin-left: 40px;
 }
 
-.chickpeas img{
+#chickpeas img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.stir-fry, .zucchini, .chickpeas{
+#stir-fry, #zucchini, #chickpeas{
     display: inline-block;
 }
 
-.buddha_bowl{
+#buddha_bowl{
     margin: 30px;
 
 }
 
-.buddha_bowl p{
+#buddha_bowl p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.buddha_bowl span{
+#buddha_bowl span{
     margin-left: 40px;
 }
 
-.buddha_bowl img{
+#buddha_bowl img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.turmeric_rice {
+#turmeric_rice {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -163,25 +163,25 @@ img:hover{
 }
 
 
-.turmeric_rice p{
+#turmeric_rice p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.turmeric_rice span{
+#turmeric_rice span{
     margin-left: 20px;
 }
 
-.turmeric_rice img{
+#turmeric_rice img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.miso_mushroom {
+#miso_mushroom {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -191,51 +191,51 @@ img:hover{
 }
 
 
-.miso_mushroom p{
+#miso_mushroom p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.miso_mushroom span{
+#miso_mushroom span{
     margin-left: 20px;
 }
 
-.miso_mushroom img{
+#miso_mushroom img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.buddha_bowl, .turmeric_rice, .miso_mushroom{
+#buddha_bowl, #turmeric_rice, #miso_mushroom{
     display: inline-block;
 }
 
-.veg_bibimbap{
+#veg_bibimbap{
     margin: 30px;
 
 }
 
-.veg_bibimbap p{
+#veg_bibimbap p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
-.veg_bibimbap span{
+#veg_bibimbap span{
     margin-left: 70px;
 }
 
-.veg_bibimbap img{
+#veg_bibimbap img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.noodles {
+#noodles {
     margin-left: 230px;
     margin-top: 30px;
     vertical-align: top;
@@ -245,25 +245,25 @@ img:hover{
 }
 
 
-.noodles p{
+#noodles p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.noodles span{
+#noodles span{
     margin-left: 40px;
 }
 
-.noodles img{
+#noodles img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.vermicelli_noodle {
+#vermicelli_noodle {
     margin-left: 250px;
     margin-top: 30px;
     vertical-align: top;
@@ -273,24 +273,189 @@ img:hover{
 }
 
 
-.vermicelli_noodle p{
+#vermicelli_noodle p{
     font-size: 16px;
     font-weight: bold;
     margin: 0;
 }
 
 
-.vermicelli_noodle span{
+#vermicelli_noodle span{
     margin-left: 20px;
 }
 
-.vermicelli_noodle img{
+#vermicelli_noodle img{
     width: 220px;
     height: 200px;
     border-radius: 8px;
     margin-bottom: 10px;
 }
 
-.veg_bibimbap, .noodles, .vermicelli_noodle{
+#veg_bibimbap, #noodles, #vermicelli_noodle{
     display: inline-block;
+}
+
+/* codes for previewing food items and adding to cart*/
+.food-preview{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.food-preview .preview{
+    display: none;
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    margin: 2rem;
+    width: 40rem;
+}
+
+.food-preview .preview.active{
+    display: inline-block;
+}
+
+.food-preview .preview img{
+    width: 103.3%;
+    height: 280px;
+    box-shadow: none;
+    cursor: auto;
+    padding: 0;
+    margin: -10px;
+}
+
+.food-preview .preview .btn-close{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 30px;
+    font-weight: bold;
+    right: 2px;
+    top: 2px;
+    position: absolute;
+    color: red;
+}
+
+.food-preview .preview .btn-close:hover{
+    opacity: 0.9px;
+    background-color: lightgray;
+
+
+}
+
+.food-preview .preview .name, .food-preview .preview .price{
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.food-preview .preview .price{
+    margin-left: 200px;
+}
+
+.food-preview .preview .buttons{
+    background: #D9D9D9;
+    display: flex;
+    align-items: center;
+    width: 103.2%;
+    border-radius: 0;
+    margin-left: -10px;
+    margin-bottom: -30px;
+    text-align: center;
+}
+
+.food-preview .preview .buttons button, .food-preview .preview .buttons p{
+    margin: 0;
+    padding: 10px;
+    font-size: 20px;
+}
+.food-preview .preview .buttons p{
+    margin-bottom: -10px;
+    margin-right: -20px;
+}
+
+
+.food-preview .preview .buttons button.reduce{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #999999;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.increase{
+    width: 50px;
+    height: 45px;
+    border-radius: 50%;
+    border: none;
+    background: #9DC284;
+    color: #fff;
+    margin-left: 20px;
+}
+
+.food-preview .preview .buttons button.cart {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 309px;
+    background: orange;
+    color: #fff;
+    border-radius: 25px;
+    border: none;
+    height: 40px;
+    margin-left: 20px;
+    margin-bottom: -18px;
+}
+
+
+.food-preview .preview .buttons button.cart:hover{
+    background: #96C087;
+    color: #fff;
+    border: none;
+}
+
+#f1 .price{
+    margin-left: 310px;
+}
+
+#f2 .price{
+    margin-left: 280px;
+}
+
+#f3 .price{
+    margin-left: 50px;
+}
+
+#f4 .price{
+    margin-left: 340px;
+}
+
+#f5 .price{
+    margin-left: 60px;
+}
+
+#f6 .price{
+    margin-left: 290px;
+}
+
+#f7 .price{
+    margin-left: 370px;
+}
+
+#f8 .price{
+    margin-left: 250px;
+}
+
+#f9 .price{
+    margin-left: 280px;
 }
