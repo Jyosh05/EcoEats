@@ -8,6 +8,7 @@
 .welcome-bar{
     background-color: #032700;
     width: 100%;
+    text-align: center;
 }
 
 .welcome-bar img{
@@ -91,6 +92,17 @@ nav{
     background-color: #FCA878;
     font-weight: bold;
     border-bottom: 1px solid #000;
+}
+
+.cart {
+      margin: 10px;
+      margin-top: 5px;
+}
+
+.cart i {
+     padding: 10px;
+     font-size: 25px;
+     color: orange;
 }
 
 
