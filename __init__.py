@@ -35,6 +35,9 @@ def dinner():
 def dessert():
     return render_template('dessert.html')
 
+@app.route("/profile")
+def profile():
+    return render_template('profile.html')
 
 
 @app.route('/createUser', methods = ['GET', 'POST'])
