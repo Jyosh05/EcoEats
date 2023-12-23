@@ -92,3 +92,10 @@ nav{
     font-weight: bold;
     border-bottom: 1px solid #000;
 }
+
+
+.profile{
+padding-right:10px;
+padding-top:5px;
+font-size:150%;
+}
