@@ -31,6 +31,7 @@ h1{
 
 img:hover{
     box-shadow: 2px 4px 4px grey;
+    cursor: pointer;
 }
 
 #kale_pasta{
@@ -307,6 +308,16 @@ img:hover{
     display: none;
     align-items: center;
     justify-content: center;
+    animation: fadeInOut 0.5s ease-in-out; /* Animation added */
+}
+
+@keyframes fadeInOut {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .food-preview .preview{
@@ -316,6 +327,18 @@ img:hover{
     position: relative;
     margin: 2rem;
     width: 40rem;
+    animation: slideIn 0.5s ease-in-out; /* Animation added */
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .food-preview .preview.active{
@@ -423,6 +446,16 @@ img:hover{
     background: #96C087;
     color: #fff;
     border: none;
+}
+
+.food-preview .preview .fa-star{
+    font-size: 40px;
+    color: #6CAC60;
+    margin-left: 150px;
+}
+
+.food-preview .preview .fa-star, .food-preview .preview p{
+    display: inline-block;
 }
 
 #f1 .price{

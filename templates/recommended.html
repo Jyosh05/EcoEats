@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 <script src="{{ url_for('static', filename='javascript/recommended.js') }}" defer></script>
 
+
 <div class="container-h1">
 <h1>Recommended</h1>
 </div>
@@ -66,16 +67,16 @@
 </div>
 </div>
 
-<!-- codes for previewing food items adding to cart -->
+<!-- codes for previewing food items description and having to add to cart feature -->
 <div class="food-preview">
-    <div class="preview active" data-target="f-1">
+    <div class="preview active" data-target="f-1" data-name="i-1">
         <img src="static/img/appetizer/Burrata.png" alt="Burrata With Cherries and Sumac">
         <button class="btn-close">&times;</button>
         <p class="name">Burrata With Cherries & Sumac </p>
         <p class="price">S$ 4.90</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
-
+        <i class="fa-regular fa-star"></i>
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
             <button class="cart">Add To Cart</button>
@@ -83,13 +84,14 @@
 
     </div>
 
-    <div class="preview active" id="f2" data-target="f-2">
+    <div class="preview active" id="f2" data-target="f-2" data-name="i-2">
         <img src="static/img/appetizer/crostini.png" alt="Peach Crostini">
         <button class="btn-close">&times;</button>
         <p class="name"> Peach Crostini </p>
         <p class="price">S$ 5.20</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -98,28 +100,32 @@
 
     </div>
 
-    <div class="preview active" id="f3" data-target="f-3">
+    <div class="preview active" id="f3" data-target="f-3" data-name="i-3">
         <img src="static/img/breakfast/roasted_veggie.png" alt="Egg & Roasted Veggie Salad">
         <button class="btn-close">&times;</button>
         <p class="name">Egg & Roasted Veggie Salad</p>
         <p class="price">S$ 6.90</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
             <button class="cart">Add To Cart</button>
         </div>
 
+
     </div>
 
-    <div class="preview active" id="f4" data-target="f-4">
+    <div class="preview active" id="f4" data-target="f-4" data-name="i-4">
+        <div>
         <img src="static/img/breakfast/blueberry_pancake.png" alt="Banana & Blueberry Pancakes">
         <button class="btn-close">&times;</button>
         <p class="name">Banana & Blueberry Pancakes</p>
         <p class="price">S$ 6.00</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -128,13 +134,14 @@
 
     </div>
 
-    <div class="preview active" id="f5" data-target="f-5">
+    <div class="preview active" id="f5" data-target="f-5" data-name="i-5">
         <img src="static/img/lunch/mushroom_rice.png" alt="Glazed Mushroom With Rice">
         <button class="btn-close">&times;</button>
         <p class="name">Glazed Mushroom With Rice</p>
         <p class="price">S$ 5.90</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -143,13 +150,14 @@
 
     </div>
 
-    <div class="preview active" id="f6" data-target="f-6">
+    <div class="preview active" id="f6" data-target="f-6" data-name="i-6">
         <img src="static/img/lunch/avocado.png" alt="Avocado & Sweet Potato With Eggs">
         <button class="btn-close">&times;</button>
         <p class="name">Avocado & Sweet Potato With Eggs</p>
         <p class="price">S$ 5.90</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -158,13 +166,14 @@
 
     </div>
 
-       <div class="preview active" id="f7" data-target="f-7">
+       <div class="preview active" id="f7" data-target="f-7" data-name="i-7">
         <img src="static/img/dinner/chickpeas.png" alt="Rice With Maple Sriracha Chickpeas & Broccoli">
         <button class="btn-close">&times;</button>
         <p class="name">Rice With Maple Sriracha Chickpeas & Broccoli</p>
         <p class="price">S$ 5.10</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+           <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -173,13 +182,14 @@
 
     </div>
 
-    <div class="preview active" id="f8" data-target="f-8">
+    <div class="preview active" id="f8" data-target="f-8" data-name="i-8">
         <img src="static/img/dinner/miso_mushroom.png" alt="Miso Mushroom Bowl">
         <button class="btn-close">&times;</button>
         <p class="name">Miso Mushroom Bowl</p>
         <p class="price">S$ 4.90</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -188,13 +198,14 @@
 
     </div>
 
-    <div class="preview active" id="f9" data-target="f-9">
+    <div class="preview active" id="f9" data-target="f-9" data-name="i-9">
         <img src="static/img/dessert/vanilla_panna_cotta.png" alt="Classic Vanilla Panna Cotta">
         <button class="btn-close">&times;</button>
         <p class="name">Classic Vanilla Panna Cotta</p>
         <p class="price">S$ 4.00</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -203,13 +214,14 @@
 
     </div>
 
-    <div class="preview active" id="f10" data-target="f-10">
+    <div class="preview active" id="f10" data-target="f-10" data-name="i-10">
         <img src="static/img/dessert/butterfly_pea_flower.png" alt="Butterfly Pea Flower Pudding">
         <button class="btn-close">&times;</button>
         <p class="name">Butterfly Pea Flower Pudding</p>
         <p class="price">S$ 4.60</p>
         <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
             impeccably cooked eggs and 2 slices of fresh avocado.</p>
+        <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
             <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
@@ -218,8 +230,107 @@
 
     </div>
 
+    <!-- codes for previewing food items ingredients sources -->
+<div class="info-preview">
+    <div class="info active"  data-target="i-1">
+        <img src="static/img/appetizer/Burrata.png" alt="Burrata With Cherries and Sumac">
+        <button class="btn-close">&times;</button>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
 
-</div>
+
+    </div>
+
+    <div class="info active" id="i2"  data-target="i-2">
+        <img src="static/img/appetizer/crostini.png" alt="Peach Crostini">
+        <button class="btn-close">&times;</button>
+        <p class="name"> Peach Crostini </p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+    <div class="info active" id="i3" data-target="i-3">
+        <img src="static/img/breakfast/roasted_veggie.png" alt="Egg & Roasted Veggie Salad">
+        <button class="btn-close">&times;</button>
+        <p class="name">Egg & Roasted Veggie Salad</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+    <div class="info active" id="i4" data-target="i-4">
+        <img src="static/img/breakfast/blueberry_pancake.png" alt="Banana & Blueberry Pancakes">
+        <button class="btn-close">&times;</button>
+        <p class="name">Banana & Blueberry Pancakes</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+    <div class="info active" id="i5" data-target="i-5">
+        <img src="static/img/lunch/mushroom_rice.png" alt="Glazed Mushroom With Rice">
+        <button class="btn-close">&times;</button>
+        <p class="name">Glazed Mushroom With Rice</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+    <div class="info active" id="i6"  data-target="i-6">
+        <img src="static/img/lunch/avocado.png" alt="Avocado & Sweet Potato With Eggs">
+        <button class="btn-close">&times;</button>
+        <p class="name">Avocado & Sweet Potato With Eggs</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+       <div class="info active" id="i7"  data-target="i-7">
+        <img src="static/img/dinner/chickpeas.png" alt="Rice With Maple Sriracha Chickpeas & Broccoli">
+        <button class="btn-close">&times;</button>
+        <p class="name">Rice With Maple Sriracha Chickpeas & Broccoli</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        </div>
+
+
+
+    <div class="info active" id="i8" data-target="i-8">
+        <img src="static/img/dinner/miso_mushroom.png" alt="Miso Mushroom Bowl">
+        <button class="btn-close">&times;</button>
+        <p class="name">Miso Mushroom Bowl</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+    </div>
+
+    <div class="info active" id="i9" data-target="i-9">
+        <img src="static/img/dessert/vanilla_panna_cotta.png" alt="Classic Vanilla Panna Cotta">
+        <button class="btn-close">&times;</button>
+        <p class="name">Classic Vanilla Panna Cotta</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+
+    </div>
+
+    <div class="info active" id="i10" data-target="i-10">
+        <img src="static/img/dessert/butterfly_pea_flower.png" alt="Butterfly Pea Flower Pudding">
+        <button class="btn-close">&times;</button>
+        <p class="name">Butterfly Pea Flower Pudding</p>
+        <p>A delectable blend of freshly grown oven-roasted vegetables,<br>
+            impeccably cooked eggs and 2 slices of fresh avocado.</p>
+
+        </div>
+
+    </div>
 
 
 {% endblock %}
