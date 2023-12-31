@@ -35,6 +35,10 @@ def dinner():
 def dessert():
     return render_template('dessert.html')
 
+@app.route("/membership")
+def membership():
+    return render_template('membership.html')
+
 @app.route("/reviews")
 def reviews():
     return render_template('reviews.html')
