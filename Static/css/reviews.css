@@ -5,7 +5,7 @@ top: 59%;
 left: 50%;
 position: absolute;
 transform: translate(-50%, -50%);
-background: #bbbbbb
+background: #bbbbbb;
 border: 10px solid #bbbbbb;
 border-radius: 10px;
 }
