@@ -24,8 +24,9 @@ border-radius: 10px;
 
 .circle1{
 background-color: #000;
-height: 20px;
-width: 20px;
+height: 60px;
+width: 60px;
+position: absolute;
 border-radius: 50%;
 }
 
