@@ -1,6 +1,10 @@
+*{
+padding: 20px;
+}
+
 .container{
 border: solid;
-border-color: #f7f4f4
+border-color: #bbbbbb
 }
 
 .star-rating{
