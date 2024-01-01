@@ -1,11 +1,12 @@
 .container{
 width: 50px;
-height: 150px;
+height: 380px;
 border: solid;
 border-color: #bbbbbb
 padding-top: 60px;
 padding-bottom: 20px;
 padding-left: 20px;
+position: absolute;
 }
 
 .star-rating{
