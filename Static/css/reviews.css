@@ -1,8 +1,8 @@
 .container{
 width: 700px;
 height: 550px;
-bottom: 100px;
-left: 30px;
+top: 50%;
+left: 50%;
 position: absolute;
 transform: translate(-50%, -50%);
 background: #bbbbbb
