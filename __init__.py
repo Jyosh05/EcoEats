@@ -47,12 +47,6 @@ def reviews():
 def profile():
     return render_template('profile.html')
 
-@app.route('/reviews')
-def reviews():
-    return render_template('reviews.html')
-
-
-
 
 @app.route('/createUser', methods = ['GET', 'POST'])
 def create_user():
