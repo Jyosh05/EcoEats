@@ -1,7 +1,7 @@
 .container{
 width: 700px;
 height: 550px;
-top: 50%;
+top: 80%;
 left: 50%;
 position: absolute;
 transform: translate(-50%, -50%);
@@ -9,9 +9,6 @@ background: #bbbbbb
 }
 
 .star-rating{
-    width: 100px;
-    height: 100px;
-    background: #fff;
     position: absolute;
     top: 50%;
     left: 50%;
