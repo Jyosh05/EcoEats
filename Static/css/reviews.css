@@ -1,7 +1,7 @@
 .container{
     width: 100px;
     height: 100px;
-    background: black;
+    background: #000;
     position: absolute;
     top: 50%;
     left: 50%;
