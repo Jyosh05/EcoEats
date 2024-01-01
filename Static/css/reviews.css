@@ -1,7 +1,7 @@
 .container{
 width: 700px;
 height: 550px;
-top: 100px;
+bottom: 100px;
 left: 30px;
 position: absolute;
 transform: translate(-50%, -50%);
