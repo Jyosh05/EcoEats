@@ -24,7 +24,7 @@ border-radius: 10px;
 
 .star-rating{
     position: absolute;
-    top: 20%;
+    top: 30%;
     left: 65%;
     transform: translate(-50%, -50%);
     display: flex;
