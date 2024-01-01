@@ -1,3 +1,8 @@
+.container{
+border: solid;
+border-color: #f7f4f4
+}
+
 .star-rating{
     width: 100px;
     height: 100px;
