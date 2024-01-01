@@ -35,7 +35,7 @@ top: 25%;
 .star-rating{
     position: absolute;
     top: 30%;
-    left: 60%;
+    left: 62%;
     transform: translate(-50%, -50%);
     display: flex;
 }
