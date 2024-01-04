@@ -1,3 +1,4 @@
+import wtforms.fields
 from wtforms import Form, StringField, RadioField, SelectField, TextAreaField, validators
 class CreateUserForm(Form):
     first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -8,3 +9,8 @@ class CreateUserForm(Form):
     membership = RadioField('Membership', choices=[('F', 'Fellow'), ('S', 'Senior'), ('P', 'Professional')],
                             default='F')
     remarks = TextAreaField('Remarks', [validators.Optional()])
+
+
+    # customer username password fields
+    username = StringField("Username / Email Address", [validators.Length(min=4,max=16)])
+    password = wtforms.fields.PasswordField("Password" , [validators.Length(min=8, max=16), validators.DataRequired()])
