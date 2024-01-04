@@ -3,7 +3,36 @@ from flask import Flask, render_template, request, redirect, url_for
 from Forms import CreateUserForm
 import shelve, User
 
+# pip install mysql-connector-python
+import mysql.connector
+
 app = Flask(__name__)
+
+# Dont run code below yet.
+
+# # mySql Credentials
+# mydb= mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='ecoeats',
+#     port='3306',
+#     database='ecoeatsusers'
+# )
+#
+# mycursor = mydb.cursor()
+# mycursor.execute('SELECT * FROM users')
+#
+# users = mycursor.fetchall()
+# # index 0 is used for count / unique id
+# for a in users:
+#     print(a)
+#     print('Username: ', a[1])
+#     print('Password: ', a[2])
+#
+# # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
+# # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
+# # Then throw the ecoeatsusers into that folder.
+
 
 
 @app.route('/')
