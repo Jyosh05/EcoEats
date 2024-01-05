@@ -33,6 +33,58 @@ app = Flask(__name__)
 # # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
 # # Then throw the ecoeatsusers into that folder.
 
+# @app.route('/createUser', methods = ['GET', 'POST'])
+# def create_user():
+#     create_user_form = CreateUserForm(request.form)
+#     if request.method == 'POST' and create_user_form.validate():
+#         username = create_user_form.username.data
+#         password = create_user_form.password.data
+#
+#         insert_query = "INSERT INTO users ('username', 'password') VALUES (%s, %s)"
+#         user_data = (username, password)
+#         mycursor.execute(insert_query, user_data)
+#
+#         mydb.commit()
+#
+#         return redirect(url_for('retrieveUser'))
+#     return render_template('createUser.html', form = create_user_form)
+#
+# @app.route('/retrieveUser')
+# def retrieve_user():
+#     select_query = "SELECT * FROM users"
+#     mycursor.execute(select_query)
+#     users = mycursor.fetchall()
+#     return render_template('retrieveUser.html', users=users)
+
+
+
+
+
+
+
+# @app.route('/createUser', methods = ['GET', 'POST'])
+# def create_user():
+#     create_user_form = CreateUserForm(request.form)
+#     if request.method == 'POST' and create_user_form.validate():
+#         users_dict = {}
+#         db = shelve.open('user.db', 'c')
+#         try:
+#             users_dict = db['Users']
+#         except:
+#              print("Error in retrieving Users from user.db.")
+#         user = User.User(create_user_form.first_name.data, create_user_form.last_name.data,
+#                          create_user_form.gender.data, create_user_form.membership.data, create_user_form.remarks.data)
+#         users_dict[user.get_user_id()] = user
+#         db['Users'] = users_dict
+#         # Test codes
+#         users_dict = db['Users']
+#         user = users_dict[user.get_user_id()]
+#         print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==",
+#               user.get_user_id())
+#         db.close()
+#
+#         return redirect(url_for('home'))
+#     return render_template('createUser.html', form = create_user_form)
 
 
 @app.route('/')
@@ -87,34 +139,15 @@ def reviews():
 # def membershipHome():
 #     return render_template('membershipHome.html')
 
+
+
+
 @app.route('/membership')
 def membership():
     return render_template('membershipHome.html')
 
 
-@app.route('/createUser', methods = ['GET', 'POST'])
-def create_user():
-    create_user_form = CreateUserForm(request.form)
-    if request.method == 'POST' and create_user_form.validate():
-        users_dict = {}
-        db = shelve.open('user.db', 'c')
-        try:
-            users_dict = db['Users']
-        except:
-             print("Error in retrieving Users from user.db.")
-        user = User.User(create_user_form.first_name.data, create_user_form.last_name.data,
-                         create_user_form.gender.data, create_user_form.membership.data, create_user_form.remarks.data)
-        users_dict[user.get_user_id()] = user
-        db['Users'] = users_dict
-        # Test codes
-        users_dict = db['Users']
-        user = users_dict[user.get_user_id()]
-        print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==",
-              user.get_user_id())
-        db.close()
 
-        return redirect(url_for('home'))
-    return render_template('createUser.html', form = create_user_form)
 
 
 
