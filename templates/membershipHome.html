@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}membershipHome{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/membershipHome.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+
+<div class="container-h1-image">
+    <h1>Membership</h1>
+</div>
+
+<br>
+
+<div class="container-contents-left">
+    <div class="container-membership-status">
+        <h3>Membership Status:</h3>
+        <p class="membershipTier">*Insert Tier*</p>
+        <p><span class="TotalEarned">*Insert total earned*</span>Leaves Earned</p>
+        <div id="membership-progress-bar">
+            *insert progress bar*
+        </div>
+        <!--if they earn >=300 within 1 year as Bloom-->
+        <p>*Membership Tier* Extended for 1 Year After *Joining date+1yr*!</p>
+        <!--if they earn <=300 within 1 year-->
+        <p>Need *points needed maintain* points to upgrade to next tier!</p>
+
+        <button class="membership-tier-benefits">
+            <a href="/membershipTiers">View Membership Benefits</a>
+        </button>
+    </div>
+
+    <br>
+
+    <div class="container-membership-details">
+        <h3>Reward Membership Details</h3>
+        <div class="membership-details-box">
+            <button class="membership-details" >
+                <a href="/membershipRewardHist">View Rewards History</a>
+        </button>
+            <!--image of arrow-->
+            <br>
+            <button class="membership-details">
+                <a href="/membershipTerms">Terms And Conditions</a>
+        </button>
+            <!--image of arrow-->
+            <br>
+            <button class="membership-details">
+                <a href="/membershipTiers">View Membership Tiers</a>
+        </button>
+            <!--image of arrow-->
+        </div>
+    </div>
+</div>
+<br>
+<div class="container-contents-right">
+    <div class="container-membership-balance">
+        <div class="balance-text-container">
+            <h3>Current Leaf Balance:</h3>
+            <p>*Insert balance here* <img src="" class="leaf-icon"></p>
+            <p>Leaves Available For Redemption</p>
+            <p><span>*balance* Leave(s) Will Expire On *Joining date+1yr*</span></p>
+        </div>
+        <!--button needs to go within container-mbrship-balance, beside text-->
+        <div class="Redemption-Shop-container">
+            <p class="redemption-shop-button">
+                <a id="membershipShop" href="/membershipShop">Go To Redemption Shop</a>
+            </p>
+                <!--link isn't working-->
+        </div>
+    </div>
+
+    <br>
+
+    <div class="container-rewards-available">
+        <div id="rewards-header">
+            <h3>Your Rewards:</h3>
+        </div>
+        <div id="reward-list">
+            <a href="link to rewards list pop-up">See All Rewards</a>
+        </div>
+        <div>
+            <p class="RewardBox1">Rewards Available: 2</p>
+            <p class="RewardBox2"><img src="" alt="" class="food-related">Loyalty Treat: Customer-For-1-Year Receive S$5 Off Your Purchase</p>
+            <p class="RewardBox1"><img src="" alt="" class="drink-related">Holiday Treat: Enjoy 1-For-1 Treat On December Exclusive Drinks</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

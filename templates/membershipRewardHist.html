@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}membershipRewardHistory{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/membershipRewardHist.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<h2>Reward History</h2>
+<div class="container-contents">
+    <div class="month-header">
+        <p>November 2023</p>
+    </div>
+    <div class="rewards-in-month">
+        <p class="reward">Bloom member: 15% OFF bill with minimum $15 spent</p>
+        <p><span class="redeem-date">redeemed on 02/10/2023</span></p>
+    </div>
+
+    <div class="month-header">
+        <p>September 2023</p>
+    </div>
+    <div class="rewards-in-month">
+        <p class="reward">10% off total bill</p>
+        <p><span class="redeem-date">120 leaves on 02/10/2023</span></p>
+    </div>
+
+    <div class="month-header">
+        <p>April 2023</p>
+    </div>
+    <div class="rewards-in-month">
+        <p class="reward">Birthday Treat: Free drink or dessert of your choice</p>
+        <p><span class="redeem-date">Redeemed on 02/10/2023</span></p>
+    </div>
+    <div class="rewards-in-month2">
+        <p class="reward">get 50% off your second Main Item</p>
+        <p><span class="redeem-date">Expired on 02/10/2023</span></p>
+    </div>
+
+    <div class="month-header">
+        <p>February 2023</p>
+    </div>
+    <div class="rewards-in-month">
+        <p class="reward">1-for-1 CNY Promotional menu item</p>
+        <p><span class="redeem-date">redeemed on 02/10/2023</span></p>
+    </div>
+</div>
+{% endblock %}

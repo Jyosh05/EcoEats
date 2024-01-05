@@ -64,11 +64,6 @@ def dinner():
 def dessert():
     return render_template('dessert.html')
 
-@app.route("/membership")
-def membership():
-    return render_template('membership.html')
-
-
 @app.route("/profile")
 def profile():
     return render_template('profile.html')
@@ -76,6 +71,25 @@ def profile():
 @app.route('/reviews')
 def reviews():
     return render_template('reviews.html')
+
+#checking if user is logged in to access their membership
+# @app.route("/membership")
+# def membership(request):
+#     #check if logged in, redirect to membership
+#     if request.user.is_authenticated:
+#         return redirect(url_for('membershipHome'))
+#     else:
+#        return redirect(url_for('create_user'))
+#     #if not, redirect to create users/log in page
+#
+# #brings to membership home page
+# @app.route('/membershipHome')
+# def membershipHome():
+#     return render_template('membershipHome.html')
+
+@app.route('/membership')
+def membership():
+    return render_template('membershipHome.html')
 
 
 @app.route('/createUser', methods = ['GET', 'POST'])
