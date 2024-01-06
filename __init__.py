@@ -91,6 +91,22 @@ def reviews():
 def membership():
     return render_template('membershipHome.html')
 
+@app.route('/membershipShop')
+def membershipShop():
+    return render_template('membershipShop.html')
+
+@app.route('/membershipTerms')
+def membershipTerms():
+    return render_template('membershipTerms.html')
+
+@app.route('/membershipRewardHist')
+def membershipRewardHist():
+    return render_template('membershipRewardHist.html')
+
+@app.route('/membershipTiers')
+def membershipTiers():
+    return render_template('membershipTiers.html')
+
 
 @app.route('/createUser', methods = ['GET', 'POST'])
 def create_user():
