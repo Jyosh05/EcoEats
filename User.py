@@ -1,16 +1,18 @@
 class User:
-    count_id = 0
-    def __init__(self, username, password, first_name, last_name, gender, membership, remarks):
-        User.count_id += 1
-        self.__user_id = User.count_id
+    id = 0 # this is the id_count
+    def __init__(self,username, password):
+        User.id += 1
+        # self.__user_id = User.count_id
         self.__username = username
         self.__password = password
-        self.__first_name = first_name
-        self.__last_name = last_name
-        self.__gender = gender
-        self.__membership = membership
-        self.__remarks = remarks
+        self.__first_name = None
+        self.__last_name = None
+        self.__gender = None
+        self.__membership = None
+        self.__remarks = None
 
+    def get_userCount(self):
+        return User.id
     def get_user_id(self):
         return self.__user_id
 

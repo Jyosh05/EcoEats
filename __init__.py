@@ -32,22 +32,30 @@ app = Flask(__name__)
 # # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
 # # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
 # # Then throw the ecoeatsusers into that folder.
-
-# @app.route('/createUser', methods = ['GET', 'POST'])
+#
+#
+# @app.route('/createUser', methods=['GET', 'POST'])
 # def create_user():
 #     create_user_form = CreateUserForm(request.form)
 #     if request.method == 'POST' and create_user_form.validate():
-#         username = create_user_form.username.data
-#         password = create_user_form.password.data
+#         try:
+#             mycursor.execute("SELECT COUNT(*) FROM users")
+#             id = mycursor.fetchone()[0]
+#             print(id)
+#             insert_query = "INSERT INTO users (id, username, password) " \
+#                            "VALUES (%s, %s, %s)"
+#             user = User.User(create_user_form.username.data, create_user_form.password.data)
+#             user_data = (id + 1,user.get_username(),user.get_password())
+#             mycursor.execute(insert_query, user_data)
+#             mydb.commit()
 #
-#         insert_query = "INSERT INTO users ('username', 'password') VALUES (%s, %s)"
-#         user_data = (username, password)
-#         mycursor.execute(insert_query, user_data)
-#
-#         mydb.commit()
-#
-#         return redirect(url_for('retrieveUser'))
-#     return render_template('createUser.html', form = create_user_form)
+#             print(f"{user.get_userCount()}{user.get_username()} {user.get_password()} was stored in the database successfully.")
+#             return redirect(url_for('home'))
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred. Check logs for details."
+#     return render_template('createUser.html', form=create_user_form)
 #
 # @app.route('/retrieveUser')
 # def retrieve_user():
@@ -61,7 +69,7 @@ app = Flask(__name__)
 
 
 
-
+# previous /createUser, only left here for reference. do not use.
 # @app.route('/createUser', methods = ['GET', 'POST'])
 # def create_user():
 #     create_user_form = CreateUserForm(request.form)
