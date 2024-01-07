@@ -18,6 +18,10 @@ class CreateUserForm(Form):
     username = StringField("Username / Email Address", [validators.Length(min=4,max=16)])
     password = PasswordField("Password" , [validators.Length(min=8, max=16), validators.DataRequired()])
 
+class UpdateUserForm(Form):
+    username = StringField("Username / Email Address", [validators.Length(min=4, max=16)])
+    password = PasswordField("Password", [validators.Length(min=8, max=16), validators.DataRequired()])
+
 
 class CreateReviewsForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
