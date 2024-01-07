@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}membershipTermsOfUse{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/membershipTermsOfUse.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<h2>Terms and Use</h2>
+<div class="container-contents">
+    <div class="terms-container-left">
+        <p class="terms-header">Eligibility</p>
+        <p>
+            1.1 this application may only be used by individuals aged 18 years or older. if the user is 13 years or older but under the age of 18 years,
+            use should review these terms with user’s parent or guardian to make sure user and user’s parent or guardian understand and agree to these terms.
+            should the user’s parent and guardian not agree to these terms, use must immediately uninstall the application and discontinue its use.
+            <br>
+            1.2 in order to use certain functions of this application, user will need to register for an account. user agrees to (a) create only one account:
+            (b) provide accurate, truthful, current and complete information when creating such account; (c) maintain and promptly update such account information;
+            (d) follow the guidance provided by EcoEats from time to time (including, but not limited to, through the EcoEats website and/or the application)
+            in designating a password when creating the account (user may change the password at any time, but any change shall be effective only if accepted by EcoEats);
+            (e) maintain the security of such account by not sharing the password with others and restricting access to the account and user’s device on which the application is installed;
+            (f) promptly notify EcoEats if user discovers or otherwise suspects any security breaches relating to the application; and
+            (G) take responsibility for all activities that occur under the account and accept all risks of unauthorized access.
+        </p>
+    </div>
+    <div class="terms-container-right">
+        <p class="terms-header">User License</p>
+        <p>
+            2.1 Any and all rights in the application are and shall remain the exclusive property to EcoEats.
+            nothing in these terms intends to transfer any such rights to, or to vest any such rights in, the user.
+            users are only entitled to the limited use of thr application granted to users under these terms.
+            ecoEats reserves all rights not expressly granted under these terms.
+            <br>
+            2.2 the user is responsible for any costs associated with downloading, installing, accessing and/or using the application which may depend and vary on the terms and conditions
+            of the user’s own mobile device service provider.
+            <br>
+            2.3 ecoEats may, at any time without giving notice to User, make changes, corrections and/or improvements to the application,
+            stop providing the application of features of the application to any users, or create usage limits for the applications.
+            <br>
+            2.4 upon any termination, user agrees to uninstall the application immediately and destroy all copies of the application,
+            any accompanying documentation, and all other associated materials.
+            EcoEats reserves the right to terminate these terms at any time if user is in breach of any of the provisions of these terms.
+        </p>
+    </div>
+</div>
+{% endblock %}
