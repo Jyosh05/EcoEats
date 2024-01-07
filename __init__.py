@@ -143,6 +143,10 @@ def profile():
 def reviews():
     return render_template('reviews.html')
 
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
+
 #checking if user is logged in to access their membership
 # @app.route("/membership")
 # def membership(request):
