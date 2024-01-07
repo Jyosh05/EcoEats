@@ -1,7 +1,9 @@
 # first file to run when starting the web application
 from flask import Flask, render_template, request, redirect, url_for
-from Forms import CreateUserForm, CreateReviewsForm
-import shelve, User
+
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm
+import shelve, User, Membership
+
 # 1:56pm
 # pip install mysql-connector-python
 # import mysql.connector
@@ -181,6 +183,7 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
+
 @app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
     create_reviews_form = CreateReviewsForm(request.form)
@@ -190,6 +193,94 @@ def create_reviews():
             reviews_dict = db['Review']
         except:
             print("Error in retrieving Users from user.db.")
+
+@app.route('/createMembership', methods=['GET', 'POST'])
+def create_membership():
+    create_membership_form = CreateMembershipForm(request.form)
+    if request.method == 'POST' and create_membership_form.validate():
+        db = shelve.open('membership.db', 'c')
+        try:
+            memberships_dict = db['Membership']
+        except:
+            print("Error in retrieving Users from user.db.")
+
+        # + Membership.Membership(get_currentBalance), Membership.get_totalPoints(), Membership.get_Buyrewards(),) #find a way to retrieve the store_reward variable, and the other non-form data
+
+        membershipFormData = Membership.Membership(create_membership_form.email.data, create_membership_form.date_joined.data, create_membership_form.address.data)
+
+
+        memberships_dict[membershipFormData.get_membership_id()] = membershipFormData
+        db['Membership'] = memberships_dict
+
+        db.close()
+
+        return redirect(url_for('membership'))
+    return render_template('createMembership.html', form=create_membership_form)
+
+#retrieving membership
+@app.route('/retrieveMembership')
+def retrieve_membership():
+    memberships_dict = {}
+    db = shelve.open('membership.db', 'r')
+    memberships_dict = db['Membership']
+    db.close()
+
+    membership_list = []
+    for key in memberships_dict:
+        membership = memberships_dict.get(key)
+        membership_list.append(membership)
+
+    return render_template('membership.html', count=len(membership_list), customers_list=membership_list)
+
+#updating membership
+@app.route('/updateMembership/<int:id>/', methods=['GET', 'POST'])
+def update_membership(id):
+    update_membership_form = CreateMembershipForm(request.form)
+    if request.method == 'POST' and update_membership_form.validate():
+        memberships_dict = {}
+        db = shelve.open('membership.db', 'w')
+        membership_dict = db['Membership']
+
+        membershipUser = membership_dict.get(id)
+        membershipUser.set_first_name(update_membership_form.first_name.data)
+        membershipUser.set_last_name(update_membership_form.last_name.data)
+        membershipUser.set_gender(update_membership_form.gender.data)
+        membershipUser.set_email(update_membership_form.email.data)
+        membershipUser.set_date_joined(update_membership_form.date_joined.data)
+        membershipUser.set_address(update_membership_form.address.data)
+
+        db['Membership'] = membership_dict
+        db.close()
+
+        return redirect(url_for('retrieve_membership'))
+    else:
+        memberships_dict = {}
+        db = shelve.open('membership.db', 'r')
+        memberships_dict = db['Membership']
+        db.close()
+
+        MembershipUser = memberships_dict.get(id)
+        update_membership_form.first_name.data = MembershipUser.get_first_name()
+        update_membership_form.last_name.data = MembershipUser.get_last_name()
+        update_membership_form.gender.data = MembershipUser.get_gender()
+        update_membership_form.email.data = MembershipUser.get_email()
+        update_membership_form.date_joined.data = MembershipUser.get_date_joined()
+        update_membership_form.address.data = MembershipUser.get_address()
+
+
+        return render_template('updateMembership.html', form=update_membership_form)
+
+@app.route('/deleteMembership/<int:id>', methods=['POST'])
+def delete_membership(id):
+    memberships_dict = {}
+    db = shelve.open('membership.db', 'w')
+    memberships_dict = db['Membership']
+    memberships_dict.pop(id)
+
+    db['Membership'] = memberships_dict
+    db.close()
+
+    return redirect(url_for('retrieve_membership'))
 
 
         reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
