@@ -283,15 +283,15 @@ def delete_membership(id):
     return redirect(url_for('retrieve_membership'))
 
 
-        reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
+    reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
 
 
-        reviews_dict[reviewsFormData.get_reviews_id()] = reviewsFormData
-        db['Review'] = reviews_dict
+    reviews_dict[reviewsFormData.get_reviews_id()] = reviewsFormData
+    db['Review'] = reviews_dict
 
-        db.close()
+    db.close()
 
-        return redirect(url_for('reviews'))
+    return redirect(url_for('reviews'))
     return render_template('createReviews.html', form=create_reviews_form)
 
 @app.route('/retrieveReviews')
