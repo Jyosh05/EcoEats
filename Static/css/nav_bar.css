@@ -97,12 +97,30 @@ nav{
 .cart {
       margin: 10px;
       margin-top: 5px;
+      display: flex;
 }
 
 .cart i {
      padding: 10px;
      font-size: 25px;
      color: orange;
+     margin-left: 20px;
+     position: relative;
+
+}
+
+.cart span{
+    display: flex;
+    width: 15px;
+    height: 20px;
+    background: #fff;
+    justify-content: center;
+    align-items: center;
+    color: #000;
+    position: absolute;
+    top: 50%;
+    right: 70px;
+    font-weight: bold;
 }
 
 
