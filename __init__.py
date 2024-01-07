@@ -1,6 +1,6 @@
 # first file to run when starting the web application
 from flask import Flask, render_template, request, redirect, url_for
-from Forms import CreateUserForm
+from Forms import CreateUserForm, CreateReviewsForm
 import shelve, User
 # 1:56pm
 # pip install mysql-connector-python
@@ -181,7 +181,45 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
+@app.route('/createReviews', methods=['GET', 'POST'])
+def create_reviews():
+    create_reviews_form = CreateReviewsForm(request.form)
+    if request.method == 'POST' and create_reviews_form.validate():
+        db = shelve.open('reviews.db', 'c')
+        try:
+            reviews_dict = db['Review']
+        except:
+            print("Error in retrieving Users from user.db.")
 
+
+        reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
+
+
+        reviews_dict[reviewsFormData.get_reviews_id()] = reviewsFormData
+        db['Review'] = reviews_dict
+
+        db.close()
+
+        return redirect(url_for('reviews'))
+    return render_template('createReviews.html', form=create_reviews_form)
+
+@app.route('/retrieveReviews')
+def retrieve_reviews():
+    reviews_dict = {}
+    db = shelve.open('reviews.db', 'r')
+    reviews_dict = db['Review']
+    db.close()
+
+    reviews_list = []
+    for key in reviews_dict:
+        reviews_dict = reviews_dict.get(key)
+        reviews_list.append(membership)
+
+    return render_template('reviews.html', count=len(reviews_list), customers_list=reviews_list)
+
+
+
+    return redirect(url_for('retrieve_reviews'))
 
 
 

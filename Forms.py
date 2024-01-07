@@ -1,5 +1,5 @@
 import wtforms.fields
-from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators
+from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators, EmailField
 class CreateUserForm(Form):
     # first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     # last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -14,3 +14,8 @@ class CreateUserForm(Form):
     # customer username password fields
     username = StringField("Username / Email Address", [validators.Length(min=4,max=16)])
     password = PasswordField("Password" , [validators.Length(min=8, max=16), validators.DataRequired()])
+
+class CreateReviewsForm(Form):
+    name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    email = EmailField('Email', [validators.DataRequired()])
+    feedback = TextAreaField('Any Feedback?',[validators.Length(min=0, max=1000)] ,[validators.Optional()])
