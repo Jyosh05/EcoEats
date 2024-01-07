@@ -4,7 +4,7 @@ from Forms import CreateUserForm
 import shelve, User
 # 1:56pm
 # pip install mysql-connector-python
-import mysql.connector
+# import mysql.connector
 
 app = Flask(__name__)
 
