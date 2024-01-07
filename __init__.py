@@ -1,7 +1,7 @@
 # first file to run when starting the web application
 from flask import Flask, render_template, request, redirect, url_for
 
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm
 import shelve, User, Membership
 
 # 1:56pm
@@ -76,6 +76,62 @@ app = Flask(__name__)
 #     mycursor.execute(select_query)
 #     users = mycursor.fetchall()
 #     return render_template('retrieveUser.html', users=users)
+#
+# @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+# def update_user(id):
+#     update_user_form = CreateUserForm(request.form)
+#
+#     if request.method == 'POST' and update_user_form.validate():
+#         try:
+#             # Retrieve user data from MySQL database
+#             select_query = "SELECT username, password FROM users WHERE id = %s"
+#             mycursor.execute(select_query, (id,))
+#             user_details = mycursor.fetchone()
+#
+#             if user_details:
+#                 username = update_user_form.username.data
+#                 password = update_user_form.password.data
+#
+#
+#                 # Update query for first_name, last_name, gender, membership, remarks
+#                 update_query = "UPDATE users SET username = %s, password = %s WHERE id = %s"
+#                 data = (username, password, id)
+#                 mycursor.execute(update_query, data)
+#                 mydb.commit()
+#
+#                 print(f"User ID: {id} updated successfully.")
+#                 return redirect(url_for('retrieve_user'))
+#             else:
+#                 return "User not found."
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred while updating user."
+#
+#     else:
+#         try:
+#             # Retrieve user data from MySQL database
+#             select_query = "SELECT username, password FROM users WHERE id = %s"
+#             mycursor.execute(select_query, (id,))
+#             user_details = mycursor.fetchone()
+#
+#             if user_details:
+#                 update_user_form.username.data = user_details[0]
+#                 update_user_form.password.data = user_details[1]
+#
+#
+#                 return render_template('updateUser.html', form=update_user_form)
+#             else:
+#                 return "User not found."
+#         except Exception as e:
+#             print("Error:", e)
+#             return "Error occurred while fetching user details."
+
+
+
+
+
+
 
 
 
