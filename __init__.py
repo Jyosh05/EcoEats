@@ -20,7 +20,18 @@ app = Flask(__name__)
 # )
 #
 # mycursor = mydb.cursor()
+#
+# tableCheck = ['users']
+# for a in tableCheck:
+#     mycursor.execute(f"SHOW TABLES LIKE 'users'")
+#     tableExist = mycursor.fetchone()
+#
+#     if not tableExist:
+#         mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+#         print(f"Table 'users' Created")
+#
 # mycursor.execute('SELECT * FROM users')
+# print(f"Using table 'users' ")
 #
 # users = mycursor.fetchall()
 # # index 0 is used for count / unique id
