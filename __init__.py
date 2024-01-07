@@ -39,6 +39,9 @@ def dessert():
 def membership():
     return render_template('membership.html')
 
+@app.route("/reviews")
+def reviews():
+    return render_template('reviews.html')
 
 @app.route("/profile")
 def profile():
@@ -47,6 +50,8 @@ def profile():
 @app.route('/reviews')
 def reviews():
     return render_template('reviews.html')
+
+
 
 
 @app.route('/createUser', methods = ['GET', 'POST'])

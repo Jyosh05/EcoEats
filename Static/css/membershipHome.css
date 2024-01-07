@@ -1,0 +1,18 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Khula', sans-serif;
+}
+
+container-h1-image{
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("----");
+    background-size: cover;
+    background-position: center;
+    width: 104vw;
+    height: 30vh;
+    margin-left: -20px;
+    }
