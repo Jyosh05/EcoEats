@@ -10,6 +10,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
+<!-- javascript for cart -->
+<script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
+
 <div class="welcome-bar">
         <img src="static/img/Logo.png">
         <span>Welcome to EcoEats</span>
@@ -54,7 +57,8 @@
     </div>
 
     <div class="cart">
-      <i class="fa-solid fa-basket-shopping"></i>
+      <a class="nav-link" href="/cart"><i class="fa-solid fa-basket-shopping"></i></a>
+      <span id="quantity" class="quantity">0</span>
     </div>
 
     <a href="/profile">

@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 <script src="{{ url_for('static', filename='javascript/recommended.js') }}" defer></script>
+<script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
 
 <div class="container-h1">
 <h1>Breakfast</h1>
@@ -74,8 +75,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()" id="addToCartButton">Add To Cart</button>
         </div>
 
     </div>
@@ -90,8 +91,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -106,8 +107,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -122,8 +123,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -138,8 +139,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -154,8 +155,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -170,8 +171,8 @@
            <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -186,8 +187,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()">Add To Cart</button>
         </div>
 
     </div>
@@ -202,8 +203,8 @@
         <i class="fa-regular fa-star"></i>
 
         <div class="buttons">
-            <button class="reduce">-</button> <p class="number">1</p> <button class="increase">+</button>
-            <button class="cart">Add To Cart</button>
+            <button class="reduce" onclick="decrementQuantity()">-</button> <p class="quantity-display">1</p> <button class="increase" onclick="incrementQuantity()">+</button>
+            <button class="cart" onClick="addToCart()" >Add To Cart</button>
         </div>
 
     </div>
