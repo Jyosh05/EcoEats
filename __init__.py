@@ -8,7 +8,7 @@ import shelve, User, Membership
 # pip install mysql-connector-python
 # import mysql.connector
 #
-# app = Flask(__name__)
+app = Flask(__name__)
 #
 # # Dont run code below yet.
 #
