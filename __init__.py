@@ -6,217 +6,217 @@ import shelve, User, Membership
 
 # 1:56pm
 # pip install mysql-connector-python
-import mysql.connector
-
-app = Flask(__name__)
-
-# Dont run code below yet.
-
-
-# mySql Credentials
-mydb= mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='ecoeats',
-    port='3306',
-    database='ecoeatsusers'
-)
-
-mycursor = mydb.cursor()
-
-tableCheck = ['users']
-for a in tableCheck:
-    mycursor.execute(f"SHOW TABLES LIKE 'users'")
-    tableExist = mycursor.fetchone()
-
-
-    if not tableExist:
-
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
-        print(f"Table 'users' Created")
-
-mycursor.execute('SELECT * FROM users')
-print(f"Using table 'users' ")
-
-users = mycursor.fetchall()
-# index 0 is used for count / unique id
-for a in users:
-    print(a)
-    print('Username: ', a[1])
-    print('Password: ', a[2])
-
-# ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
-# WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
-# Then throw the ecoeatsusers into that folder.
-
-
-@app.route('/createUser', methods=['GET', 'POST'])
-def create_user():
-    create_user_form = CreateUserForm(request.form)
-    if request.method == 'POST' and create_user_form.validate():
-        try:
-            # mycursor.execute("SELECT COUNT(*) FROM users")
-            # id = mycursor.fetchone()[0]
-            # id = User.User.get_userCount()
-            # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
-            # mycursor.execute(autoIncrement)
-            print(id)
-            insert_query = "INSERT INTO users ( username, password) " \
-                           "VALUES (%s, %s)"
-            user = User.User(create_user_form.username.data, create_user_form.password.data)
-            user_data = (user.get_username(),user.get_password())
-            mycursor.execute(insert_query, user_data)
-            mydb.commit()
-
-            lastest_id = mycursor.lastrowid
-
-            print(f"{user.get_userCount()} {lastest_id} {user.get_username()} {user.get_password()} was stored in the database successfully.")
-            return redirect(url_for('retrieve_user'))
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred. Check logs for details."
-    return render_template('createUser.html', form=create_user_form)
-
-@app.route('/retrieveUser')
-def retrieve_user():
-    select_query = "SELECT * FROM users"
-    mycursor.execute(select_query)
-    users = mycursor.fetchall()
-    return render_template('retrieveUser.html', users=users)
-
-@app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
-def update_user(id):
-    update_user_form = CreateUserForm(request.form)
-
-    if request.method == 'POST' and update_user_form.validate():
-        try:
-            #reetrieve user data from db
-            select_query = "SELECT username, password FROM users WHERE id = %s"
-            mycursor.execute(select_query, (id,))
-            user_details = mycursor.fetchone()
-
-            if user_details:
-                username = update_user_form.username.data
-                password = update_user_form.password.data
-
-
-                update_query = "UPDATE users SET username = %s, password = %s WHERE id = %s"
-                data = (username, password, id)
-                mycursor.execute(update_query, data)
-                mydb.commit()
-
-                print(f"User ID: {id} updated successfully.")
-                return redirect(url_for('retrieve_user'))
-            else:
-                return "User not found."
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred while updating user."
-
-    else:
-        try:
-            #retrieve user data from mysql db
-            select_query = "SELECT username, password FROM users WHERE id = %s"
-            mycursor.execute(select_query, (id,))
-            user_details = mycursor.fetchone()
-
-            if user_details:
-                update_user_form.username.data = user_details[0]
-                update_user_form.password.data = user_details[1]
-
-
-                return render_template('updateUser.html', form=update_user_form)
-            else:
-                return "User not found."
-        except Exception as e:
-            print("Error:", e)
-            return "Error occurred while fetching user details."
-
-@app.route('/deleteUser/<int:id>/', methods=['GET', 'POST'])
-def delete_user(id):
-    try:
-        # Check if the user exists before attempting deletion
-        select_query = "SELECT * FROM users WHERE id = %s"
-        mycursor.execute(select_query, (id,))
-        user = mycursor.fetchone()
-
-        if user:
-            delete_query = "DELETE FROM users WHERE id = %s"
-            mycursor.execute(delete_query, (id,))
-            mydb.commit()
-
-            print(f"User ID: {id} deleted successfully.")
-            return redirect(url_for('retrieve_user'))
-        else:
-            return "User not found."
-    except Exception as e:
-        print("Error:", e)
-        mydb.rollback()
-        return "Error occurred while deleting user."
-
-
-
-
-
-@app.route('/deleteUser/', methods=['POST'])
-def delete_users():
-    try:
-        ids_to_delete = request.form.getlist('selected_users[]')
-
-        if ids_to_delete:
-            placeholders = ', '.join(['%s'] * len(ids_to_delete))
-
-            select_query = f"SELECT * FROM users WHERE id IN ({placeholders})"
-            mycursor.execute(select_query, tuple(ids_to_delete))
-            users = mycursor.fetchall()
-
-            if users:
-                #delete all the selected users from db
-                delete_query = f"DELETE FROM users WHERE id IN ({placeholders})"
-                mycursor.execute(delete_query, tuple(ids_to_delete))
-                mydb.commit()
-
-                print(f"Users with IDs: {', '.join(ids_to_delete)} deleted successfully.")
-                return redirect(url_for('retrieve_user'))
-            else:
-                return "Users not found."
-        else:
-            return "No users selected for deletion."
-    except Exception as e:
-        print("Error:", e)
-        mydb.rollback()
-        return "Error occurred while deleting users."
-
-
-
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    loginForm = CreateUserForm(request.form)
-
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        #query to fetch user by username and password
-        select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
-        mycursor.execute(select_query, (username, password))
-        user = mycursor.fetchone()
-        id = user[0] #retrieve id of user
-
-
-        if user:
-            #logged in, redirect  back to website
-            print(f"User ID: {id} , Username: {username} Password:wont display but possible logged in successfully.  ")
-            return redirect(url_for('profile'))
-
-        else:
-            #invalid login error msg
-            return "Invalid credentials. Please try again or sign up."
-
-    return render_template('login.html', form=loginForm)
+# import mysql.connector
+#
+# app = Flask(__name__)
+#
+# # Dont run code below yet.
+#
+#
+# # mySql Credentials
+# mydb= mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='ecoeats',
+#     port='3306',
+#     database='ecoeatsusers'
+# )
+#
+# mycursor = mydb.cursor()
+#
+# tableCheck = ['users']
+# for a in tableCheck:
+#     mycursor.execute(f"SHOW TABLES LIKE 'users'")
+#     tableExist = mycursor.fetchone()
+#
+#
+#     if not tableExist:
+#
+#         mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+#         print(f"Table 'users' Created")
+#
+# mycursor.execute('SELECT * FROM users')
+# print(f"Using table 'users' ")
+#
+# users = mycursor.fetchall()
+# # index 0 is used for count / unique id
+# for a in users:
+#     print(a)
+#     print('Username: ', a[1])
+#     print('Password: ', a[2])
+#
+# # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
+# # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
+# # Then throw the ecoeatsusers into that folder.
+#
+#
+# @app.route('/createUser', methods=['GET', 'POST'])
+# def create_user():
+#     create_user_form = CreateUserForm(request.form)
+#     if request.method == 'POST' and create_user_form.validate():
+#         try:
+#             # mycursor.execute("SELECT COUNT(*) FROM users")
+#             # id = mycursor.fetchone()[0]
+#             # id = User.User.get_userCount()
+#             # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
+#             # mycursor.execute(autoIncrement)
+#             print(id)
+#             insert_query = "INSERT INTO users ( username, password) " \
+#                            "VALUES (%s, %s)"
+#             user = User.User(create_user_form.username.data, create_user_form.password.data)
+#             user_data = (user.get_username(),user.get_password())
+#             mycursor.execute(insert_query, user_data)
+#             mydb.commit()
+#
+#             lastest_id = mycursor.lastrowid
+#
+#             print(f"{user.get_userCount()} {lastest_id} {user.get_username()} {user.get_password()} was stored in the database successfully.")
+#             return redirect(url_for('retrieve_user'))
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred. Check logs for details."
+#     return render_template('createUser.html', form=create_user_form)
+#
+# @app.route('/retrieveUser')
+# def retrieve_user():
+#     select_query = "SELECT * FROM users"
+#     mycursor.execute(select_query)
+#     users = mycursor.fetchall()
+#     return render_template('retrieveUser.html', users=users)
+#
+# @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
+# def update_user(id):
+#     update_user_form = CreateUserForm(request.form)
+#
+#     if request.method == 'POST' and update_user_form.validate():
+#         try:
+#             #reetrieve user data from db
+#             select_query = "SELECT username, password FROM users WHERE id = %s"
+#             mycursor.execute(select_query, (id,))
+#             user_details = mycursor.fetchone()
+#
+#             if user_details:
+#                 username = update_user_form.username.data
+#                 password = update_user_form.password.data
+#
+#
+#                 update_query = "UPDATE users SET username = %s, password = %s WHERE id = %s"
+#                 data = (username, password, id)
+#                 mycursor.execute(update_query, data)
+#                 mydb.commit()
+#
+#                 print(f"User ID: {id} updated successfully.")
+#                 return redirect(url_for('retrieve_user'))
+#             else:
+#                 return "User not found."
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred while updating user."
+#
+#     else:
+#         try:
+#             #retrieve user data from mysql db
+#             select_query = "SELECT username, password FROM users WHERE id = %s"
+#             mycursor.execute(select_query, (id,))
+#             user_details = mycursor.fetchone()
+#
+#             if user_details:
+#                 update_user_form.username.data = user_details[0]
+#                 update_user_form.password.data = user_details[1]
+#
+#
+#                 return render_template('updateUser.html', form=update_user_form)
+#             else:
+#                 return "User not found."
+#         except Exception as e:
+#             print("Error:", e)
+#             return "Error occurred while fetching user details."
+#
+# @app.route('/deleteUser/<int:id>/', methods=['GET', 'POST'])
+# def delete_user(id):
+#     try:
+#         # Check if the user exists before attempting deletion
+#         select_query = "SELECT * FROM users WHERE id = %s"
+#         mycursor.execute(select_query, (id,))
+#         user = mycursor.fetchone()
+#
+#         if user:
+#             delete_query = "DELETE FROM users WHERE id = %s"
+#             mycursor.execute(delete_query, (id,))
+#             mydb.commit()
+#
+#             print(f"User ID: {id} deleted successfully.")
+#             return redirect(url_for('retrieve_user'))
+#         else:
+#             return "User not found."
+#     except Exception as e:
+#         print("Error:", e)
+#         mydb.rollback()
+#         return "Error occurred while deleting user."
+#
+#
+#
+#
+#
+# @app.route('/deleteUser/', methods=['POST'])
+# def delete_users():
+#     try:
+#         ids_to_delete = request.form.getlist('selected_users[]')
+#
+#         if ids_to_delete:
+#             placeholders = ', '.join(['%s'] * len(ids_to_delete))
+#
+#             select_query = f"SELECT * FROM users WHERE id IN ({placeholders})"
+#             mycursor.execute(select_query, tuple(ids_to_delete))
+#             users = mycursor.fetchall()
+#
+#             if users:
+#                 #delete all the selected users from db
+#                 delete_query = f"DELETE FROM users WHERE id IN ({placeholders})"
+#                 mycursor.execute(delete_query, tuple(ids_to_delete))
+#                 mydb.commit()
+#
+#                 print(f"Users with IDs: {', '.join(ids_to_delete)} deleted successfully.")
+#                 return redirect(url_for('retrieve_user'))
+#             else:
+#                 return "Users not found."
+#         else:
+#             return "No users selected for deletion."
+#     except Exception as e:
+#         print("Error:", e)
+#         mydb.rollback()
+#         return "Error occurred while deleting users."
+#
+#
+#
+#
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     loginForm = CreateUserForm(request.form)
+#
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         password = request.form['password']
+#
+#         #query to fetch user by username and password
+#         select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
+#         mycursor.execute(select_query, (username, password))
+#         user = mycursor.fetchone()
+#         id = user[0] #retrieve id of user
+#
+#
+#         if user:
+#             #logged in, redirect  back to website
+#             print(f"User ID: {id} , Username: {username} Password:wont display but possible logged in successfully.  ")
+#             return redirect(url_for('profile'))
+#
+#         else:
+#             #invalid login error msg
+#             return "Invalid credentials. Please try again or sign up."
+#
+#     return render_template('login.html', form=loginForm)
 
 
 # previous /createUser, only left here for reference. do not use.
