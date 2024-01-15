@@ -2,80 +2,80 @@
 from flask import Flask, render_template, request, redirect, url_for
 
 from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm
-import shelve, User, Membership
+import shelve, User, Membership, ReviewUser
 
 # 1:56pm
 # pip install mysql-connector-python
-# import mysql.connector
+import mysql.connector
 
 app = Flask(__name__)
 
 # Dont run code below yet.
 
-# # mySql Credentials
-# mydb= mysql.connector.connect(
-#     host='localhost',
-#     user='root',
-#     password='ecoeats',
-#     port='3306',
-#     database='ecoeatsusers'
-# )
-#
-# mycursor = mydb.cursor()
-#
-# tableCheck = ['users']
-# for a in tableCheck:
-#     mycursor.execute(f"SHOW TABLES LIKE 'users'")
-#     tableExist = mycursor.fetchone()
-#
-#     if not tableExist:
-#         mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
-#         print(f"Table 'users' Created")
-#
-# mycursor.execute('SELECT * FROM users')
-# print(f"Using table 'users' ")
-#
-# users = mycursor.fetchall()
-# # index 0 is used for count / unique id
-# for a in users:
-#     print(a)
-#     print('Username: ', a[1])
-#     print('Password: ', a[2])
-#
-# # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
-# # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
-# # Then throw the ecoeatsusers into that folder.
-#
-#
-# @app.route('/createUser', methods=['GET', 'POST'])
-# def create_user():
-#     create_user_form = CreateUserForm(request.form)
-#     if request.method == 'POST' and create_user_form.validate():
-#         try:
-#             mycursor.execute("SELECT COUNT(*) FROM users")
-#             id = mycursor.fetchone()[0]
-#             print(id)
-#             insert_query = "INSERT INTO users (id, username, password) " \
-#                            "VALUES (%s, %s, %s)"
-#             user = User.User(create_user_form.username.data, create_user_form.password.data)
-#             user_data = (id + 1,user.get_username(),user.get_password())
-#             mycursor.execute(insert_query, user_data)
-#             mydb.commit()
-#
-#             print(f"{user.get_userCount()}{user.get_username()} {user.get_password()} was stored in the database successfully.")
-#             return redirect(url_for('home'))
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred. Check logs for details."
-#     return render_template('createUser.html', form=create_user_form)
-#
-# @app.route('/retrieveUser')
-# def retrieve_user():
-#     select_query = "SELECT * FROM users"
-#     mycursor.execute(select_query)
-#     users = mycursor.fetchall()
-#     return render_template('retrieveUser.html', users=users)
+# mySql Credentials
+mydb= mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='ecoeats',
+    port='3306',
+    database='ecoeatsusers'
+)
+
+mycursor = mydb.cursor()
+
+tableCheck = ['users']
+for a in tableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'users'")
+    tableExist = mycursor.fetchone()
+
+    if not tableExist:
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        print(f"Table 'users' Created")
+
+mycursor.execute('SELECT * FROM users')
+print(f"Using table 'users' ")
+
+users = mycursor.fetchall()
+# index 0 is used for count / unique id
+for a in users:
+    print(a)
+    print('Username: ', a[1])
+    print('Password: ', a[2])
+
+# ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
+# WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
+# Then throw the ecoeatsusers into that folder.
+
+
+@app.route('/createUser', methods=['GET', 'POST'])
+def create_user():
+    create_user_form = CreateUserForm(request.form)
+    if request.method == 'POST' and create_user_form.validate():
+        try:
+            mycursor.execute("SELECT COUNT(*) FROM users")
+            id = mycursor.fetchone()[0]
+            print(id)
+            insert_query = "INSERT INTO users (id, username, password) " \
+                           "VALUES (%s, %s, %s)"
+            user = User.User(create_user_form.username.data, create_user_form.password.data)
+            user_data = (id + 1,user.get_username(),user.get_password())
+            mycursor.execute(insert_query, user_data)
+            mydb.commit()
+
+            print(f"{user.get_userCount()}{user.get_username()} {user.get_password()} was stored in the database successfully.")
+            return redirect(url_for('home'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
+    return render_template('createUser.html', form=create_user_form)
+
+@app.route('/retrieveUser')
+def retrieve_user():
+    select_query = "SELECT * FROM users"
+    mycursor.execute(select_query)
+    users = mycursor.fetchall()
+    return render_template('retrieveUser.html', users=users)
 
 
 
@@ -160,9 +160,6 @@ def reviews():
 # def membershipHome():
 #     return render_template('membershipHome.html')
 
-
-
-
 @app.route('/membership')
 def membership():
     return render_template('membershipHome.html')
@@ -183,16 +180,83 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
-
 @app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
+    reviews_dict = {}
     create_reviews_form = CreateReviewsForm(request.form)
     if request.method == 'POST' and create_reviews_form.validate():
         db = shelve.open('reviews.db', 'c')
         try:
-            reviews_dict = db['Review']
+            reviews_dict = db['ReviewUser']
         except:
             print("Error in retrieving Users from user.db.")
+
+        reviewsFormData = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data, create_reviews_form.experience.data, create_reviews_form.feedback.data)
+
+        reviews_dict[reviewsFormData.get_user_id()] = reviewsFormData
+        db['ReviewUser'] = reviews_dict
+
+        db.close()
+
+        return redirect(url_for('retrieve_reviews'))
+    return render_template('createReviews.html', form=create_reviews_form)
+
+@app.route('/retrieveReviews')
+def retrieve_reviews():
+    reviews_dict = {}
+    db = shelve.open('reviews.db', 'r')
+    reviews_dict = db['ReviewUser']
+    db.close()
+
+    reviews_list = []
+    for key in reviews_dict:
+        review = reviews_dict.get(key)
+        reviews_list.append(review)
+
+    return render_template('retrieveReviews.html', count=len(reviews_list), reviews_list=reviews_list)
+
+@app.route('/updateReviews/<int:id>/', methods=['GET', 'POST'])
+def update_review(id):
+    update_reviews_form = CreateReviewsForm(request.form)
+    if request.method == 'POST' and update_reviews_form.validate():
+        reviews_dict = {}
+        db = shelve.open('reviews.db', 'w')
+        reviews_dict = db['ReviewUser']
+
+        review = reviews_dict.get(id)
+        review.set_name(update_reviews_form.name.data)
+        review.set_email(update_reviews_form.email.data)
+        review.set_experience(update_reviews_form.experience.data)
+        review.set_feedback(update_reviews_form.feedback.data)
+        db['ReviewUser'] = reviews_dict
+        db.close()
+
+        return redirect(url_for('retrieve_reviews'))
+    else:
+        reviews_dict = {}
+        db = shelve.open('reviews.db', 'r')
+        reviews_dict = db['ReviewUser']
+        db.close()
+        review = reviews_dict.get(id)
+        update_reviews_form.name.data = review.get_name()
+        update_reviews_form.email.data = review.get_email()
+        update_reviews_form.experience.data = review.get_experience()
+        update_reviews_form.feedback.data = review.get_feedback()
+
+        return render_template('updateReviews.html', form=update_reviews_form)
+
+@app.route('/deleteReviews/<int:id>', methods=['POST'])
+def delete_reviews(id):
+    reviews_dict = {}
+    db = shelve.open('reviews.db', 'w')
+    reviews_dict = db['ReviewUser']
+
+    reviews_dict.pop(id)
+
+    db['ReviewUser'] = reviews_dict
+    db.close()
+
+    return redirect(url_for('retrieve_reviews'))
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 def create_membership():
@@ -270,6 +334,7 @@ def update_membership(id):
 
         return render_template('updateMembership.html', form=update_membership_form)
 
+
 @app.route('/deleteMembership/<int:id>', methods=['POST'])
 def delete_membership(id):
     memberships_dict = {}
@@ -281,38 +346,6 @@ def delete_membership(id):
     db.close()
 
     return redirect(url_for('retrieve_membership'))
-
-
-    reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
-
-
-    reviews_dict[reviewsFormData.get_reviews_id()] = reviewsFormData
-    db['Review'] = reviews_dict
-
-    db.close()
-
-    return redirect(url_for('reviews'))
-    return render_template('createReviews.html', form=create_reviews_form)
-
-@app.route('/retrieveReviews')
-def retrieve_reviews():
-    reviews_dict = {}
-    db = shelve.open('reviews.db', 'r')
-    reviews_dict = db['Review']
-    db.close()
-
-    reviews_list = []
-    for key in reviews_dict:
-        reviews_dict = reviews_dict.get(key)
-        reviews_list.append(membership)
-
-    return render_template('reviews.html', count=len(reviews_list), customers_list=reviews_list)
-
-
-
-    return redirect(url_for('retrieve_reviews'))
-
-
 
 
 if __name__ == '__main__':

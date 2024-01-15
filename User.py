@@ -62,4 +62,3 @@ class User:
         self.__remarks = remarks
 
 print("Hello")
-print('cb')

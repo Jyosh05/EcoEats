@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Reviews{% endblock %}
+{% block title %}reviews{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css')}}">
+
+<div class="hyperlink">
+    <a href="createReviews">Create Reviews</a>
+    <a href="retrieveReviews">Retrieve Reviews</a>
+    <a href="star">Star</a>
+</div>
 
 <div class="rectangle1"></div>
 <div class="rectangle2"></div>
