@@ -25,3 +25,4 @@ class CreateMembershipForm(Form):
                              default='')
     email = EmailField('Email', [validators.Email(), validators.DataRequired()])
     date_joined = DateField('Date Joined', format='%Y-%m-%d')
+    address = TextAreaField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
