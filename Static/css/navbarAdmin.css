@@ -1,0 +1,169 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Khula', sans-serif;
+  }
+
+  .welcome-bar{
+      background-color: #032700;
+      width: 20%;
+      text-align: center;
+  }
+
+  .welcome-bar img{
+      width: 45px;
+      height: 40px;
+      margin-top: -15px;
+  }
+
+  .welcome-bar span{
+      text-align: center; /* text align center doesnt work */
+      font-family: 'Marck Script', cursive;
+      font-size: 40px;
+      color: #fff;
+  }
+
+  nav{
+      position: relative;
+      background-color: #D3EACC;
+  }
+
+  .navbar-custom .navbar-nav .nav-link{
+      color: #073100;
+      font-weight: bold;
+      padding-right: 50px;
+  }
+
+
+  .navbar-toggler {
+      border: none;
+      background-color: transparent;
+  }
+
+  .navbar-toggler:focus {
+      outline: none;
+  }
+
+  .navbar-toggler-icon {
+      background-color: #F6B328; /* Customize the color of the hamburger icon */
+  }
+
+
+
+  .dropdown-menu{
+      text-align: center;
+      padding: 0;
+      border-radius: 3px;
+
+  }
+
+  #recommended{
+      background-color: #FFD8C2;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  #appetizers{
+      background-color: #FCA878;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  #breakfast{
+      background-color: #FFD8C2;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  #lunch{
+      background-color: #FCA878;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  #dinner{
+      background-color: #FFD8C2;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  #dessert{
+      background-color: #FCA878;
+      font-weight: bold;
+      border-bottom: 1px solid #000;
+  }
+
+  .cart {
+        margin: 10px;
+        margin-top: 5px;
+  }
+
+  .cart i {
+       padding: 10px;
+       font-size: 25px;
+       color: orange;
+  }
+
+
+  .profile{
+  padding-right:10px;
+  padding-top:5px;
+  font-size:150%;
+  }
+
+
+.dashboardBar {
+    display: inline-block;
+}
+
+.header {
+
+}
+
+.welcome-bar{
+    width: 20%;
+    float: left;
+
+}
+
+.dashboardBar {
+    width: 80%;
+    float: left;
+    background-color: #95a993;
+    text-align: center;
+    height: 60px;
+    padding-top: 8px;
+}
+
+.dashboardBar span{
+    color: white;
+    text-align: center;
+    font-size: 32px;
+
+}
+
+.dashboardBar a {
+    float: right;
+    padding-top: 5px;
+    padding-right: 10px;
+
+}
+
+.sidebar {
+    float: left;
+    background-color: white;
+    border: 1px solid black;
+    /* position: absolute ; */
+    height: 100%;
+    width: 20%;
+
+}
+
+.mainBody {
+    float: left;
+    background-color: white;
+    border: 1px solid red;
+    height: 100%;
+    width:80%;
+}
