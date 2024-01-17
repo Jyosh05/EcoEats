@@ -244,6 +244,10 @@ app = Flask(__name__)
 #         return redirect(url_for('home'))
 #     return render_template('createUser.html', form = create_user_form)
 
+@app.route('/dashboard')
+def dashboard():
+    return render_template("dashboard.html")
+
 
 @app.route('/')
 def home():
