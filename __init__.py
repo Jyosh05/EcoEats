@@ -191,7 +191,7 @@ def create_reviews():
         except:
             print("Error in retrieving Users from user.db.")
 
-        reviewsFormData = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data, create_reviews_form.experience.data, create_reviews_form.feedback.data)
+        reviewsFormData = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data, create_reviews_form.stars.data, create_reviews_form.feedback.data)
 
         reviews_dict[reviewsFormData.get_user_id()] = reviewsFormData
         db['ReviewUser'] = reviews_dict
@@ -226,7 +226,7 @@ def update_review(id):
         review = reviews_dict.get(id)
         review.set_name(update_reviews_form.name.data)
         review.set_email(update_reviews_form.email.data)
-        review.set_experience(update_reviews_form.experience.data)
+        review.set_stars(update_reviews_form.stars.data)
         review.set_feedback(update_reviews_form.feedback.data)
         db['ReviewUser'] = reviews_dict
         db.close()
@@ -240,7 +240,7 @@ def update_review(id):
         review = reviews_dict.get(id)
         update_reviews_form.name.data = review.get_name()
         update_reviews_form.email.data = review.get_email()
-        update_reviews_form.experience.data = review.get_experience()
+        update_reviews_form.stars.data = review.get_stars()
         update_reviews_form.feedback.data = review.get_feedback()
 
         return render_template('updateReviews.html', form=update_reviews_form)

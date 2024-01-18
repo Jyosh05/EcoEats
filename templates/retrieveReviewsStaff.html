@@ -3,10 +3,21 @@
 {% block content %}
 <h1 class="display-4">Retrieve Users</h1>
 <div>
+    {% if count == 0 %}
+    <p>There are no users.</p>
+    {% elif count == 1 %}
+    <p>There is 1 user.</p>
+    {% else %}
+    <p>There are {{ count }} users.</p>
+    {% endif %}
+</div>
+<div>
     <table class="table table-striped">
         <thead>
         <tr>
+            <th>User ID</th>
             <th>Name</th>
+            <th>Email</th>
             <th>Experience</th>
             <th>Feedback </th>
         </tr>
@@ -14,7 +25,9 @@
         <tbody>
         {% for review in reviews_list %}
         <tr>
+            <td>{{ review.get_user_id() }}</td>
             <td>{{ review.get_name() }}</td>
+            <td>{{ review.get_email() }}</td>
             <td>{{ review.get_experience() }}</td>
             <td>{{ review.get_feedback() }}</td>
             <td><a href="/updateReviews/{{review.get_user_id()}}" class="btn btn-warning">Update</a></td>
@@ -28,4 +41,6 @@
         </tbody>
     </table>
 </div>
+
+
 {% endblock %}

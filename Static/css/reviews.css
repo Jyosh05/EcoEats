@@ -1,45 +1,164 @@
 .rectangle1{
-width: 700px;
-height: 550px;
-top: 59%;
-left: 25%;
-position: absolute;
-transform: translate(-50%, -50%);
-background: #e4e4e4;
-border: 10px solid #e4e4e4;
-border-radius: 10px;
+    width: 700px;
+    height: 550px;
+    top: 59%;
+    left: 25%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #ebecf0;
+    border: 10px solid #ebecf0;
+    border-radius: 10px;
 }
 
 .rectangle2{
-width: 700px;
-height: 550px;
-top: 59%;
-left: 75%;
-position: absolute;
-transform: translate(-50%, -50%);
-background: #e4e4e4;
-border: 10px solid #e4e4e4;
-border-radius: 10px;
+    width: 700px;
+    height: 550px;
+    top: 59%;
+    left: 75%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #ebecf0;
+    border: 10px solid #ebecf0;
+    border-radius: 10px;
 }
 
-.circle1{
-background-color: #000;
-height: 60px;
-width: 60px;
-position: absolute;
-border-radius: 50%;
-left: 55%;
-top: 25%;
+.icon1{
+    position: absolute;
+    clip-path: circle(40%);
+    width: 75px;
+    height: 75px;
+    top: 2%;
+    left: 1%;
+    z-index: 2;
 }
 
 .star-rating{
     position: absolute;
-    top: 30%;
-    left: 62%;
+    top: 11%;
+    left: 18%;
     transform: translate(-50%, -50%);
     display: flex;
 }
 
 .checked{
-color: orange;
+    color: orange;
+}
+
+.person1{
+    position: absolute;
+    left: 12%;
+    top: 5%;
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+.text1{
+    color: black;
+    position: absolute;
+    top: 15%;
+    left: 12%;
+    display: inline-block;
+    width: 500px;
+    font-size: 15px;
+}
+
+.icon2{
+    position: absolute;
+    clip-path: circle(40%);
+    width: 75px;
+    height: 75px;
+    top: 37%;
+    left: 1%;
+    z-index: 1000;
+}
+
+.person2{
+    position: absolute;
+    left: 12%;
+    top: 40%;
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+.text2{
+    color: black;
+    position: absolute;
+    top: 50%;
+    left: 12%;
+    display: inline-block;
+    width: 500px;
+    font-size: 15px;
+}
+
+.star-rating1{
+    position: absolute;
+    top: 46%;
+    left: 18%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    z-index: 1000;
+}
+
+.icon3{
+    position: absolute;
+    clip-path: circle(35%);
+    width: 80px;
+    height: 75px;
+    top: 70%;
+    left: 1%;
+    z-index: 1000;
+}
+
+.person3{
+    position: absolute;
+    left: 12%;
+    top: 73%;
+    font-weight: bolder;
+    font-size: 18px;
+}
+
+.star-rating2{
+    position: absolute;
+    top: 79%;
+    left: 18%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    z-index: 1000;
+}
+
+.text3{
+    color: black;
+    position: absolute;
+    top: 83%;
+    left: 12%;
+    display: inline-block;
+    width: 500px;
+    font-size: 15px;
+}
+
+.daily-ratings{
+    position: absolute;
+    font-size: 150px;
+    left: 37%;
+    top: 5%;
+}
+
+h5{
+    font-family: sans-serif;
+    font-size: 25px;
+    font-weight: bolder;
+    position: absolute;
+    left: 36%;
+    top: 40%;
+}
+
+.rate {
+    color: white;
+    font-family: sans-serif;
+    font-size: 30px;
+    font-weight: bolder;
+    position: absolute;
+    left: 46.5%;
+    top: 18%;
+    z-index: 1000;
 }

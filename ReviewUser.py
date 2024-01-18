@@ -2,19 +2,20 @@ import User
 
 class UserReview(User.User):
     count_id = 0
-    def __init__(self, name, email, experience,feedback):
+    def __init__(self, name, email, stars, feedback, username, password):
+        super().__init__(username, password)
+        self.__stars = stars
         UserReview.count_id += 1
-        UserReview.__experience = None
         self.__user_id = UserReview.count_id
         self.__name = name
         self.__email = email
         self.__feedback = feedback
 
-    def get_experience(self):
-        return self.__experience
+    def get_stars(self):
+        return self.__stars
 
-    def set_experience(self, experience):
-        self.__experience = experience
+    def set_stars(self, stars):
+        self.__stars = stars
 
     def get_name(self):
         return self.__name
