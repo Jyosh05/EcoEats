@@ -1,7 +1,10 @@
 # first file to run when starting the web application
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm
+import Rewards
+from Forms import CreateUserForm, CreateMembershipForm
+from Forms import CreateRewardsForm
+# CreateReviewsForm, UpdateUserForm
 import shelve, User, Membership
 
 # 1:56pm
@@ -51,27 +54,82 @@ for a in users:
     print('Password: ', a[2])
 
 
-#membership tables
-mycursor.execute("CREATE TABLE 'ecoeatsusers'.'memberships' ("
-                 "'membership_id' INT,"
-                 "'customer_id' INT,"
-                 "'rewards' VARCHAR(1000)"
-                 "'currentBalance' INT DEFAULT 0"
-                 "'totalBalance' INT DEFAULT 0"
-                 "'date_joined DATE"
-                 "PRIMARY KEY ('membership_id'));")
 
-mycursor.execute("CREATE TABLE 'ecoeatsusers'.'storeRewards' ("
-                 "'rewards_id INT PRIMARY KEY,"
-                 "reward_name VARCHAR(1000)"
-                 "reward_value INT")
+# Tables to check and create
+tables_to_check = ['storerewards', 'memberships']
 
-# inserting values of rewards into table)
-mycursor.execute("INSERT INTO 'ecoeatsusers'.'storeRewards' (reward_id, reward_name, reward_value) VALUES"
-                 "(1, 'Reward1', 30),"
-                 "(2, 'Reward1', 60),"
-                 "(3, 'Reward1', 90),"
-                 "(4, 'Reward1', 120),")
+for table_name in tables_to_check:
+    mycursor.execute(f"SHOW TABLES LIKE '{table_name}'")
+    table_exist = mycursor.fetchone()
+
+    if not table_exist:
+        if table_name == 'storerewards':
+            mycursor.execute("CREATE TABLE `ecoeatsusers`.`storerewards` ("
+                             "`reward_id` INT NOT NULL,"
+                             "`reward_name` VARCHAR(100) NULL,"
+                             "`reward_value` DECIMAL NULL DEFAULT 0.00,"
+                             "`reward_type` VARCHAR(45) NULL,"
+                             "PRIMARY KEY (`reward_id`)"
+                             ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+        elif table_name == 'memberships':
+            mycursor.execute("CREATE TABLE `ecoeatsusers`.`memberships` ("
+                             "`membership_id` INT NOT NULL,"
+                             "`rewards` VARCHAR(100) NULL,"
+                             "`currentBalance` FLOAT DEFAULT 0.00,"
+                             "`totalBalance` FLOAT DEFAULT 0.00,"
+                             "`date_joined` DATE DEFAULT NULL,"
+                             "PRIMARY KEY (`membership_id`),"
+                             "CONSTRAINT id FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
+                             ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+
+        print(f"Table '{table_name}' Created")
+
+for _ in mycursor:
+    pass
+
+@app.route('/retrieveMembership')
+def retrieve_membership():
+    #retrieve from membership table
+    select_query = "SELECT * FROM memberships"
+    mycursor.execute(select_query)
+    membershipUser = mycursor.fetchall()
+
+    return render_template('membership.html', membershipUser=membershipUser)
+
+#rewards are all in staff section
+#creating rewards
+@app.route('/createRewards', methods=['GET', 'POST'])
+def create_rewards():
+    create_reward_form = CreateRewardsForm(request.form)
+    if request.method == 'POST' and create_reward_form.validate():
+        try:
+            insert_query = "INSERT INTO storerewards ( reward_name, reward_value, ) " \
+                           "VALUES (%s, %s)"
+            reward = Rewards.Rewards(create_reward_form.reward_name.data, create_reward_form.reward_type.data,
+                                     create_reward_form.reward_type.data)
+            reward_data = (reward.get_reward_name(), reward.get_reward_value(), reward.get_reward_type())
+            mycursor.execute(insert_query, reward_data)
+            mydb.commit()
+            print(
+                f"{reward.get_reward_name()} {reward.get_reward_value()} {reward.get_reward_type()} "
+                f"was stored in the database successfully.")
+            return redirect(url_for('retrieve_Reward'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
+        return render_template('createRewards.html', form=create_reward_form)
+
+    @app.route('/retrieverewards')
+    def retrieve_rewards():
+        # retrieve from membership table
+        select_query = "SELECT * FROM storerewards"
+        mycursor.execute(select_query)
+        rewards = mycursor.fetchall()
+
+        return render_template('membership.html', rewards=rewards)
+
+
 # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
 # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
 # Then throw the ecoeatsusers into that folder.
@@ -452,22 +510,6 @@ def membershipTiers():
 #     return redirect(url_for('reviews'))
 #     return render_template('createReviews.html', form=create_reviews_form)
 #retrieve membership details
-@app.route('/retrieveMembershipDetails', methods=['GET' , 'POST'])
-def retrieve_membership():
-    try:
-        #retrieve from membership table
-        mycursor.execute("SELECT id FROM memberships LIMIT 1")
-        user_data = mycursor.fetchone()
-
-        if user_data is None:
-            return jsonify({'error': 'User details not found'}), 404
-
-        user_details = {'id': user_data[0]}
-        return jsonify(user_details), 200
-    except Exception as e:
-        return jsonify({'errpr': str(e)}), 500
-
-    return render_template('membership.html', user_data=user_data)
 
 #redeeming rewards
 @app.route('/redeemRewards', methods=['GET', 'POST'])
@@ -503,15 +545,15 @@ def redeem_rewards():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/createReviews', methods=['GET', 'POST'])
-def create_reviews():
-    create_reviews_form = CreateReviewsForm(request.form)
-    if request.method == 'POST' and create_reviews_form.validate():
-        db = shelve.open('reviews.db', 'c')
-        try:
-            reviews_dict = db['Review']
-        except:
-            print("Error in retrieving Users from user.db.")
+# @app.route('/createReviews', methods=['GET', 'POST'])
+# def create_reviews():
+#     create_reviews_form = CreateReviewsForm(request.form)
+#     if request.method == 'POST' and create_reviews_form.validate():
+#         db = shelve.open('reviews.db', 'c')
+#         try:
+#             reviews_dict = db['Review']
+#         except:
+#             print("Error in retrieving Users from user.db.")
 @app.route('/retrieveReviews')
 def retrieve_reviews():
     reviews_dict = {}

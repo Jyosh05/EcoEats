@@ -13,7 +13,7 @@
 </div>
 
 <br>
-
+<h2>Welcome Back *User First Name*!</h2>
 <div class="container-contents-left">
     <div class="container-membership-status">
         <h3>Membership Status:</h3>
@@ -89,4 +89,49 @@
     </div>
 </div>
 
+<h1 class="display-4">Retrieve Membership Details</h1>
+<div>
+    {% if count == 0 %}
+    <p>There are no customers.</p>
+    {% elif count == 1 %}
+    <p>There is 1 customer.</p>
+    {% else %}
+    <p>There are {{ count }} customers.</p>
+    {% endif %}
+</div>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Date Joined</th>
+            <th>Address</th>
+            <th>Membership</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers_list %}
+        <tr>
+            <td>{{ customer.get_email() }}</td>
+            <td>{{ customer.get_date_joined() }}</td>
+            <td>{{ customer.get_address() }}</td>
+            {% if customer.get_membership() == "F" %}
+            <td>Fellow</td>
+            {% elif customer.get_membership() == "Seed" %}
+            <td>Seed</td>
+            {% endif %}
+            <td><a href="#" class="btn btn-warning">Update</a></td>
+            <td>
+                <form action="" method="POST">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

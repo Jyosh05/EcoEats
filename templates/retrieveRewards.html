@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<p>Retrieve Rewards page</p>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rewards List</title>
+</head>
+<body>
+    <h1>Rewards List</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Reward Name</th>
+                <th>Reward Value</th>
+                <th>Reward Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reward in rewards %}
+            <tr>
+                <td>{{ reward[0] }}</td>
+                <td>{{ reward[1] }}</td>
+                <td>{{ reward[2] }}</td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+
+
+{% endblock %}
