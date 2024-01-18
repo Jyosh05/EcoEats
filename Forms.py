@@ -35,4 +35,9 @@ class CreateMembershipForm(Form):
 class CreateRewardsForm(Form):
     reward_name = StringField("Reward Name", [validators.Length(min=10,max=600)])
     reward_value = FloatField("Reward Price", [validators.NumberRange(min=10, max=200)])
-    reward_type = RadioField("Reward Type", choices=[('S', 'StoreFixed'), ('P', 'Promotional')],default='S')
+    reward_type = RadioField("Reward Type", choices=[('S', 'StoreWide'), ('P', 'Promotional'), ('F', 'Fixed')],default='S')
+
+class UpdateRewardsForm(Form):
+    reward_name = StringField("Reward Name", [validators.Length(min=10,max=600)])
+    reward_value = FloatField("Reward Price", [validators.NumberRange(min=10, max=200)])
+    reward_type = RadioField("Reward Type", choices=[('S', 'StoreWide'), ('P', 'Promotional'), ('F', 'Fixed')],default='S')

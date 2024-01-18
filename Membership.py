@@ -2,15 +2,10 @@ import User
 
 
 class Membership(User.User):
-    count_id = 0
     store_rewards = ['Loyalty Treat: Customer-For-1-Year Receive S$5 Off Your Purchase',
                      'Holiday Treat: Enjoy 1-For-1 Treat On December Exclusive Drinks']
 
-    def __init__(self, first_name, last_name, gender, membership, remarks, email, date_joined, address, Buyrewards,
-                 totalPoints, currentBalance):
-        super().__init__(first_name, last_name, gender, remarks)
-        membership.count_id += 1
-        self.__membership_id = Membership.count_id
+    def __init__(self, email, date_joined, address, Buyrewards, totalPoints, currentBalance):
         self.__store_rewards = Membership.store_rewards
         self.__membership = 'Seed'  # default is base tier
         self.__email = email
