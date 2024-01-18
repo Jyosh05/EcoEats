@@ -1,15 +1,38 @@
 *{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body{
-align-items: center;
+    align-items: center;
 }
 
 .btn btn-primary{
-position: absolute;
-bottom: 10px;
+    position: absolute;
 }
 
+
+h6{
+    color: #black;
+}
+
+.rating-container {
+    text-align: center;
+    margin: 50px;
+}
+
+.rating {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.star {
+    display: inline-block;
+    margin: 0 5px;
+}
+
+.star:hover,
+.star.active {
+    color: gold;
+}

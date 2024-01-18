@@ -22,8 +22,8 @@ class CreateUserForm(Form):
 class CreateReviewsForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email', [validators.Email(), validators.DataRequired()])
-    experience = RadioField('What do you think of your experience on EocEats?', [validators.DataRequired()],
-                            choices=[('Horrible!'), ('Can be better.'), ('Nice.'), ('Amazing!'), ('Exceptional!')])
+    stars = RadioField('What do you think of your experience on EocEats?', [validators.DataRequired()],
+                            choices=[('1 star'), ('2 stars'), ('3 stars'), ('4 stars'), ('5 stars')])
     feedback = TextAreaField('Any Feedback?',[validators.Optional()])
 
 class CreateMembershipForm(Form):
