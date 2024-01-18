@@ -1,35 +1,46 @@
 {% extends 'base.html' %}
+{% block title %}Retrieve Rewards{% endblock %}
+
+
 {% block content %}
-<p>Retrieve Rewards page</p>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Rewards.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Rewards List</title>
-</head>
-<body>
-    <h1>Rewards List</h1>
-    <table border="1">
-        <thead>
+    <div>
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <th>Reward Name</th>
-                <th>Reward Value</th>
-                <th>Reward Type</th>
+                <th>Email</th>
+                <th>Date Joined</th>
+                <th>Address</th>
+                <th>Membership</th>
+                <th></th>
+                <th></th>
             </tr>
-        </thead>
-        <tbody>
-            {% for reward in rewards %}
+            </thead>
+            <tbody>
+            {% for customer in customers_list %}
             <tr>
-                <td>{{ reward[0] }}</td>
-                <td>{{ reward[1] }}</td>
-                <td>{{ reward[2] }}</td>
-
+                <td>{{ customer.get_email() }}</td>
+                <td>{{ customer.get_date_joined() }}</td>
+                <td>{{ customer.get_address() }}</td>
+                {% if customer.get_membership() == "F" %}
+                <td>Fellow</td>
+                {% elif customer.get_membership() == "Seed" %}
+                <td>Seed</td>
+                {% endif %}
+                <td><a href="#" class="btn btn-warning">Update</a></td>
+                <td>
+                    <form action="" method="POST">
+                        <input type="submit" value="Delete" class="btn btn-danger">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html>
+            </tbody>
+        </table>
+    </div>
+{% end block %}
 
-
-{% endblock %}

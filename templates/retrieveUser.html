@@ -1,33 +1,81 @@
 {% extends 'base.html' %}
+{% block title %} Retrieve User {% endblock %}
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveUser.css') }}">
+
+<script src="https://kit.fontawesome.com/ea5763dd29.js" crossorigin="anonymous"></script>
 <p>Retrieve User page</p>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User List</title>
+    <title>Customer User List</title>
 </head>
 <body>
-    <h1>User List</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Count</th>
-                <th>Username</th>
-                <th>Password</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user[0] }}</td>
-                <td>{{ user[1] }}</td>
-                <td>{{ user[2] }}</td>
+<h1>User List</h1>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Count</th>
+        <th>Username</th>
+        <th>Password</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in users %}
+    <tr>
+        <td>{{ user[0] }}</td>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
 
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!--test for bulk -->
+<form action="/deleteUser" method="POST">
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Select</th>
+        <th scope="col">#Count</th>
+        <th scope="col">Username</th>
+        <th scope="col">Password</th>
+        <th scope="col">Update</th>
+        <th scope="col">Delete</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for user in users %}
+    <tr>
+        <td><input type="checkbox" name="selected_users[]" value="{{ user[0] }}"></td>
+        <th scope="row">{{ user[0]  }} </th>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
+        <td><a href="/updateUser/{{ user[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
+        <td><a href="/deleteUser/{{ user[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
+
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+
+
+    <button type="submit" style="font-weight: 700; color: black; text-decoration: none; padding: 5px; background-color: pink; border: 1px solid black; border-radius: 5px;">Delete Selected Users</button>
+</form>
+<a style="font-weight:700; color:black; text-decoration:none; padding:5px; background-color:pink; border:1px solid black; border-radius:5px;" href="/createUser">Create New Customer User</a>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 </body>
 </html>
 
