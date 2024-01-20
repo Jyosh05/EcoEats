@@ -1,14 +1,11 @@
-import User
-
-class UserReview(User.User):
+class UserReview():
     count_id = 0
-    def __init__(self, name, email, stars, feedback, username, password):
-        super().__init__(username, password)
-        self.__stars = stars
+    def __init__(self, name, email,stars, feedback):
         UserReview.count_id += 1
         self.__user_id = UserReview.count_id
         self.__name = name
         self.__email = email
+        self.__stars = stars
         self.__feedback = feedback
 
     def get_stars(self):

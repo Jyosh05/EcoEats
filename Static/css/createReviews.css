@@ -10,8 +10,8 @@ body{
 
 .btn btn-primary{
     position: absolute;
+    bottom: 10%;
 }
-
 
 h6{
     color: #black;
@@ -19,20 +19,35 @@ h6{
 
 .rating-container {
     text-align: center;
-    margin: 50px;
 }
 
-.rating {
+.stars input {
+    display: none;
+}
+
+.stars {
+    direction: rtl; /* Set direction to right-to-left */
+}
+
+
+.stars label {
     font-size: 30px;
+    color: #ccc;
     cursor: pointer;
 }
 
-.star {
-    display: inline-block;
-    margin: 0 5px;
+.stars label:before {
+    content: '\2605'; /* Unicode character for a solid star */
+    display: block;
 }
 
-.star:hover,
-.star.active {
-    color: gold;
+.stars input:checked ~ label {
+    color: #ffcc00;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
 }
