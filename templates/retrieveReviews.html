@@ -7,16 +7,16 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Experience</th>
+            <th>Stars</th>
             <th>Feedback </th>
         </tr>
         </thead>
         <tbody>
-        {% for review in reviews_list %}
         <tr>
-            <td>{{ review.get_name() }}</td>
-            <td>{{ review.get_experience() }}</td>
-            <td>{{ review.get_feedback() }}</td>
+        {% for reviews in reviews %}
+            <td>{{ reviews[0] }}</td>
+            <td>{{ reviews[1] }}</td>
+            <td>{{ reviews[2] }}</td>
             <td><a href="/updateReviews/{{review.get_user_id()}}" class="btn btn-warning">Update</a></td>
             <td>
                 <form action="{{url_for('delete_reviews', id=review.get_user_id())}}" method="POST">

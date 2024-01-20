@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for
 
 from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm
 import shelve, User, Membership, ReviewUser
-
+import logging
 # 1:56pm
 # pip install mysql-connector-python
 import mysql.connector
@@ -65,7 +65,7 @@ def create_user():
             print(f"{user.get_userCount()}{user.get_username()} {user.get_password()} was stored in the database successfully.")
             return redirect(url_for('home'))
         except Exception as e:
-            print("Error:", e)
+            logging.error("Error occurred: %s", e)
             mydb.rollback()
             return "Error occurred. Check logs for details."
     return render_template('createUser.html', form=create_user_form)
@@ -180,83 +180,78 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
+
+tableCheck = ['reviews']
+for a in tableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'reviews'")
+    tableExist = mycursor.fetchone()
+
+    if not tableExist:
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`reviews` (" 
+  "`id` INT NOT NULL AUTO_INCREMENT, " 
+  "`name` VARCHAR(100) NULL,"
+  "stars ENUM('1 star', '2 stars', '3 stars', '4 stars', '5 stars')"
+  "`feedback` VARCHAR(500) NULL,"
+  "PRIMARY KEY (`id`));"
+)
+        print(f"Table 'reviews' Created")
+
+
 @app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
-    reviews_dict = {}
     create_reviews_form = CreateReviewsForm(request.form)
     if request.method == 'POST' and create_reviews_form.validate():
-        db = shelve.open('reviews.db', 'c')
         try:
-            reviews_dict = db['ReviewUser']
-        except:
-            print("Error in retrieving Users from user.db.")
+            mycursor.execute("SELECT COUNT(*) FROM reviews")
+            id = mycursor.fetchone()[0]
 
-        reviewsFormData = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data, create_reviews_form.stars.data, create_reviews_form.feedback.data)
+            insert_query = "INSERT INTO reviews (name, stars, feedback) VALUES (%s, %s, %s)"
+            reviews = ReviewUser.UserReview(create_reviews_form.name.data,create_reviews_form.stars.data, create_reviews_form.feedback.data)
+            reviews_data = (reviews.get_name(),reviews.get_stars(), reviews.get_feedback())
+            mycursor.execute(insert_query, reviews_data)
+            mydb.commit()
 
-        reviews_dict[reviewsFormData.get_user_id()] = reviewsFormData
-        db['ReviewUser'] = reviews_dict
-
-        db.close()
-
-        return redirect(url_for('retrieve_reviews'))
+            return redirect(url_for('retrieve_reviews'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
     return render_template('createReviews.html', form=create_reviews_form)
 
 @app.route('/retrieveReviews')
 def retrieve_reviews():
-    reviews_dict = {}
-    db = shelve.open('reviews.db', 'r')
-    reviews_dict = db['ReviewUser']
-    db.close()
+    select_query = "SELECT * FROM reviews"
+    mycursor.execute(select_query)
+    review = mycursor.fetchall()
 
-    reviews_list = []
-    for key in reviews_dict:
-        review = reviews_dict.get(key)
-        reviews_list.append(review)
+    return render_template('retrieveReviews.html', review=review)
 
-    return render_template('retrieveReviews.html', count=len(reviews_list), reviews_list=reviews_list)
+# @app.route('/updateReviews/<int:id>/', methods=['GET', 'POST'])
+# def update_review():
+#     update_reviews_form = CreateReviewsForm(request.form)
+#     if request.method == 'POST' and update_reviews_form.validate():
+#         mycursor.execute("CREATE TABLE `update_reviews` ("
+#                         "`feedback` varchar(1000) NOT NULL,"
+#                         "`stars` enum('fixed') DEFAULT NULL"
+#                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+#
+#         return redirect(url_for('retrieve_reviews'))
+#     else:
+#
+#         return render_template('updateReviews.html', form=update_reviews_form)
 
-@app.route('/updateReviews/<int:id>/', methods=['GET', 'POST'])
-def update_review(id):
-    update_reviews_form = CreateReviewsForm(request.form)
-    if request.method == 'POST' and update_reviews_form.validate():
-        reviews_dict = {}
-        db = shelve.open('reviews.db', 'w')
-        reviews_dict = db['ReviewUser']
-
-        review = reviews_dict.get(id)
-        review.set_name(update_reviews_form.name.data)
-        review.set_email(update_reviews_form.email.data)
-        review.set_stars(update_reviews_form.stars.data)
-        review.set_feedback(update_reviews_form.feedback.data)
-        db['ReviewUser'] = reviews_dict
-        db.close()
-
-        return redirect(url_for('retrieve_reviews'))
-    else:
-        reviews_dict = {}
-        db = shelve.open('reviews.db', 'r')
-        reviews_dict = db['ReviewUser']
-        db.close()
-        review = reviews_dict.get(id)
-        update_reviews_form.name.data = review.get_name()
-        update_reviews_form.email.data = review.get_email()
-        update_reviews_form.stars.data = review.get_stars()
-        update_reviews_form.feedback.data = review.get_feedback()
-
-        return render_template('updateReviews.html', form=update_reviews_form)
-
-@app.route('/deleteReviews/<int:id>', methods=['POST'])
-def delete_reviews(id):
-    reviews_dict = {}
-    db = shelve.open('reviews.db', 'w')
-    reviews_dict = db['ReviewUser']
-
-    reviews_dict.pop(id)
-
-    db['ReviewUser'] = reviews_dict
-    db.close()
-
-    return redirect(url_for('retrieve_reviews'))
+# @app.route('/deleteReviews/<int:id>', methods=['POST'])
+# def delete_reviews(id):
+#     reviews_dict = {}
+#     db = shelve.open('reviews.db', 'w')
+#     reviews_dict = db['ReviewUser']
+#
+#     reviews_dict.pop(id)
+#
+#     db['ReviewUser'] = reviews_dict
+#     db.close()
+#
+#     return redirect(url_for('retrieve_reviews'))
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 def create_membership():
