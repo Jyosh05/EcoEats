@@ -180,6 +180,7 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
+<<<<<<< Updated upstream
 
 tableCheck = ['reviews']
 for a in tableCheck:
@@ -197,6 +198,31 @@ for a in tableCheck:
         print(f"Table 'reviews' Created")
 
 
+=======
+SELECT id, stars, name, feedback, email FROM reviews;
+CREATE TABLE `reviews` (
+    `user_id` int NOT NULL,
+  `stars` enum('fixed') DEFAULT NULL,
+  `feedback` varchar(1000) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+)
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+cursor = connection.cursor()
+for row in results:
+    user_id, stars, name, feedback, email = row
+    print(f"User ID: {user_id}, Stars: {stars}, Name: {name}, Feedback: {feedback}, Email: {email}")
+
+cursor.close()
+connection.close()
+query = "SELECT id, stars, name, feedback, email FROM user_feedback;"
+cursor.execute(query)
+results = cursor.fetchall()
+
+>>>>>>> Stashed changes
 @app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
     create_reviews_form = CreateReviewsForm(request.form)
