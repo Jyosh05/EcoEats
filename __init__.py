@@ -180,7 +180,7 @@ def membershipRewardHist():
 def membershipTiers():
     return render_template('membershipTiers.html')
 
-<<<<<<< Updated upstream
+
 
 tableCheck = ['reviews']
 for a in tableCheck:
@@ -188,96 +188,121 @@ for a in tableCheck:
     tableExist = mycursor.fetchone()
 
     if not tableExist:
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`reviews` (" 
-  "`id` INT NOT NULL AUTO_INCREMENT, " 
-  "`name` VARCHAR(100) NULL,"
-  "stars ENUM('1 star', '2 stars', '3 stars', '4 stars', '5 stars')"
-  "`feedback` VARCHAR(500) NULL,"
-  "PRIMARY KEY (`id`));"
-)
+        mycursor.execute("CREATE TABLE 'ecoeatsusers'.'reviews' ("
+                        "'user_id' INT AUTO_INCREMENT PRIMARY KEY,"
+                        "'name' varchar(100) DEFAULT NULL,"
+                        "'email' varchar(100) DEFAULT NULL,"
+                        "'stars' INT NOT NULL CHECK (stars >= 1 AND stars <= 5),"
+                        "'feedback' varchar(1000) DEFAULT NULL,"
+                        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
         print(f"Table 'reviews' Created")
 
-
-=======
-SELECT id, stars, name, feedback, email FROM reviews;
-CREATE TABLE `reviews` (
-    `user_id` int NOT NULL,
-  `stars` enum('fixed') DEFAULT NULL,
-  `feedback` varchar(1000) DEFAULT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`user_id`)
-)
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
-
-cursor = connection.cursor()
-for row in results:
-    user_id, stars, name, feedback, email = row
-    print(f"User ID: {user_id}, Stars: {stars}, Name: {name}, Feedback: {feedback}, Email: {email}")
-
-cursor.close()
-connection.close()
-query = "SELECT id, stars, name, feedback, email FROM user_feedback;"
-cursor.execute(query)
-results = cursor.fetchall()
-
->>>>>>> Stashed changes
 @app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
-    create_reviews_form = CreateReviewsForm(request.form)
-    if request.method == 'POST' and create_reviews_form.validate():
-        try:
-            mycursor.execute("SELECT COUNT(*) FROM reviews")
-            id = mycursor.fetchone()[0]
+    form = CreateReviewsForm(request.form)
 
-            insert_query = "INSERT INTO reviews (name, stars, feedback) VALUES (%s, %s, %s)"
-            reviews = ReviewUser.UserReview(create_reviews_form.name.data,create_reviews_form.stars.data, create_reviews_form.feedback.data)
-            reviews_data = (reviews.get_name(),reviews.get_stars(), reviews.get_feedback())
-            mycursor.execute(insert_query, reviews_data)
-            mydb.commit()
+    if request.method == "POST" and form.validate():
+        name = form.name.data
+        email = form.email.data
+        stars = form.stars.data
+        feedback = form.feedback.data
 
-            return redirect(url_for('retrieve_reviews'))
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred. Check logs for details."
-    return render_template('createReviews.html', form=create_reviews_form)
+
+        insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
+        reviews = ReviewUser.UserReview(form.name.data, form.email.data, form.stars.data, form.feedback.data)
+        reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
+        mycursor.execute(insert_query, reviews_data)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_reviews'))
+
+    mycursor.execute("SELECT * FROM reviews")
+
+    return render_template('createReviews.html',  form=form)
 
 @app.route('/retrieveReviews')
 def retrieve_reviews():
     select_query = "SELECT * FROM reviews"
     mycursor.execute(select_query)
-    review = mycursor.fetchall()
+    reviews = mycursor.fetchall()
 
-    return render_template('retrieveReviews.html', review=review)
+    return render_template('retrieveReviews.html', reviews=reviews)
 
-# @app.route('/updateReviews/<int:id>/', methods=['GET', 'POST'])
-# def update_review():
-#     update_reviews_form = CreateReviewsForm(request.form)
-#     if request.method == 'POST' and update_reviews_form.validate():
-#         mycursor.execute("CREATE TABLE `update_reviews` ("
-#                         "`feedback` varchar(1000) NOT NULL,"
-#                         "`stars` enum('fixed') DEFAULT NULL"
-#                         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
-#
-#         return redirect(url_for('retrieve_reviews'))
-#     else:
-#
-#         return render_template('updateReviews.html', form=update_reviews_form)
+@app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
+def update_review(user_id):
+    update_reviews_form = CreateReviewsForm(request.form)
 
-# @app.route('/deleteReviews/<int:id>', methods=['POST'])
-# def delete_reviews(id):
-#     reviews_dict = {}
-#     db = shelve.open('reviews.db', 'w')
-#     reviews_dict = db['ReviewUser']
-#
-#     reviews_dict.pop(id)
-#
-#     db['ReviewUser'] = reviews_dict
-#     db.close()
-#
-#     return redirect(url_for('retrieve_reviews'))
+    if request.method == 'POST' and update_reviews_form.validate():
+        try:
+            select_query = "SELECT reviews_name, reviews_stars, reviews_feedback FROM update_reviews WHERE user_id = %s"
+
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+                name = update_reviews_form.name.data
+                stars = update_reviews_form.stars.data
+                feedback = update_reviews_form.feedback.data
+
+                update_query = "UPDATE reviews SET name = %s, stars = %s, feedback = %s WHERE user_id = %s"
+                data = (name, stars, feedback, user_id)
+                mycursor.execute(update_query, data)
+
+                mydb.commit()
+
+                print(f"User ID: {user_id} updated successfully.")
+                return redirect(url_for('retrieve_reviews'))
+            else:
+                return "Reviews not found."
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while updating reviews."
+    else:
+        try:
+
+            select_query = "SELECT name, stars, feedback FROM reviews WHERE user_id = %s"
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+
+                update_reviews_form.name.data = reviews[0]
+                update_reviews_form.stars.data = reviews[1]
+                update_reviews_form.feedback.data = reviews[2]
+
+                return render_template('createReviews.html', form=update_reviews_form)
+
+            else:
+                return "Review not found."
+        except Exception as e:
+
+            print("Error:", e)
+
+            mydb.rollback()
+
+            return "Error occurred while updating review."
+
+@app.route('/deleteReviews/user_id', methods=['POST'])
+def delete_reviews(user_id):
+    try:
+        select_query = "SELECT * FROM reviews WHERE user_id = %s"
+        mycursor.execute(select_query, (user_id,))
+        reviews = mycursor.fetchone()
+
+        if reviews:
+            delete_query = "DELETE FROM reviews WHERE user_id = %s"
+            mycursor.execute(delete_query, (user_id,))
+            mydb.commit()
+
+            print(f"USER ID: {user_id} deleted successfully.")
+            return redirect(url_for('retrieve_rewards'))
+        else:
+            return "Reviews not found."
+    except Exception as e:
+        print("Error:", e)
+        mydb.rollback()
+        return "Error occurred while deleting reviews."
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 def create_membership():

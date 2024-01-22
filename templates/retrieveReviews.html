@@ -3,29 +3,22 @@
 {% block content %}
 <h1 class="display-4">Retrieve Users</h1>
 <div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Stars</th>
-            <th>Feedback </th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        {% for reviews in reviews %}
-            <td>{{ reviews[0] }}</td>
-            <td>{{ reviews[1] }}</td>
-            <td>{{ reviews[2] }}</td>
-            <td><a href="/updateReviews/{{review.get_user_id()}}" class="btn btn-warning">Update</a></td>
-            <td>
-                <form action="{{url_for('delete_reviews', id=review.get_user_id())}}" method="POST">
-                    <input type="submit" value="Delete" class="btn btn-danger">
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% for review in reviews %}
+    <div class="review">
+
+        <p><strong>User ID:</strong> {{ review[0] }}</p>
+        <p><strong>Name:</strong> {{ review[1] }}</p>
+        <p><strong>Email:</strong> {{ review[2] }}</p>
+        <p><strong>Stars:</strong> {{ review[3] }}</p>
+        <p><strong>Feedback:</strong> {{ review[4] }}</p>
+            
+    </div>
+    <div>
+
+    </div>
+    <div>
+
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
