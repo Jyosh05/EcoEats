@@ -1,32 +1,14 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const stars = document.querySelectorAll('.star');
-    const starsInput = document.getElementById('stars-input');
+function submitRating() {
+    const stars = document.getElementsByName('rating');
+    let ratingValue = 0;
 
-    stars.forEach(star => {
-        star.addEventListener('click', function () {
-            const value = this.getAttribute('data-value');
-            updateStars(value);
-        });
-
-        star.addEventListener('mouseover', function () {
-            const value = this.getAttribute('data-value');
-            highlightStars(value);
-        });
-
-        star.addEventListener('mouseout', function () {
-            highlightStars(starsInput.value);
-        });
-    });
-
-    function updateStars(value) {
-        starsInput.value = value;
-        highlightStars(value);
+    for (let i = 0; i < stars.length; i++) {
+        if (stars[i].checked) {
+            ratingValue = stars[i].value;
+            break;
+        }
     }
 
-    function highlightStars(value) {
-        stars.forEach(star => {
-            const starValue = star.getAttribute('data-value');
-            star.classList.toggle('active', starValue <= value);
-        });
-    }
-});
+    // You can use the ratingValue to perform any action, such as sending it to a server
+    // For simplicity, let's just log the rating for now
+    console.log("You submitted a rating of " + ratingValue + " stars.");

@@ -17,41 +17,7 @@ h6{
     color: #black;
 }
 
-.review {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-input,
-textarea {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-}
-
-#star-rating {
-    display: flex;
-    cursor: pointer;
-}
-
-.star {
-    font-size: 30px;
-    color: gray;
-    margin-right: 5px;
-}
-
-.star:hover,
-.star.active {
-    color: gold;
-}
-
-/* .rating-container {
+.rating-container {
     text-align: center;
 }
 
@@ -60,8 +26,9 @@ textarea {
 }
 
 .stars {
-    direction: rtl; /* Set direction to right-to-left
+    direction: rtl; /* Set direction to right-to-left */
 }
+
 
 .stars label {
     font-size: 30px;
@@ -70,7 +37,7 @@ textarea {
 }
 
 .stars label:before {
-    content: '\2605'; /* Unicode character for a solid star
+    content: '\2605'; /* Unicode character for a solid star */
     display: block;
 }
 
@@ -83,4 +50,4 @@ button {
     padding: 10px 20px;
     font-size: 18px;
     cursor: pointer;
-} */
+}
