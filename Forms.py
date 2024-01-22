@@ -28,16 +28,17 @@ class CreateReviewsForm(Form):
     feedback = TextAreaField('Any Feedback?',[validators.Length(min=0, max=1000)] ,[validators.Optional()])
 
 class CreateMembershipForm(Form):
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
     date_joined = DateField('Date Joined', format='%Y-%m-%d')
-    address = TextAreaField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
+    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+
+
+class UpdateMembershipForm(Form):
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
 
 class CreateRewardsForm(Form):
-    reward_name = StringField("Reward Name", [validators.Length(min=10,max=600)])
+    reward_name = StringField("Reward Name", [validators.Length(min=10, max=600)])
     reward_value = FloatField("Reward Price", [validators.NumberRange(min=10, max=200)])
-    reward_type = RadioField("Reward Type", choices=[('S', 'StoreWide'), ('P', 'Promotional'), ('F', 'Fixed')],default='S')
+    reward_type = RadioField("Reward Type", choices=[('storewide', 'Storewide'), ('promotional', 'Promotional'), ('fixed', 'Fixed')], default='storewide')
 
-class UpdateRewardsForm(Form):
-    reward_name = StringField("Reward Name", [validators.Length(min=10,max=600)])
-    reward_value = FloatField("Reward Price", [validators.NumberRange(min=10, max=200)])
-    reward_type = RadioField("Reward Type", choices=[('S', 'StoreWide'), ('P', 'Promotional'), ('F', 'Fixed')],default='S')

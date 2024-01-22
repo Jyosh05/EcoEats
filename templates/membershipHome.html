@@ -92,11 +92,11 @@
 <h1 class="display-4">Retrieve Membership Details</h1>
 <div>
     {% if count == 0 %}
-    <p>There are no customers.</p>
+    <p>There are no memberships.</p>
     {% elif count == 1 %}
-    <p>There is 1 customer.</p>
+    <p>There is 1 membership.</p>
     {% else %}
-    <p>There are {{ count }} customers.</p>
+    <p>There are {{ count }} memberships.</p>
     {% endif %}
 </div>
 
@@ -104,31 +104,29 @@
     <table class="table table-striped">
         <thead>
         <tr>
-            <th>Email</th>
+            <th>ID</th>
+            <th>Rewards</th>
+            <th>Current Balance</th>
+            <th>Total Balance</th>
             <th>Date Joined</th>
             <th>Address</th>
-            <th>Membership</th>
-            <th></th>
-            <th></th>
+            <th>Email</th>
+            <th>Update</th>
+            <th>Delete</th>
         </tr>
         </thead>
         <tbody>
-        {% for customer in customers_list %}
+        {% for membership in memberships %}
         <tr>
-            <td>{{ customer.get_email() }}</td>
-            <td>{{ customer.get_date_joined() }}</td>
-            <td>{{ customer.get_address() }}</td>
-            {% if customer.get_membership() == "F" %}
-            <td>Fellow</td>
-            {% elif customer.get_membership() == "Seed" %}
-            <td>Seed</td>
-            {% endif %}
-            <td><a href="#" class="btn btn-warning">Update</a></td>
-            <td>
-                <form action="" method="POST">
-                    <input type="submit" value="Delete" class="btn btn-danger">
-                </form>
-            </td>
+            <td>{{ membership[0] }}</td>
+            <td>{{ membership[1] }}</td>
+            <td>{{ membership[2] }}</td>
+            <td>{{ membership[3] }}</td>
+            <td>{{ membership[4] }}</td>
+            <td>{{ membership[5] }}</td>
+            <td>{{ membership[6] }}</td>
+            <td><a href="/updateMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
+            <td><a href="/deleteMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
         </tr>
         {% endfor %}
         </tbody>

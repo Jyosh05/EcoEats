@@ -8,39 +8,42 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
-    <div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Email</th>
-                <th>Date Joined</th>
-                <th>Address</th>
-                <th>Membership</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for customer in customers_list %}
-            <tr>
-                <td>{{ customer.get_email() }}</td>
-                <td>{{ customer.get_date_joined() }}</td>
-                <td>{{ customer.get_address() }}</td>
-                {% if customer.get_membership() == "F" %}
-                <td>Fellow</td>
-                {% elif customer.get_membership() == "Seed" %}
-                <td>Seed</td>
-                {% endif %}
-                <td><a href="#" class="btn btn-warning">Update</a></td>
-                <td>
-                    <form action="" method="POST">
-                        <input type="submit" value="Delete" class="btn btn-danger">
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% end block %}
+    <h1 class="display-4">Retrieve Rewards Details</h1>
+<div>
+    {% if count == 0 %}
+    <p>There are no rewards.</p>
+    {% elif count == 1 %}
+    <p>There is 1 reward.</p>
+    {% else %}
+    <p>There are {{ count }} rewards.</p>
+    {% endif %}
+</div>
+
+<div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Reward Name</th>
+            <th>Reward Value</th>
+            <th>Reward Type</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for reward in rewards %}
+        <tr>
+            <td>{{ reward[0] }}</td>
+            <td>{{ reward[1] }}</td>
+            <td>{{ reward[2] }}</td>
+            <td>{{ reward[3] }}</td>
+
+            <td><a href="/updateReward/{{ reward[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
+            <td><a href="/deleteReward/{{ reward[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
 
