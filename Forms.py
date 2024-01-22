@@ -1,6 +1,6 @@
 import wtforms.fields
 from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators
-from wtforms.fields import EmailField, DateField, FloatField
+from wtforms.fields import EmailField, DateField
 
 class CreateUserForm(Form):
     # first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])

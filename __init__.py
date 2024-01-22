@@ -23,7 +23,8 @@ mydb= mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-#
+
+#user tables
 tableCheck = ['users']
 for a in tableCheck:
     mycursor.execute(f"SHOW TABLES LIKE 'users'")
@@ -32,7 +33,11 @@ for a in tableCheck:
 
     if not tableExist:
 
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` ("
+                         "`id` INT AUTO_INCREMENT NOT NULL,"
+                         "`username` VARCHAR(45) NULL,"
+                         "`password` VARCHAR(45) NULL, "
+                         "PRIMARY KEY (`id`)); ")
         print(f"Table 'users' Created")
 
 mycursor.execute('SELECT * FROM users')
@@ -45,6 +50,28 @@ for a in users:
     print('Username: ', a[1])
     print('Password: ', a[2])
 
+
+#membership tables
+mycursor.execute("CREATE TABLE 'ecoeatsusers'.'memberships' ("
+                 "'membership_id' INT,"
+                 "'customer_id' INT,"
+                 "'rewards' VARCHAR(1000)"
+                 "'currentBalance' INT DEFAULT 0"
+                 "'totalBalance' INT DEFAULT 0"
+                 "'date_joined DATE"
+                 "PRIMARY KEY ('membership_id'));")
+
+mycursor.execute("CREATE TABLE 'ecoeatsusers'.'storeRewards' ("
+                 "'rewards_id INT PRIMARY KEY,"
+                 "reward_name VARCHAR(1000)"
+                 "reward_value INT")
+
+# inserting values of rewards into table)
+mycursor.execute("INSERT INTO 'ecoeatsusers'.'storeRewards' (reward_id, reward_name, reward_value) VALUES"
+                 "(1, 'Reward1', 30),"
+                 "(2, 'Reward1', 60),"
+                 "(3, 'Reward1', 90),"
+                 "(4, 'Reward1', 120),")
 # ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
 # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
 # Then throw the ecoeatsusers into that folder.
@@ -60,7 +87,7 @@ def create_user():
             # id = User.User.get_userCount()
             # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
             # mycursor.execute(autoIncrement)
-            # print(id)
+            print(id)
             insert_query = "INSERT INTO users ( username, password) " \
                            "VALUES (%s, %s)"
             user = User.User(create_user_form.username.data, create_user_form.password.data)
@@ -217,24 +244,6 @@ def login():
             return "Invalid credentials. Please try again or sign up."
 
     return render_template('login.html', form=loginForm)
-
-    #     #query to fetch user by username and password
-    #     select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
-    #     mycursor.execute(select_query, (username, password))
-    #     user = mycursor.fetchone()
-    #     id = user[0] #retrieve id of user
-    #
-    #
-    #     if user:
-    #         #logged in, redirect  back to website
-    #         print(f"User ID: {id} , Username: {username} Password:wont display but possible logged in successfully.  ")
-    #         return redirect(url_for('profile'))
-    #
-    #     else:
-    #         #invalid login error msg
-    #         return "Invalid credentials. Please try again or sign up."
-    #
-    # return render_template('login.html', form=loginForm)
 #
 #
 # # previous /createUser, only left here for reference. do not use.
@@ -263,11 +272,6 @@ def login():
 # #     return render_template('createUser.html', form = create_user_form)
 #
 #
-@app.route('/dashboard')
-def dashboard():
-    return render_template("dashboard.html")
-
-
 @app.route('/')
 def home():
     return render_template("home.html")
@@ -309,6 +313,30 @@ def reviews():
 def cart():
     return render_template('cart.html')
 
+# @app.route('/createUser', methods = ['GET', 'POST'])
+# def create_user():
+#     create_user_form = CreateUserForm(request.form)
+#     if request.method == 'POST' and create_user_form.validate():
+#         users_dict = {}
+#         db = shelve.open('user.db', 'c')
+#         try:
+#             users_dict = db['Users']
+#         except:
+#              print("Error in retrieving Users from user.db.")
+#         user = User.User(create_user_form.first_name.data, create_user_form.last_name.data,
+#                          create_user_form.gender.data, create_user_form.membership.data, create_user_form.remarks.data)
+#         users_dict[user.get_user_id()] = user
+#         db['Users'] = users_dict
+#         # Test codes
+#         users_dict = db['Users']
+#         user = users_dict[user.get_user_id()]
+#         print(user.get_first_name(), user.get_last_name(), "was stored in user.db successfully with user_id ==",
+#               user.get_user_id())
+#         db.close()
+#
+#         return redirect(url_for('home'))
+#     return render_template('createUser.html', form = create_user_form)
+
 #checking if user is logged in to access their membership
 # @app.route("/membership")
 # def membership(request):
@@ -319,15 +347,9 @@ def cart():
 #        return redirect(url_for('create_user'))
 #     #if not, redirect to create users/log in page
 #
-# #brings to membership home page
-# @app.route('/membershipHome')
-# def membershipHome():
-#     return render_template('membershipHome.html')
-
 
 
 #routing for all membership pages
-
 @app.route('/membership')
 def membership():
     return render_template('membershipHome.html')
@@ -663,7 +685,22 @@ def redeem_rewards():
         return "Error occurred while redeeming reward."
 
 
-app.route('/createReviews', methods=['GET', 'POST'])
+        return render_template('updateMembership.html', form=update_membership_form)
+
+@app.route('/deleteMembership/<int:id>', methods=['POST'])
+def delete_membership(id):
+    memberships_dict = {}
+    db = shelve.open('membership.db', 'w')
+    memberships_dict = db['Membership']
+    memberships_dict.pop(id)
+
+    db['Membership'] = memberships_dict
+    db.close()
+
+    return redirect(url_for('retrieve_membership'))
+
+#points system
+@app.route('/createReviews', methods=['GET', 'POST'])
 def create_reviews():
     create_reviews_form = CreateReviewsForm(request.form)
     if request.method == 'POST' and create_reviews_form.validate():
@@ -685,7 +722,11 @@ def retrieve_reviews():
         reviews_list.append(membership)
 
     return render_template('reviews.html', count=len(reviews_list), customers_list=reviews_list)
+
+
+
     return redirect(url_for('retrieve_reviews'))
+
 
 
 
@@ -693,3 +734,8 @@ if __name__ == '__main__':
     app.run()
 
 
+#COMBINE MEMBERSHIP FORM INTO SIGN UP
+#option for membership: Y or N
+#   if Y selected, open a new part of the form with all the extra membership qns
+#when click on membership page, check if user had selected Y, if so, bring them to home
+#if user selected N, bring them to membership signup page
