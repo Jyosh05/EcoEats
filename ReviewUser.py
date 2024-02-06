@@ -1,29 +1,40 @@
 class UserReview():
     count_id = 0
-    def __init__(self, first_name, last_name, feedback):
+
+    def __init__(self, name, email, stars, feedback):
         UserReview.count_id += 1
         self.__user_id = UserReview.count_id
-        self.__first_name = first_name
-        self.__last_name = last_name
+        self.__name = name
+        self.__email = email
+        self.__stars = stars
         self.__feedback = feedback
 
-    def get_user_id(self):
-        return self.__user_id
+    def get_stars(self):
+        return self.__stars
 
-    def get_first_name(self):
-        return self.__first_name
+    def set_stars(self, stars):
+        self.__stars = stars
 
-    def get_last_name(self):
-        return self.__last_name
+    def get_name(self):
+        return self.__name
+
+    def set_name(self, name):
+        self.__name = name
 
     def get_feedback(self):
         return self.__feedback
 
-    def set_first_name(self, first_name):
-        self.__first_name = first_name
-
-    def set_last_name(self, last_name):
-        self.__last_name = last_name
-
     def set_feedback(self, feedback):
         self.__feedback = feedback
+
+    def get_email(self):
+        return self.__email
+
+    def set_email(self, email):
+        self.__email = email
+
+    def get_user_id(self):
+        return self.__user_id
+
+    def set_user_id(self, user_id):
+        self.__user_id=user_id

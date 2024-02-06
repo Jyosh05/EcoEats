@@ -3,7 +3,32 @@
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/createUser.css') }}">
+<style>
+  .flashes {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
 
+  .flash {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    background-color: #f8d7da; /* Red background color for error messages, you can change it to your preferred color */
+    color: #721c24; /* Text color for error messages, you can change it to your preferred color */
+    border-radius: 4px;
+  }
+</style>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flashes">
+      {% for message in messages %}
+        <li class="flash">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
 <!--<h1 class="display-4">Create User</h1>-->
 <form id="formPopUp" method="POST" action="">

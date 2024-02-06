@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+<style>
+    .nav-item { position: relative; } .dropdown-menu { display: none; position: absolute; z-index: 1; } .nav-item:hover .dropdown-menu { display: block; } #your-reviews{ background-color: #96C087; font-weight: bolder; }
+</style>
 
 <!-- javascript for cart -->
 <script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
@@ -42,18 +45,23 @@
             <a class="dropdown-item" id="dessert" href="/dessert">Dessert</a>
           </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/createMembership">Membership</a>
-        </li>
+        <li class="nav-item"> <a class="nav-link" href="/createMembership">Create Membership (temp)</a> </li> <li class="nav-item"> <a class="nav-link" href="/membership">Membership (temp)</a> </li> <li class="nav-item"> <a class="nav-link" href="/createRewards">(Test) Rewards</a> </li> <li class="nav-item"> <a class="nav-link" href="/retrieveMembershipAdmin">RetrieveMembership (temp)</a> </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/reviews">Review</a>
-          <ul class="dropdown-menu">
-            <a class="dropdown-item" id="add-review" href="/createReviews">Add Review</a>
-          </ul>
-        </li>
+        <li class="nav-item"> <a class="nav-link" href="/reviews">Review ▼</a> <ul class="dropdown-menu"> <li><a class="dropdown-item" id="your-reviews" href="/retrieveReviews">Your Reviews</a></li> </ul> </li>
 
       </ul>
+    </div>
+
+    <div>
+     {% if 'user_id' in session %}
+    {% if User is defined %}
+        <p>Welcome, {{ User.User.get_username_by_id(session['user_id']) }}! <a href="{{ url_for('logout') }}">Logout</a></p>
+    {% else %}
+        <p>Welcome, User is not defined. <a href="{{ url_for('logout') }}">Logout</a></p>
+    {% endif %}
+{% else %}
+    <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
+{% endif %}
     </div>
 
     <div class="cart">

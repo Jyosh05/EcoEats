@@ -167,3 +167,13 @@
     height: 100%;
     width:80%;
 }
+
+.dot {
+  height: 40px;
+  width: 40px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 30px;
+  margin-top:30px;
+}
