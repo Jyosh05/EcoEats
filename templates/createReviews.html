@@ -1,11 +1,104 @@
-{% extends 'base.html' %}
-{% block title %}Create Reviews{% endblock %}
-
-
+{% extends "base.html" %}
+{% block title %}Create Review{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/appetizer.css') }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
-<script src="{{ url_for('static', filename='javascript/recommended.js') }}" defer></script>
-{% end block %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/createReviews.css')}}">
+<script src="{{ url_for('static', filename='javascript/stars.js') }}" defer></script>
+<style>
+    *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    align-items: center;
+}
+
+.btn btn-primary{
+    position: absolute;
+    bottom: 10%;
+}
+
+#reviews-container {
+    margin-top: 20px;
+}
+
+.review {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#add-review-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#star-rating {
+    display: flex;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 50px;
+    color: gray;
+    margin-right: 5px;
+}
+
+.star:hover,
+.star.active {
+    color: gold;
+}
+
+h1{
+text-align: center;
+justify-content; center;
+}
+
+h4{
+text-align: center;
+justify-content;center;
+}
+
+</style>
+
+{% from "includes/_formHelper.html" import render_field %}
+<h1 class="display-4">Feedback to Us!</h1>
+<h4>We want to hear from you!</h4>
+
+<form id="add-review-form" action="{{ url_for('create_reviews') }}" method="POST">
+        <label for="add-review-form">Name:</label>
+        {{ form.name() }}
+
+        <label for="add-review-form">Email:</label>
+        {{ form.email() }}
+
+        <label for="add-review-form">Stars:</label>
+        <div id="star-rating">
+            <input type="hidden" name="stars" id="stars-input" value="0">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+
+        <label for="add-review-form">Feedback:</label>
+        {{ form.feedback() }}
+
+    <input type="submit" value="Submit" class="btn btn-primary"/>
+</form>
+{%endblock%}

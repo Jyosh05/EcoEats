@@ -1,11 +1,59 @@
-{% extends 'base.html' %}
-{% block title %}Retrieve Reviews{% endblock %}
-
-
+{% extends "base.html" %}
+{% block title %}Library Loan System - Retrieve Users{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/appetizer.css') }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
-<script src="{{ url_for('static', filename='javascript/recommended.js') }}" defer></script>
-{% end block %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveReviews.css')}}">
+<style>
+    h4{
+text-align: center;
+justify-content: center;
+font-size: 40px;
+}
+
+h5{
+text-align: center;
+justify-content: center;
+}
+
+.review {
+border: 3px solid #9CAF88;
+padding: 10px;
+margin: 10px 0;
+border-radius: 15px;
+position: relative;
+max-width: 500px;
+word-wrap: break-word;
+height: 300px;
+overflow: hidden;
+}
+
+.actionButton{
+position: relative;
+padding: 10px;
+right: 75px;
+top:130px;
+}
+
+</style>
+<h4>Your Feedbacks</h4>
+<h5>View all of your feedbacks here!</h5>
+<div>
+    <table>
+    {% for review in reviews %}
+    <td>
+    <div class="review">
+        <p><strong>No. of Reviews:</strong> {{ review[0] }}</p>
+        <p><strong>Name:</strong> {{ review[1] }}</p>
+        <p><strong>Email:</strong> {{ review[2] }}</p>
+        <p><strong>Stars (1-5):</strong> {{ review[3] }}</p>
+        <p><strong>Feedback:</strong> {{ review[4] }}</p>
+
+    </div>
+
+    <td><a href="/updateReviews/{{ review[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
+    <td><a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
+
+    </td>
+    {% endfor %}
+    </table>
+</div>
+{%endblock%}

@@ -4,8 +4,8 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/_navbarAdmin.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link    href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
-    rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
+      rel="stylesheet">
 
 <br>
 
@@ -14,15 +14,47 @@
 <div class="main">
 
 
-        <div class="mainBody">
-            <p>dasshboard</p>
-            <h2>mainBody</h2>
+    <div class="mainBody">
+        <p>dasshboard</p>
+        <h2>mainBody</h2>
+
+
+        <h1 class="display-4">Retrieve Users for Admin</h1>
+        <div>
+            <table>
+                {% for review in reviews %}
+                <td>
+                    <div class="review">
+                        <p><strong>User ID:</strong> {{ review[0] }}</p>
+                        <p><strong>Name:</strong> {{ review[1] }}</p>
+                        <p><strong>Email:</strong> {{ review[2] }}</p>
+                        <p><strong>Stars:</strong> {{ review[3] }}</p>
+                        <p><strong>Feedback:</strong> {{ review[4] }}</p>
+                    </div>
+                </td>
+                <td><a href="/updateReviews/{{ review[0] }}" class="actionButton"><i
+                        class="fa-solid fa-pen-to-square"></i></a></td>
+                <td><a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-trash"></i></a>
+                </td>
+                {% endfor %}
+            </table>
         </div>
+
+
     </div>
 
+
+    <h1>Report</h1>
+    <div>
+        <h2>Product Prices Chart</h2>
+        <img src="{{ chart_path }}" alt="Product Prices Chart">
+    </div>
+
+
+
+</div>
+
 </body>
-
-
 
 
 {% endblock %}

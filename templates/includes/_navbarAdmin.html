@@ -3,16 +3,16 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-    href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
-    rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
+        rel="stylesheet">
 <script src="https://kit.fontawesome.com/ea5763dd29.js" crossorigin="anonymous"></script>
 
 <!-- font for the welcome bar -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-    href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
-    rel="stylesheet">
+        href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
+        rel="stylesheet">
 
 <div class="header">
     <div class="welcome-bar">
@@ -32,24 +32,64 @@
 </div>
 
 <body>
-    <div class="main">
-        <div class="sidebar">
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
+<div class="main">
+    <div class="sidebar">
 
-            <h3>sidebar</h3>
+        <div id="sidebarUser">
+            <span class="dot"></span>
+            {% if 'user_id' in session %}
+            <p>Welcome, {{ User.User.get_username_by_id(session['user_id']) }}! <a
+                    href="{{ url_for('logout') }}">Logout</a></p>
+            {% else %}
+            <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
+            {% endif %}
         </div>
 
-        <div class="mainBody">
-            <p>navbaradmin</p>
-            <h2>mainBody</h2>
+        <hr>
+
+        <div id="siderbarMain">
+
+            <ul>
+                <h2>Home</h2>
+                <li>
+                    <a href="/dashboard">Dashboard</a>
+                </li>
+                <li>
+                    <a href="/sales">Sales</a>
+                </li>
+                <li>
+                    <a href="/products">Products</a>
+                </li>
+
+            </ul>
+
+            <hr>
+
+            <ul>
+                <h2>Others</h2>
+                <li>
+                    <a href="/retrieveUser">Customers</a>
+                </li>
+            </ul>
         </div>
+
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+        <h3>sidebar</h3>
     </div>
+
+    <div class="mainBody">
+        <p>navbaradmin</p>
+        <h2>mainBody</h2>
+    </div>
+</div>
 </body>
