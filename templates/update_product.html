@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Recommended{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<!-- Update products -->
+<h1 class="display-4">Update Product</h1>
+
+<span class="btn btn-warning">For category field, please indicate which menu the food item is from.
+        Only use the following terms (follow the structure given here): appetizer, breakfast, lunch, dinner, dessert! </span>
+
+<form method="POST" action="" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="idproducts">Product ID:</label>
+    <input type="number" id="idproducts" name="idproducts" class="form-control" required>
+  </div>
+  <div class="form-group">
+    {{ render_field(form.name, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.price, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.category, class="form-control") }}
+  </div>
+   <div class="form-group">
+    {{ render_field(form.image, class="form-control") }}
+  </div>
+  <div class="form-group">
+    {{ render_field(form.description, class="form-control") }}
+  </div>
+
+  <div class="form-group">
+    {{ render_field(form.ingredients_info, class="form-control") }}
+  </div>
+
+
+  <div style="margin-top: 10px;">
+    <input type="submit" value="Update" class="btn btn-primary"/>
+    </div>
+
+</form>
+
+{% endblock %}

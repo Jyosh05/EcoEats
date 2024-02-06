@@ -1,17 +1,17 @@
-{% extends 'productBase.html' %}
+{% extends 'base.html' %}
 
-{% block title %}Recommended{% endblock %}
-{% block heading %}Recommended{% endblock %}
+{% block title %}{{ page_title }}{% endblock %}
+
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/recommended.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/productBase.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
-    <h1>Recommended</h1>
+    <h1>{{ category }}</h1>
         <div class="products-container">
-    {% if recommended_products %}
-    {% for product in recommended_products %}
+    {% if products %}
+    {% for product in products %}
         <div class="product-item">
             {% if product[4] %}
                 <!-- Add a data-bs-toggle and data-bs-target attributes to the image to trigger the modal -->
@@ -48,22 +48,23 @@
                         </div>
                         <div class="modal-footer">
                             <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post">
-                            <div class="quantity-input">
-                                <label for="quantity_{{ product[0] }}">Quantity:</label>
-                                <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1">
+                                <!-- Include other product information if needed -->
+                                <div class="quantity-input">
+                                    <label for="quantity_{{ product[0] }}">Quantity:</label>
+                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1">
+                                </div>
+                                <button type="submit" class="btn btn-secondary">Add to Cart</button>
+                            </form>
+
+
                             </div>
-
-
-                                    <button type="submit" class="btn btn-secondary">Add to Cart</button>
-                                </form>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     {% endfor %}
 {% else %}
-    <p>No recommended items available.</p>
+    <p>No items available.</p>
 {% endif %}
 
 </div>
@@ -72,12 +73,6 @@
     <a href="/create_product" class="btn btn-warning">Create Food Item</a>
     <a href="/retrieve_product" class="btn btn-warning">Update Food Item</a>
 </div>
+
+
 {% endblock %}
-
-
-
-
-
-
-
-

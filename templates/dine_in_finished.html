@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Completed{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<img src="{{ url_for('static', filename='img/tick.png' ) }}" alt="{{ order_placed }}" width="380" height="330">
+
+<h1>Your order has been placed!</h1>
+<p>Receipt has been sent to your email</p>
+
+<button><a href="{{ url_for('home') }}">Proceed back to Home page</a></button>
+
+
+
+{% endblock %}
