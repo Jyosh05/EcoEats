@@ -44,7 +44,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
@@ -52,24 +52,24 @@ mydb = mysql.connector.connect(
 db = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
-    port=3306,
+    password='ecoeats',
+    port='3306',
     database='ecoeatsusers'
 )
 
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
-    port=3306,
+    password='ecoeats',
+    port='3306',
     database='ecoeatsusers'
 )
 
 my_db = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
-    port=3306,
+    password='ecoeats',
+    port='3306',
     database='ecoeatsusers'
 )
 
@@ -119,13 +119,13 @@ for a in tableCheck:
 
     if not tableExist:
         cursor.execute("CREATE TABLE `ecoeatsusers`"
-                       "`products` "
+                       ".`products` "
                        "(`idproducts` INT NOT NULL, `name` VARCHAR(100) NULL, "
                        "`price` DECIMAL(10,2) NULL, "
                        "`category` VARCHAR(45) NULL, "
                        "`image` VARCHAR(200) NULL,"
                        "`description` VARCHAR(400) NULL,"
-                       "`ingredients_info` VARCHAR(1000) NULL"
+                       "`ingredients_info` VARCHAR(1000) NULL,"
                        "PRIMARY KEY (`idproducts`)); ")
         print(f"Table 'products' Created")
 
@@ -140,8 +140,8 @@ for a in tableCheck:
     if not tableExist:
         cur.execute('''
             CREATE TABLE `ecoeatsusers`
-              `cart`(
-                id int NOT NULL AUTO_INCREMENT,
+              .`cart`(
+                id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 product_name VARCHAR(100) DEFAULT NULL,
                 product_price DECIMAL(10, 2) DEFAULT NULL,
                 product_image VARCHAR(200) DEFAULT NULL,
@@ -161,8 +161,8 @@ for a in tableCheck:
     if not tableExist:
         mycursor.execute('''
             CREATE TABLE `ecoeatsusers`
-              `order_info`(
-                order_id int NOT NULL AUTO_INCREMENT,
+              .`order_info`(
+                order_id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 order_type VARCHAR(45) DEFAULT NULL,
                 dine_in_time VARCHAR(45) DEFAULT NULL,
                 pax INT DEFAULT NULL,
