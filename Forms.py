@@ -4,6 +4,7 @@ from wtforms import Form, StringField, PasswordField, RadioField, SelectField, T
     ValidationError, FileField, IntegerField
 from wtforms.fields import EmailField, DateField, SubmitField
 from wtforms.validators import DataRequired
+from flask_wtf.file import FileField, FileAllowed
 
 
 class CreateUserForm(Form):
@@ -58,3 +59,39 @@ class CreateMembershipForm(Form):
     #                      default='')
     email = EmailField('Email', [validators.Email(), validators.DataRequired()])
     date_joined = DateField('Date Joined', format='%Y-%m-%d')
+
+class CreateProductForm(Form):
+    name = StringField(' Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    price = StringField('Price', [validators.Length(min=1, max=150),validators.DataRequired()])
+    category = StringField('Category', [validators.Length(min=1, max=150), validators.DataRequired()])
+    image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
+    description = TextAreaField('Description', [validators.Length(min=1, max=400), validators.DataRequired()])
+    ingredients_info = TextAreaField('Ingredients Info', [validators.Length(min=1, max=600), validators.DataRequired()])
+
+
+
+    # function to validate price entered to make sure that the price entered is either integers or float
+    def validate_price(form, field):
+        try:
+            # Attempt to convert the input from the above field, price, to a float
+            float_value = float(field.data)
+        except ValueError:
+            raise validators.ValidationError('Price must be a valid number.')
+
+    def validate_category(form, field):
+        # Check if the field being validated is 'category'
+        if field.name == 'category':
+            # Convert the input to lowercase
+            field.data = field.data.lower()
+
+
+class DineInForm(Form):
+    time = StringField('Approximated Dine-in Timing',[validators.Length(min=1, max=4), validators.DataRequired()])
+    pax = StringField('No. of People Dining-In', [validators.Length(min=1, max=150), validators.DataRequired()])
+
+
+class DeliveryForm(Form):
+    street = StringField('Street', [validators.Length(min=1, max=150), validators.DataRequired()])
+    block = StringField('Block', [validators.Length(min=1, max=150), validators.DataRequired()])
+    unit_no = StringField('Unit No', [validators.Length(min=1, max=150), validators.DataRequired()])
+    postal_code = StringField('Postal Code', [validators.Length(min=1, max=150), validators.DataRequired()])

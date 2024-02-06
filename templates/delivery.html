@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Cart- Delivery{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+
+<table class="table table-striped">
+    <tbody>
+        {% for item in cart_items %}
+            <tr>
+                <td>
+                    {% if item.get_image() %}
+                        <img src="{{ url_for('static', filename='img/' + item.get_image()) }}" alt="{{ item.get_name() }} Image" width="150" height="150">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                    {{ item.get_name() }}
+                </td>
+                <td>{{ item.get_quantity() }}</td>
+                {% if item.get_price() is not none and item.get_quantity() is not none %}
+                    <td>${{ item.get_price() * item.get_quantity() }}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>Subtotal: ${{ total_price }}</p>
+<p>Delivery Fee: ${{ delivery_fee }}</p>
+<p>Total: ${{ new_total }}</p>
+
+
+<!-- Display delivery details if available -->
+{% if delivery %}
+    <p>Street: {{ delivery.get_street() }}</p>
+    <p>Block: {{ delivery.get_block() }}</p>
+    <p>Unit No.: {{ delivery.get_unit_no() }}</p>
+    <p>Postal Code: {{ delivery.get_postal_code() }}</p>
+
+{% endif %}
+
+
+
+<form method="post" action="/delivery">
+
+    <div class="form-group">
+        {{ render_field(form.street, class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.block, class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.unit_no, class="form-control") }}
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.postal_code, class="form-control") }}
+    </div>
+
+    <div style="margin-top: 10px;">
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div class="payment_method">
+
+</div>
+
+<button><a href="delivery_finished">Proceed to Pay</a></button>
+
+{% endblock %}

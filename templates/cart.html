@@ -1,24 +1,58 @@
 {% extends 'base.html' %}
-{% block title %}Recommended{% endblock %}
+{% block title %}Cart{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
-<script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
 
+<table class="table table-striped">
+       <tbody>
+        {% for item in cart_items %}
+            <tr>
+                <td>
+                {% if item.get_image() %}
+                    <img src="{{ url_for('static', filename='img/' + item.get_image()) }}" alt="{{ item.get_name() }} Image" width="150" height="150">
+                {% else %}
+                    No Image
+                {% endif %}
+                {{ item.get_name() }}
+            </td>
+                {% if item.get_price() and item.get_quantity() %}
+                    <td>${{ item.get_price() * item.get_quantity() }}</td>
+                {% else %}
+                    <td>N/A</td>
+                {% endif %}
+                <td>
 
-<div class="cart">
+                    <form action="{{ url_for('update_cart', product_id=item.get_name()) }}" method="post">
+                        <input type="hidden" name="product_id" value="{{ item.get_name() }}">
+                        <input type="number" name="quantity" value="{{ item.get_quantity() }}" min="1">
+                        <button type="submit" class="btn btn-warning">Update</button>
+                    </form>
 
-        <div class="listCart">
-        </div>
+                </td>
 
-        <div class="btn">
-            <button class="checkOut">Proceed to Pay</button>
-        </div>
+                 <td>
+                    <form action="{{ url_for('remove_from_cart') }}" method="post">
+                        <input type="hidden" name="product_id" value="{{ item.get_name() }}">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    </td>
 
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 
+<a href="recommended">+ Add More Items</a>
+<p>Total Price: ${{ total_price }}</p>
+
+<div class="order-type">
+    <h4>Please select type of mode for your order:</h4>
+    <a href="dine_in">Dine-in</a>
+    <a href="delivery">Delivery</a>
+    <a href="collection">Collection</a>
 </div>
-
 {% endblock %}
