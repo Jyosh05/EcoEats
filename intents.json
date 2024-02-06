@@ -1,0 +1,21 @@
+{"intents": [
+  {"tag":  "greetings",
+  "patterns": ["hello", "hey", "hi", "good day", "greetings", "what's up", "hows it going", "howdy", "yo"],
+    "responses": ["Hello!", "Hey!", "What can I do for you?"]},
+  {
+      "tag": "goodbye",
+      "patterns": ["goodbye", "bye", "see you later", "farewell", "take care"],
+      "responses": ["Goodbye!", "Farewell!", "Hope to see you again!", "Take care!"]},
+    {
+      "tag": "help",
+      "patterns": ["help", "need assistance", "support", "guide", "Help"],
+      "responses": ["Sure, I'm here to help!", "How can I assist you?", "I'm here for any questions you have."]},
+    {
+      "tag": "operating_hours",
+      "patterns": ["operating hours", "business hours", "when are you open", "how long are you open", "when"],
+      "responses": ["Our operating hours are from 9 AM to 6 PM, Monday to Friday.", "We are open Monday through Friday, 9 AM to 6 PM.", "9 AM to 6 PM on the weekdays."]},
+    {
+      "tag": "vegetarian",
+      "patterns": ["vegetarian options", "no meat", "i cant eat meat", "fruits and vegetables", "vegetarian"],
+      "responses": ["We have vegetarian options such as egg & roasted veggie salad, green fruits salad, classic fruit salad, fruits & oatmeal, blueberry and banana pancakes."]}
+]}

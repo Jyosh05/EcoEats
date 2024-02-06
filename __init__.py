@@ -1,9 +1,16 @@
 # first file to run when starting the web application
 from flask import Flask, render_template, request, redirect, url_for
+import User, Membership
 
+import random
+import json
+import pickle
+import numpy as np
+import nltk
+from nltk.stem import WordNetLemmatizer
+from tensorflow.keras.models import load_model
 from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm
 import ReviewUser
-import shelve, User, Membership
 
 # 1:56pm
 # pip install mysql-connector-python
@@ -27,7 +34,7 @@ app.secret_key = 'my_super_secret_key_123'
 mydb= mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='1234',
     port='3306',
     database='ecoeatsusers'
 )
@@ -572,6 +579,57 @@ def plot_to_base64():
 #
 #         return redirect(url_for('home'))
 #     return render_template('createUser.html', form = create_user_form)
+
+
+intents = json.loads(open('intents.json').read())
+
+lemmatizer = WordNetLemmatizer()
+words = pickle.load(open('words.pkl', 'rb'))
+classes = pickle.load(open('classes.pkl', 'rb'))
+model = load_model('chatbotmodel.h5')
+
+def clean_up_sentence(sentence):
+    sentence_words = nltk.word_tokenize(sentence)
+    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
+    return sentence_words
+
+def bag_of_words(sentence):
+    sentence_words = clean_up_sentence(sentence)
+    bag = [0] * len(words)
+    for w in sentence_words:
+        for i, word in enumerate(words):
+            if word == w:
+                bag[i] = 133
+    return np.array(bag)
+
+def predict_class(sentence):
+    bow = bag_of_words(sentence)
+    res = model.predict(np.array([bow]))[0]
+    ERROR_THRESHOLD = 0.25
+    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+
+    results.sort(key=lambda x: x[1], reverse=True)
+    return_list = []
+    for r in results:
+        return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
+    return return_list
+
+def get_response(intents_list, intents_json):
+    tag = intents_list[0]['intent']
+    list_of_intents = intents_json['intents']
+    for i in list_of_intents:
+        if i['tag'] == tag:
+            result = random.choice(i['responses'])
+            break
+    return result
+
+
+@app.route("/get")
+def get_bot_response():
+    user_message = request.args.get("msg")
+    ints = predict_class(user_message)
+    res = get_response(ints, intents)
+    return res
 
 @app.route('/dashboard')
 @login_required(role='admin')
