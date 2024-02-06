@@ -10,4 +10,200 @@
 <div class="container-h1">
 <h1>December Promotions</h1>
 </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #chat-container {
+    border: none; /* Remove the border */
+    padding: 10px;
+    height: 500px; /* Set an initial height */
+    overflow-y: auto; /* Only show the scroll bar when content is overflowing */
+    margin-bottom: 10px;
+    background-color: #fff;
+}
+
+#modal-header {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: -10px;
+}
+
+        .user-bubble-container {
+            text-align: right;
+            margin-bottom: 10px;
+        }
+
+        .user-bubble {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            display: inline-block;
+        }
+
+        .bot-bubble-container {
+            text-align: left;
+            margin-bottom: 10px;
+        }
+
+        .bot-bubble {
+            background-color: #8d9f6f;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 70%;
+            display: inline-block;
+        }
+
+        #user-input {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        #user-message {
+            width: 100%;
+            padding: 5px;
+            margin-right: 5px;
+        }
+
+        #send-btn {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        #open-chatbot-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #8D9f6F;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+            .modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(50%, -40%);
+    width: 30%;
+    height: 75%;
+    justify-content: center;
+    align-items: center;
+    outline: none; /* Remove outline */
+    z-index: 1050; /* Ensure modal appears above Bootstrap's default */
+}
+
+
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            height: 100%;
+            width: 100%l;
+            display: flex;
+            flex-direction: column; /* Make the content stack vertically */
+            justify-content: space-between; /* Space between content and buttons */
+        }
+
+
+    </style>
+</head>
+<body>
+
+<!-- Circular button to open chatbot modal -->
+<button id="open-chatbot-btn" onclick="openChatbot()">
+    <i class="fa-solid fa-robot"></i> <!-- FontAwesome icon for chat -->
+</button>
+
+<!-- Modal for chatbot -->
+<div class="modal" id="chatbot-modal">
+    <div class="modal-content">
+
+        <div id="modal-header">EcoEats | Virtual Assistant <i class="fa-solid fa-robot"></i> </div>
+
+        <div id="chat-container" class="border">
+            {% for message in chat_messages %}
+            {% if message.sender == 'user' %}
+            <div class="user-bubble-container">
+                <div class="user-bubble">{{ message.text }}</div>
+            </div>
+            {% else %}
+            <div class="bot-bubble-container">
+                <p>sdksakdka</p>
+                <div class="bot-bubble">{{ message.text }}</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        <div id="user-input">
+            <input type="text" id="user-message" class="form-control" placeholder="Type your message...">
+            <button id="send-btn" class="btn btn-primary" onclick="sendMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+</div>
+
+<!-- Bootstrap 5 JS Bundle (Popper included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function sendMessage() {
+        var userMessage = document.getElementById("user-message").value;
+        document.getElementById("chat-container").innerHTML +=
+            '<div class="user-bubble-container"><div class="user-bubble">' + userMessage + '</div></div>';
+        document.getElementById("user-message").value = "";
+
+        // Make a request to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/get?msg=" + encodeURIComponent(userMessage), true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var botResponse = xhr.responseText;
+                document.getElementById("chat-container").innerHTML +=
+                    '<div class="bot-bubble-container"><div class="bot-bubble">' + botResponse + '</div></div>';
+                document.getElementById("chat-container").scrollTop = document.getElementById("chat-container").scrollHeight;
+            }
+        };
+        xhr.send();
+    }
+
+    function openChatbot() {
+    var modal = document.getElementById("chatbot-modal");
+    modal.style.display = modal.style.display === "flex" ? "none" : "flex";
+}
+
+
+    function closeChatbot() {
+        document.getElementById("chatbot-modal").style.display = "none";
+    }
+
+
+</script>
+
+
+</body>
+</html>
+
 {% endblock %}
