@@ -2,6 +2,8 @@ import wtforms.fields
 
 from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators, EmailField
 from wtforms.fields import EmailField, DateField
+from wtforms.validators import DataRequired
+
 
 class CreateUserForm(Form):
     # first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
@@ -22,8 +24,9 @@ class CreateUserForm(Form):
 class CreateReviewsForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     email = EmailField('Email', [validators.Email(), validators.DataRequired()])
-    stars = RadioField('What do you think of your experience on EocEats?', [validators.DataRequired()],
-                            choices=[('1 star'), ('2 stars'), ('3 stars'), ('4 stars'), ('5 stars')])
+    stars = SelectField('Stars',
+                        choices=[(1, '1 Star'), (2, '2 Stars'), (3, '3 Stars'), (4, '4 Stars'), (5, '5 Stars')],
+                        coerce=int, validators=[DataRequired()])
     feedback = TextAreaField('Any Feedback?',[validators.Optional()])
 
 class CreateMembershipForm(Form):

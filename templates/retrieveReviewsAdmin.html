@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Library Loan System - Retrieve Users for Admin{% endblock %}
+{% block content %}
+<h1 class="display-4">Retrieve Users for Admin</h1>
+<div>
+    <table>
+    {% for review in reviews %}
+    <td>
+    <div class="review">
+        <p><strong>User ID:</strong> {{ review[0] }}</p>
+        <p><strong>Name:</strong> {{ review[1] }}</p>
+        <p><strong>Email:</strong> {{ review[2] }}</p>
+        <p><strong>Stars:</strong> {{ review[3] }}</p>
+        <p><strong>Feedback:</strong> {{ review[4] }}</p>
+    </div>
+    </td>
+    <td><a href="/updateReviews/{{ review[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
+    <td><a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
+    {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
 <div class="welcome-bar">
-        <img src="static/img/Logo.png">
+        <img src="static/img/ecoeats-logo.png">
         <span>Welcome to EcoEats</span>
 </div>
 
@@ -40,15 +40,24 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/membership">Membership</a>
+          <a class="nav-link" href="/createMembership">Create Membership (temp)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/membership">Membership (temp)</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/createRewards">(Test) Rewards</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/retrieveMembershipAdmin">RetrieveMembership (temp)</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/reviews">Review</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="/createReviews">Create Reviews</a>
-            <a class="dropdown-item" href="#">Retrieve Users</a>
-          </div>
+          <a class="nav-link" href="/reviews">Review ▼</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" id="your-reviews" href="/retrieveReviews">Your Reviews</a></li>
+
+            </ul>
         </li>
 
       </ul>

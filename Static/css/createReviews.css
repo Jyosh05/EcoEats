@@ -13,41 +13,56 @@ body{
     bottom: 10%;
 }
 
-h6{
-    color: #black;
-}
-
-.rating-container {
-    text-align: center;
-}
-
-.stars input {
-    display: none;
-}
-
-.stars {
-    direction: rtl; /* Set direction to right-to-left */
-}
-
-
-.stars label {
-    font-size: 30px;
-    color: #ccc;
-    cursor: pointer;
-}
-
-.stars label:before {
-    content: '\2605'; /* Unicode character for a solid star */
-    display: block;
-}
-
-.stars input:checked ~ label {
-    color: #ffcc00;
-}
-
-button {
+#reviews-container {
     margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 18px;
+}
+
+.review {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#add-review-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input,
+textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+#star-rating {
+    display: flex;
     cursor: pointer;
+}
+
+.star {
+    font-size: 50px;
+    color: gray;
+    margin-right: 5px;
+}
+
+.star:hover,
+.star.active {
+    color: gold;
+}
+
+h1{
+text-align: center;
+justify-content; center;
+}
+
+h4{
+text-align: center;
+justify-content; center;
 }

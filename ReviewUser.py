@@ -1,6 +1,7 @@
 class UserReview():
     count_id = 0
-    def __init__(self, name, email,stars, feedback):
+
+    def __init__(self, name, email, stars, feedback):
         UserReview.count_id += 1
         self.__user_id = UserReview.count_id
         self.__name = name
@@ -37,4 +38,3 @@ class UserReview():
 
     def set_user_id(self, user_id):
         self.__user_id = user_id
-
