@@ -36,38 +36,41 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 #
 #
 # mySql Credentials
+
+
+# db = mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='JYOSHNA2006!',
+#     port=3306,
+#     database='products'
+# )
+
+# mydb = mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='JYOSHNA2006!',
+#     port=3306,
+#     database='products'
+# )
+
+# my_db = mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='JYOSHNA2006!',
+#     port=3306,
+#     database='products'
+# )
+
+
+
 mydb= mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='JYOSHNA2006!',
     port='3306',
     database='ecoeatsusers'
 )
-
-db = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='JYOSHNA2006!',
-    port=3306,
-    database='products'
-)
-
-mydb = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='JYOSHNA2006!',
-    port=3306,
-    database='products'
-)
-
-my_db = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='JYOSHNA2006!',
-    port=3306,
-    database='products'
-)
-
 mycursor = mydb.cursor()
 
 tableCheck = ['users']
@@ -100,75 +103,104 @@ for a in users:
 # WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
 # Then throw the ecoeatsusers into that folder.
 
-@app.route('/')
-def home():
-    return render_template("home.html")
+
+
+# cursor = db.cursor()
+# cur = mydb.cursor()
+# mycursor = my_db.cursor()
+
+db = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='JYOSHNA2006!',
+    port=3306,
+    database='ecoeatsusers'
+)
 
 cursor = db.cursor()
-cur = mydb.cursor()
-mycursor = my_db.cursor()
 
-
-tableCheck = ['products']
-for a in tableCheck:
+productTableCheck = ['products']
+for a in productTableCheck:
     cursor.execute(f"SHOW TABLES LIKE 'products'")
-    tableExist = cursor.fetchone()
+    productTableExist = cursor.fetchone()
 
-    if not tableExist:
-        cursor.execute("CREATE TABLE `products`"
-                       "`products` "
-                       "(`idproducts` INT NOT NULL, `name` VARCHAR(100) NULL, "
+    if not productTableExist:
+        cursor.execute("CREATE TABLE `ecoeatsusers`.`products` "
+                       "(`idproducts` INT NOT NULL, "
+                       "`name` VARCHAR(100) NULL, "
                        "`price` DECIMAL(10,2) NULL, "
                        "`category` VARCHAR(45) NULL, "
-                       "`image` VARCHAR(200) NULL,"
-                       "`description` VARCHAR(400) NULL,"
-                       "`ingredients_info` VARCHAR(1000) NULL"
+                       "`image` VARCHAR(200) NULL, "
+                       "`description` VARCHAR(400) NULL, "
+                       "`ingredients_info` VARCHAR(1000) NULL, "
                        "PRIMARY KEY (`idproducts`)); ")
+
         print(f"Table 'products' Created")
 
 cursor.execute('SELECT * FROM products')
 print(f"Using table 'products' ")
 
-tableCheck = ['cart']
-for a in tableCheck:
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='JYOSHNA2006!',
+    port=3306,
+    database='ecoeatsusers'
+)
+
+cur = mydb.cursor()
+
+cartTableCheck = ['cart']
+for a in cartTableCheck:
     cur.execute(f"SHOW TABLES LIKE 'cart'")
     tableExist = cur.fetchone()
 
     if not tableExist:
         cur.execute('''
-            CREATE TABLE `product`
-              `cart`(
-                id int NOT NULL AUTO_INCREMENT,
-                product_name VARCHAR(100) DEFAULT NULL,
-                product_price DECIMAL(10, 2) DEFAULT NULL,
-                product_image VARCHAR(200) DEFAULT NULL,
-                quantity INT DEFAULT NULL
-            )
-        ''')
+                CREATE TABLE `ecoeatsusers`.`cart` (
+                    id INT NOT NULL AUTO_INCREMENT,
+                    product_name VARCHAR(100) DEFAULT NULL,
+                    product_price DECIMAL(10, 2) DEFAULT NULL,
+                    product_image VARCHAR(200) DEFAULT NULL,
+                    quantity INT DEFAULT NULL,
+                    PRIMARY KEY (id)
+                )
+            ''')
         print(f"Table 'cart' Created")
 
 cur.execute('SELECT * FROM cart')
 print(f"Using table 'cart' ")
 
-tableCheck = ['order_info']
-for a in tableCheck:
+my_db = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='JYOSHNA2006!',
+    port=3306,
+    database='ecoeatsusers'
+)
+
+mycursor = my_db.cursor()
+
+orderTableCheck = ['order_info']
+for a in orderTableCheck:
     mycursor.execute(f"SHOW TABLES LIKE 'order_info'")
     tableExist = mycursor.fetchone()
 
     if not tableExist:
         mycursor.execute('''
-            CREATE TABLE `product`
-              `order_info`(
-                order_id int NOT NULL AUTO_INCREMENT,
+            CREATE TABLE `ecoeatsusers`.`order_info` (
+                order_id INT NOT NULL AUTO_INCREMENT,
                 order_type VARCHAR(45) DEFAULT NULL,
                 dine_in_time VARCHAR(45) DEFAULT NULL,
                 pax INT DEFAULT NULL,
                 street VARCHAR(200) DEFAULT NULL,
                 block VARCHAR(45) DEFAULT NULL,
                 unit_no VARCHAR(45) DEFAULT NULL,
-                postal_code VARCHAR(45) DEFAULT NULL
+                postal_code VARCHAR(45) DEFAULT NULL,
+                PRIMARY KEY (order_id)
             )
         ''')
+
         print(f"Table 'order_info' Created")
 
 mycursor.execute('SELECT * FROM order_info')
@@ -1244,9 +1276,6 @@ def delete_reviews(user_id):
 
 
 
-@app.route("/cart")
-def cart():
-    return render_template('cart.html')
 
 #checking if user is logged in to access their membership
 # @app.route("/membership")
