@@ -1,5 +1,7 @@
 # first file to run when starting the web application
-from flask import Flask, render_template, request, redirect, url_for
+import datetime
+
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import User, Membership
 
 import random
@@ -38,12 +40,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 
-#
-# # Dont run code below yet.
-#
-#
-# mySql Credentials
-mydb= mysql.connector.connect(
+# # mySql Credentials
+mydb = mysql.connector.connect(
     host='localhost',
     user='root',
     password='1234',
@@ -103,9 +101,7 @@ for a in users:
     print('Username: ', a[1])
     print('Password: ', a[2])
 
-# ecoeatsusers file is MySql DB file, if u want to put onto ur local disk >
-# WIN + R, type in '%programdata%', find MySQL > MySQL Server 8.0 > Data
-# Then throw the ecoeatsusers into that folder.
+
 
 @app.route('/')
 def home():
@@ -216,13 +212,15 @@ def create_user():
 
             lastest_id = mycursor.lastrowid
 
-            print(f"{user.get_userCount()} {lastest_id} {user.get_username()} {user.get_password()} was stored in the database successfully.")
+            print(
+                f"{user.get_userCount()} {lastest_id} {user.get_username()} {user.get_password()} was stored in the database successfully.")
             return redirect(url_for('retrieve_user'))
         except Exception as e:
             print("Error:", e)
             mydb.rollback()
             return "Error occurred. Check logs for details."
     return render_template('createUser.html', form=create_user_form)
+
 
 @app.route('/retrieveUser')
 def retrieve_user():
@@ -231,13 +229,14 @@ def retrieve_user():
     users = mycursor.fetchall()
     return render_template('retrieveUser.html', users=users, User=User)
 
+
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
 def update_user(id):
     update_user_form = CreateUserForm(request.form)
 
     if request.method == 'POST' and update_user_form.validate():
         try:
-            #reetrieve user data from db
+            # reetrieve user data from db
             select_query = "SELECT username, password FROM users WHERE id = %s"
             mycursor.execute(select_query, (id,))
             user_details = mycursor.fetchone()
@@ -245,7 +244,6 @@ def update_user(id):
             if user_details:
                 username = update_user_form.username.data
                 password = update_user_form.password.data
-
 
                 update_query = "UPDATE users SET username = %s, password = %s WHERE id = %s"
                 data = (username, password, id)
@@ -263,7 +261,7 @@ def update_user(id):
 
     else:
         try:
-            #retrieve user data from mysql db
+            # retrieve user data from mysql db
             select_query = "SELECT username, password FROM users WHERE id = %s"
             mycursor.execute(select_query, (id,))
             user_details = mycursor.fetchone()
@@ -272,13 +270,13 @@ def update_user(id):
                 update_user_form.username.data = user_details[0]
                 update_user_form.password.data = user_details[1]
 
-
                 return render_template('updateUser.html', form=update_user_form)
             else:
                 return "User not found."
         except Exception as e:
             print("Error:", e)
             return "Error occurred while fetching user details."
+
 
 @app.route('/deleteUser/<int:id>/', methods=['GET', 'POST'])
 def delete_user(id):
@@ -303,9 +301,6 @@ def delete_user(id):
         return "Error occurred while deleting user."
 
 
-
-
-
 @app.route('/deleteUser/', methods=['POST'])
 def delete_users():
     try:
@@ -319,7 +314,7 @@ def delete_users():
             users = mycursor.fetchall()
 
             if users:
-                #delete all the selected users from db
+                # delete all the selected users from db
                 delete_query = f"DELETE FROM users WHERE id IN ({placeholders})"
                 mycursor.execute(delete_query, tuple(ids_to_delete))
                 mydb.commit()
@@ -334,6 +329,7 @@ def delete_users():
         print("Error:", e)
         mydb.rollback()
         return "Error occurred while deleting users."
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -639,20 +635,38 @@ def plot_to_base64():
 #     return role and role[0] == 'admin'
 
 
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     loginForm = CreateUserForm(request.form)
-#
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         password = request.form['password']
-#
-#         #query to fetch user by username and password
+# # @app.route('/login', methods=['GET', 'POST'])
+# # def login():
+# #     loginForm = CreateUserForm(request.form)
+# #
+# #     if request.method == 'POST':
+# #         username = request.form['username']
+# #         password = request.form['password']
+# #
+# #         #query to fetch user by username and password
+# #         select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
+# #         mycursor.execute(select_query, (username, password))
+# #         user = mycursor.fetchone()[0]
+# #
+# #         id = user #retrieve id of user
+#         # query to fetch user by username and password
 #         select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
 #         mycursor.execute(select_query, (username, password))
-#         user = mycursor.fetchone()[0]
+#         user = mycursor.fetchone()
+#         id = user[0]  # retrieve id of user
 #
-#         id = user #retrieve id of user
+#         if user:
+#             # logged in, redirect  back to website
+#             print(f"User ID: {id} , Username: {username} Password:wont display but possible logged in successfully.  ")
+#             return redirect(url_for('profile'))
+#
+#         else:
+#             # invalid login error msg
+#             return "Invalid credentials. Please try again or sign up."
+#
+#     return render_template('login.html', form=loginForm)
+
+
 #
 #
 #         if user:
@@ -754,6 +768,18 @@ def dashboard():
     reviews = mycursor.fetchall()
     print('a')
     return render_template("dashboard.html", User=User, reviews=reviews)
+# to redirect back to previous page
+# @app.route("/previous")
+# def previous():
+#     prev_route = session.get("prev_route")
+#     if prev_route:
+#         return redirect(url_for(prev_route))
+#     else:
+#         return "No previous route"
+#
+# @app.before_request
+# def before_request():
+#     session["prev_route"] = request.endpoint
 
 
 @app.route('/')
@@ -781,6 +807,17 @@ def recommended():
     category_names = [category[0] for category in cursor_categories.fetchall()]
     cursor_categories.close()
 
+
+@app.route('/reccomended')
+def reccomended():
+    # Define the number of products to fetch from each category
+    products_per_category = 2
+
+    # Fetch distinct category names from the products table
+    cursor_categories = db.cursor()
+    cursor_categories.execute('SELECT DISTINCT category FROM products')
+    category_names = [category[0] for category in cursor_categories.fetchall()]
+    cursor_categories.close()
     # Fetch recommended products for each category
     recommended_products = []
 
@@ -795,17 +832,22 @@ def recommended():
 def appetizers():
     return redirect(url_for('category', category='Appetizer')) # the category field here is
     # what helps to input the page title in then respective html pages
+    
+    
 @app.route('/breakfast')
 def breakfast():
     return redirect(url_for('category', category='Breakfast'))
+
 
 @app.route('/lunch')
 def lunch():
     return redirect(url_for('category', category='Lunch'))
 
+
 @app.route('/dinner')
 def dinner():
     return redirect(url_for('category', category='Dinner'))
+
 
 @app.route('/dessert')
 def dessert():
@@ -1169,136 +1211,139 @@ def delivery_finished():
 def dine_in_finished():
     return render_template('dine_in_finished.html')
 
+
 @app.route("/profile")
 def profile():
     return render_template('profile.html')
+
 
 @app.route('/reviews')
 def reviews():
     return render_template('reviews.html')
 
-@app.route('/createReviews', methods=['GET', 'POST'])
-def create_reviews():
-    create_reviews_form = CreateReviewsForm(request.form)
+# @app.route('/createReviews', methods=['GET', 'POST'])
+# def create_reviews():
+#     create_reviews_form = CreateReviewsForm(request.form)
+#
+#     if request.method == 'POST' and create_reviews_form.validate():
+#         try:
+#             # Create the reviews table if it doesn't exist
+#             mycursor.execute(
+#                 "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
+#                 "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
+#                 "`name` VARCHAR(100) DEFAULT NULL,"
+#                 "`email` VARCHAR(100) DEFAULT NULL,"
+#                 "`stars` INT DEFAULT NULL,"
+#                 "`feedback` VARCHAR(1000) DEFAULT NULL"
+#                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+#             )
+#
+#             # Insert data into the reviews table
+#             insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
+#             reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
+#                                             create_reviews_form.stars.data,
+#                                             create_reviews_form.feedback.data)
+#             reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
+#             mycursor.execute(insert_query, reviews_data)
+#             mydb.commit()
+#
+#             return redirect(url_for('retrieve_reviews'))
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred. Check logs for details."
+#
+#     return render_template('createReviews.html', form=create_reviews_form)
+#
+# @app.route('/retrieveReviews')
+# def retrieve_reviews():
+#     select_query = "SELECT * FROM reviews"
+#     mycursor.execute(select_query)
+#     reviews = mycursor.fetchall()
+#
+#     return render_template('retrieveReviews.html', reviews=reviews)
+#
+#
+# @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
+# def update_reviews(user_id):
+#     update_reviews_form = CreateReviewsForm(request.form)
+#
+#     if request.method == 'POST' and update_reviews_form.validate():
+#         try:
+#             # retrieve user data from db
+#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+#
+#             mycursor.execute(select_query, (user_id,))
+#             reviews = mycursor.fetchone()
+#
+#             if reviews:
+#                 name = update_reviews_form.name.data
+#                 email = update_reviews_form.email.data
+#                 stars = update_reviews_form.stars.data
+#                 feedback = update_reviews_form.feedback.data
+#
+#                 update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
+#                 data = (user_id, name, email, stars, feedback)
+#                 mycursor.execute(update_query, data)
+#
+#                 mydb.commit()
+#
+#                 print(f"USER ID: {user_id} updated successfully.")
+#                 return redirect(url_for('retrieve_reviews'))
+#             else:
+#                 return "Reviews not found."
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred while updating reviews."
+#     else:
+#         try:
+#
+#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+#             mycursor.execute(select_query, (user_id,))
+#             reviews = mycursor.fetchone()
+#
+#             if reviews:
+#
+#                 update_reviews_form.name.data = reviews[0]
+#                 update_reviews_form.email.data = reviews[1]
+#                 update_reviews_form.stars.data = reviews[2]
+#                 update_reviews_form.feedback.data = reviews[3]
+#
+#                 return render_template('createReviews.html', form=update_reviews_form)
+#
+#             else:
+#                 return "Reviews not found."
+#         except Exception as e:
+#
+#             print("Error:", e)
+#
+#             mydb.rollback()
+#
+#             return "Error occurred while updating reviews."
+#
+#
+# @app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
+# def delete_reviews(user_id):
+#     try:
+#         select_query = "SELECT * FROM reviews WHERE user_id = %s"
+#         mycursor.execute(select_query, (user_id,))
+#         reviews = mycursor.fetchone()
+#
+#         if reviews:
+#             delete_query = "DELETE FROM reviews WHERE user_id = %s"
+#             mycursor.execute(delete_query, (user_id,))
+#             mydb.commit()
+#
+#             print(f"USER ID: {user_id} deleted successfully.")
+#             return redirect(url_for('retrieve_reviews'))
+#         else:
+#             return "Reviews not found."
+#     except Exception as e:
+#         print("Error:", e)
+#         mydb.rollback()
+#         return "Error occurred while deleting reviews."
 
-    if request.method == 'POST' and create_reviews_form.validate():
-        try:
-            # Create the reviews table if it doesn't exist
-            mycursor.execute(
-                "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
-                "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
-                "`name` VARCHAR(100) DEFAULT NULL,"
-                "`email` VARCHAR(100) DEFAULT NULL,"
-                "`stars` INT DEFAULT NULL,"
-                "`feedback` VARCHAR(1000) DEFAULT NULL"
-                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
-            )
-
-            # Insert data into the reviews table
-            insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
-            reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
-                                            create_reviews_form.stars.data,
-                                            create_reviews_form.feedback.data)
-            reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
-            mycursor.execute(insert_query, reviews_data)
-            mydb.commit()
-
-            return redirect(url_for('retrieve_reviews'))
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred. Check logs for details."
-
-    return render_template('createReviews.html', form=create_reviews_form)
-
-@app.route('/retrieveReviews')
-def retrieve_reviews():
-    select_query = "SELECT * FROM reviews"
-    mycursor.execute(select_query)
-    reviews = mycursor.fetchall()
-
-    return render_template('retrieveReviews.html', reviews=reviews)
-
-
-@app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
-def update_reviews(user_id):
-    update_reviews_form = CreateReviewsForm(request.form)
-
-    if request.method == 'POST' and update_reviews_form.validate():
-        try:
-            # retrieve user data from db
-            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-
-            mycursor.execute(select_query, (user_id,))
-            reviews = mycursor.fetchone()
-
-            if reviews:
-                name = update_reviews_form.name.data
-                email = update_reviews_form.email.data
-                stars = update_reviews_form.stars.data
-                feedback = update_reviews_form.feedback.data
-
-                update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
-                data = (user_id, name, email, stars, feedback)
-                mycursor.execute(update_query, data)
-
-                mydb.commit()
-
-                print(f"USER ID: {user_id} updated successfully.")
-                return redirect(url_for('retrieve_reviews'))
-            else:
-                return "Reviews not found."
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred while updating reviews."
-    else:
-        try:
-
-            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-            mycursor.execute(select_query, (user_id,))
-            reviews = mycursor.fetchone()
-
-            if reviews:
-
-                update_reviews_form.name.data = reviews[0]
-                update_reviews_form.email.data = reviews[1]
-                update_reviews_form.stars.data = reviews[2]
-                update_reviews_form.feedback.data = reviews[3]
-
-                return render_template('createReviews.html', form=update_reviews_form)
-
-            else:
-                return "Reviews not found."
-        except Exception as e:
-
-            print("Error:", e)
-
-            mydb.rollback()
-
-            return "Error occurred while updating reviews."
-
-
-@app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
-def delete_reviews(user_id):
-    try:
-        select_query = "SELECT * FROM reviews WHERE user_id = %s"
-        mycursor.execute(select_query, (user_id,))
-        reviews = mycursor.fetchone()
-
-        if reviews:
-            delete_query = "DELETE FROM reviews WHERE user_id = %s"
-            mycursor.execute(delete_query, (user_id,))
-            mydb.commit()
-
-            print(f"USER ID: {user_id} deleted successfully.")
-            return redirect(url_for('retrieve_reviews'))
-        else:
-            return "Reviews not found."
-    except Exception as e:
-        print("Error:", e)
-        mydb.rollback()
-        return "Error occurred while deleting reviews."
 
 
 
@@ -1307,6 +1352,8 @@ def cart():
     return render_template('cart.html')
 
 #checking if user is logged in to access their membership
+
+# checking if user is logged in to access their membership
 # @app.route("/membership")
 # def membership(request):
 #     #check if logged in, redirect to membership
@@ -1324,146 +1371,288 @@ def cart():
 
 
 
+# routing for all membership pages
 @app.route('/membership')
 def membership():
     return render_template('membershipHome.html')
+
 
 @app.route('/membershipShop')
 def membershipShop():
     return render_template('membershipShop.html')
 
+
 @app.route('/membershipTerms')
 def membershipTerms():
     return render_template('membershipTerms.html')
 
+
 @app.route('/membershipRewardHist')
 def membershipRewardHist():
     return render_template('membershipRewardHist.html')
+
 
 @app.route('/membershipTiers')
 def membershipTiers():
     return render_template('membershipTiers.html')
 
 
-# @app.route('/createReviews', methods=['GET', 'POST'])
-# def create_reviews():
-#     create_reviews_form = CreateReviewsForm(request.form)
-#     if request.method == 'POST' and create_reviews_form.validate():
-#         db = shelve.open('reviews.db', 'c')
-#         try:
-#             reviews_dict = db['Review']
-#         except:
-#             print("Error in retrieving Users from user.db.")
+# Tables to check and create
+tableCheck = ['memberships']
+for a in tableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'memberships'")
+    tableExist = mycursor.fetchone()
+
+    if not tableExist:
+        mycursor.execute(
+            "CREATE TABLE `memberships` ("
+          "`membership_id` int NOT NULL,"
+          "`currentBalance` float DEFAULT '0',"
+          "`totalBalance` float DEFAULT '0',"
+          "`date_joined` date DEFAULT NULL,"
+          "`address` varchar(45) DEFAULT NULL,"
+          "`email` varchar(45) DEFAULT NULL,"
+          "PRIMARY KEY (`membership_id`),"
+          "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
+          ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+
+        print(f"Table 'memberships' Created")
+
+mycursor.execute('SELECT * FROM memberships')
+print(f"Using table 'memberships' ")
+
+
+
+
+@app.route('/retrieveMembershipAdmin')
+def retrieve_membership_admin():
+    # retrieve from membership table
+    select_query = "SELECT * FROM memberships"
+    mycursor.execute(select_query)
+    memberships = mycursor.fetchall()
+
+    return render_template('retrieveMembershipAdmin.html', memberships=memberships)
+
+
+@app.route('/retrieveMembership/<int:user_id>', methods=['GET'])
+def retrieve_membership(user_id):
+    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+    membershipUser = mycursor.fetchall()
+    print("membershipUser: ", membershipUser)
+
+    return render_template('retrieveMembership.html', membershipUser=membershipUser)
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 def create_membership():
     create_membership_form = CreateMembershipForm(request.form)
+    # Check if a user is logged in
+    # if 'user_id' not in session:
+    #     return redirect(url_for('create_user'))  # Redirect to the login page if the user is not logged in
+    #
+    # user_id = session['user_id']
+    #
+    # # Check if the user already has a membership
+    # mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+    # membership = mycursor.fetchone()
+    # # If the user already has a membership, redirect to retrieve_membershipInfo
+    # if membership:
+    #     return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+
     if request.method == 'POST' and create_membership_form.validate():
-        db = shelve.open('membership.db', 'c')
         try:
-            memberships_dict = db['Membership']
-        except:
-            print("Error in retrieving Users from user.db.")
+            mydb = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='ecoeats',
+                port='3306',
+                database='ecoeatsusers'
+            )
 
-        # + Membership.Membership(get_currentBalance), Membership.get_totalPoints(), Membership.get_Buyrewards(),) #find a way to retrieve the store_reward variable, and the other non-form data
+            mycursor = mydb.cursor()
+            # Update or insert rewards into memberships table
+            insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance) VALUES (%s, %s, %s)"
+            # Prepare membership data
+            memberships = Membership.Membership(create_membership_form.date_joined.data,
+                                                create_membership_form.address.data,
+                                                create_membership_form.email.data)
+            print(insert_query)
+            now = datetime.datetime(2009, 5, 5)
+            user_id = 1
+            data = (user_id, 300, 0)
 
-        membershipFormData = Membership.Membership(create_membership_form.email.data, create_membership_form.date_joined.data, create_membership_form.address.data)
+            mycursor.execute(insert_query, data)
+            mydb.commit()
+            print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+                  f"was stored in the database successfully.")
+            return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+            # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+            #       f"was stored in the database successfully.")
+            # return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
 
-
-        memberships_dict[membershipFormData.get_membership_id()] = membershipFormData
-        db['Membership'] = memberships_dict
-
-        db.close()
-
-        return redirect(url_for('membership'))
     return render_template('createMembership.html', form=create_membership_form)
 
-#retrieving membership
-@app.route('/retrieveMembership')
-def retrieve_membership():
-    memberships_dict = {}
-    db = shelve.open('membership.db', 'r')
-    memberships_dict = db['Membership']
-    db.close()
 
-    membership_list = []
-    for key in memberships_dict:
-        membership = memberships_dict.get(key)
-        membership_list.append(membership)
+#to display membership info and getting user first name for membership home
+@app.route('/membershipInfo/<int:user_id>', methods=['GET'])
+def retrieve_membershipInfo(user_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
 
-    return render_template('membership.html', count=len(membership_list), customers_list=membership_list)
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+    membershipUser = mycursor.fetchone()
+    print("membershipUser: ", membershipUser)
 
-#updating membership
-@app.route('/updateMembership/<int:id>/', methods=['GET', 'POST'])
-def update_membership(id):
+    mycursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
+    membershipUsername = mycursor.fetchone()
+    print("membershipUsername: ", membershipUsername)
+
+    return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername)
+
+
+@app.route('/updateMembership/<int:membership_id>/', methods=['GET', 'POST'])
+def update_membership(membership_id):
     update_membership_form = CreateMembershipForm(request.form)
+
     if request.method == 'POST' and update_membership_form.validate():
-        memberships_dict = {}
-        db = shelve.open('membership.db', 'w')
-        membership_dict = db['Membership']
+        try:
+            # retrieve user data from db
+            select_query = "SELECT date_joined, address, email FROM memberships WHERE membership_id = %s"
+            mycursor.execute(select_query, (membership_id,))
+            membership_details = mycursor.fetchone()
 
-        membershipUser = membership_dict.get(id)
-        membershipUser.set_first_name(update_membership_form.first_name.data)
-        membershipUser.set_last_name(update_membership_form.last_name.data)
-        membershipUser.set_gender(update_membership_form.gender.data)
-        membershipUser.set_email(update_membership_form.email.data)
-        membershipUser.set_date_joined(update_membership_form.date_joined.data)
-        membershipUser.set_address(update_membership_form.address.data)
+            if membership_details:
+                date_joined = create_membership.date_joined.data
+                address = update_membership_form.address.data
+                email = update_membership_form.email.data
 
-        db['Membership'] = membership_dict
-        db.close()
+                update_query = "UPDATE memberships SET date_joined = %s, address = %s, email = %s WHERE membership_id = %s"
+                data = (date_joined, address, email, membership_id)
 
-        return redirect(url_for('retrieve_membership'))
+                mycursor.execute(update_query, data)
+                mydb.commit()
+
+                print(f"Reward ID: {membership_id} updated successfully.")
+                return redirect(url_for('retrieve_membership'))
+            else:
+                return "User Membership not found."
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while updating User Membership."
+
     else:
-        memberships_dict = {}
-        db = shelve.open('membership.db', 'r')
-        memberships_dict = db['Membership']
-        db.close()
+        try:
+            # retrieve user data from mysql db
+            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
+            mycursor.execute(select_query, (membership_id,))
+            reward_details = mycursor.fetchone()
 
-        MembershipUser = memberships_dict.get(id)
-        update_membership_form.first_name.data = MembershipUser.get_first_name()
-        update_membership_form.last_name.data = MembershipUser.get_last_name()
-        update_membership_form.gender.data = MembershipUser.get_gender()
-        update_membership_form.email.data = MembershipUser.get_email()
-        update_membership_form.date_joined.data = MembershipUser.get_date_joined()
-        update_membership_form.address.data = MembershipUser.get_address()
+            if reward_details:
 
+                update_membership_form.address.data = reward_details[0]
+                update_membership_form.email.data = reward_details[1]
 
-        return render_template('updateMembership.html', form=update_membership_form)
-
-@app.route('/deleteMembership/<int:id>', methods=['POST'])
-def delete_membership(id):
-    memberships_dict = {}
-    db = shelve.open('membership.db', 'w')
-    memberships_dict = db['Membership']
-    memberships_dict.pop(id)
-
-    db['Membership'] = memberships_dict
-    db.close()
-
-    return redirect(url_for('retrieve_membership'))
+                return render_template('updateMembership.html', form=update_membership_form)
+            else:
+                return "User Membership not found."
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while updating User Membership."
 
 
-    reviewsFormData = reviews.reviews(create_reviews_form.email.data, create_reviews_form.date_joined.data, create_reviews_form.address.data)
+@app.route('/deleteMembership/<int:membership_id>/', methods=['GET', 'POST'])
+def delete_membership(membership_id):
+    try:
+        # Check if the user exists before attempting deletion
+        select_query = "SELECT * FROM memberships WHERE membership_id = %s"
+        mycursor.execute(select_query, (membership_id,))
+        membership = mycursor.fetchone()
+
+        if membership:
+            delete_query = "DELETE FROM memberships WHERE membership_id = %s"
+            mycursor.execute(delete_query, (membership_id,))
+            mydb.commit()
+
+            print(f"MEMBERSHIP ID: {membership_id} deleted successfully.")
+            return redirect(url_for('create_membership'))
+        else:
+            return "User Membership not found."
+    except Exception as e:
+        print("Error:", e)
+        mydb.rollback()
+        return "Error occurred while deleting User Membership."
 
 
-    reviews_dict[reviewsFormData.get_reviews_id()] = reviewsFormData
-    db['Review'] = reviews_dict
+@app.route('/redeemRewards/<int:user_id>', methods=['GET', 'POST'])
+def redeem_rewards(user_id):
+    redeem_rewards_form = RedeemForm(request.form)
+    if request.method == 'POST' and redeem_rewards_form.validate():
+        mydb = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='ecoeats',
+            port='3306',
+            database='ecoeatsusers'
+        )
 
-    db.close()
+        mycursor = mydb.cursor()
+        try:
+            select_query = ("SELECT currentBalance from memberships WHERE membership_id = %s")
+            mycursor.execute(select_query, (user_id,))
+            currentBalance = mycursor.fetchone()[0]
+            if redeem_rewards_form.rewards.data == 1:
+                if currentBalance>=50:
+                    newCurrentBalance = currentBalance - 50
 
-    return redirect(url_for('reviews'))
-    return render_template('createReviews.html', form=create_reviews_form)
+                    update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
+                    mycursor.execute(update_query, (newCurrentBalance, user_id))
+                    mydb.commit()
+                    print(f"Membership ID: {user_id} redeemed $5 off voucher successfully.")
+                    return redirect(url_for('display_reward1'))
+                else:
+                    return "Balance not sufficient to redeem '$5 off voucher'."
+            elif redeem_rewards_form.rewards.data == 2:
+                if currentBalance >= 100:
+                    newCurrentBalance = currentBalance - 100
 
+                    update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
+                    mycursor.execute(update_query, (newCurrentBalance, user_id))
+                    mydb.commit()
+                    print(f"Membership ID: {user_id} redeemed $10 off voucher successfully.")
+                    return redirect(url_for('display_reward2'))
+                else:
+                    return "Balance not sufficient to redeem '$10 off voucher'."
+            else:
+                if currentBalance >= 150:
+                    newCurrentBalance = currentBalance - 150
 
+                    update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
+                    mycursor.execute(update_query, (newCurrentBalance, user_id))
+                    mydb.commit()
+                    print(f"Membership ID: {user_id} redeemed $15 off voucher successfully.")
+                    return redirect(url_for('display_reward2'))
+                else:
+                    return "Balance not sufficient to redeem '$15 off voucher'."
 
-
-
-
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while redeeming reward."
+    return render_template('redeemRewards.html', form=redeem_rewards_form)
 
 
 
 if __name__ == '__main__':
     app.run()
-
 

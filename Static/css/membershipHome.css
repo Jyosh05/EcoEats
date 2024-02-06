@@ -5,14 +5,186 @@
   font-family: 'Khula', sans-serif;
 }
 
-container-h1-image{
+.container-h1-image{
     margin: 0;
     padding: 0;
     color: #fff;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("----");
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("static/img/membership/OIP.jpeg");
     background-size: cover;
     background-position: center;
     width: 104vw;
     height: 30vh;
     margin-left: -20px;
     }
+
+#h1-image-title{
+    text-align: center;
+    font-weight: very bold;
+}
+
+
+.container-header-greeting{
+    width: 100%;
+ }
+
+ span{
+    font-weight: bold;
+ }
+
+.container-contents-left{
+    width: 50%
+    display: flex;
+    float: left;
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    position: relative;
+
+}
+
+.container-contents-right{
+    width: 50%
+    display: flex;
+    float: right;
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    position: relative;
+}
+
+.container-membership-status{
+    background: #C3E4C5;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.membershipTier {
+    font-size: 20px;
+}
+
+.TotalEarned{
+    font-size: 20px;
+}
+
+.membership-tier-benefits{
+    padding: 5px;
+    border-radius: 10px;
+    background: #032700;
+    }
+
+a{
+    text-decoration:none;
+}
+
+a.membershipBenefits{
+    font-weight: bolder;
+        color: white;
+}
+
+
+
+.membership-details-box{
+    padding: 5px;
+    border-radius: 10px;
+    background: #C3E4C5;
+}
+
+.balance-text-container{
+    padding: 5px;
+    border-radius: 10px;
+    background: #C3E4C5;
+}
+
+.container-membership-balance{
+    padding: 5px;
+    border-radius: 10px;
+    background: #C3E4C5;
+}
+
+.balance-text-container{
+    width: 50%
+    float: left;
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+}
+
+.Redemption-Shop-container{
+    width: 50%
+    float: left;
+    padding: 15px;
+    background: #032700;
+    border-radius: 10px;
+    margin: 30px;
+}
+
+#membershipShop{
+    color: #ffffff;
+}
+
+#balance{
+    font-size: 30px;
+}
+
+.dark-green-text{
+    color: #032700;
+}
+
+.rewards-list{
+    background-color: #75A077;
+}
+
+.rewards-list-item{
+    color: #ffffff;
+}
+
+.RewardBox1{
+    background: #75A077;
+    padding: 20px;
+}
+
+.dark-box-words{
+    color: #ffffff;
+}
+
+.membership-details{
+    border-bottom: 5px;
+    border-color: #0A0706;
+}
+
+a.membership-details{
+    font-weight: bold;
+    color: #263238;
+    text-decoration: underline
+    text-decoration-colour: #032700
+    width: 100%;
+    margin: 10px;
+}
+
+.membership-details-box{
+    padding: 10px;
+}
+
+.actionButton {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  text-decoration: none;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.leaf-icon {
+  width: 2rem;
+  height: 2rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.settings {
+    background: #C3E4C5;
+    padding: 20px;
+    border-radius: 10px;
+}

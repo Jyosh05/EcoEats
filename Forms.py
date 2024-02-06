@@ -52,13 +52,18 @@ class CreateReviewsForm(Form):
     feedback = TextAreaField('Any Feedback?',[validators.Optional()])
 
 class CreateMembershipForm(Form):
-    # first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    # last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
-    # gender = SelectField('Gender', [validators.DataRequired()],
-    #                      choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')],
-    #                      default='')
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
     date_joined = DateField('Date Joined', format='%Y-%m-%d')
+    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+
+
+class UpdateMembershipForm(Form):
+    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
+
+
+class RedeemForm(Form):
+    rewards = SelectField('rewards', choices=[(1, '$5 off'), (2, '$10 off'), (3, '$15 off')])
 
 class CreateProductForm(Form):
     name = StringField(' Name', [validators.Length(min=1, max=150), validators.DataRequired()])

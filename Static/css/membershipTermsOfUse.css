@@ -4,3 +4,36 @@
   box-sizing: border-box;
   font-family: 'Khula', sans-serif;
 }
+
+.terms-container-left{
+    width: 45%;
+    float: left;
+    padding: 15px;
+    margin: 20px;
+    background-color: #DCDEDF;
+    height: 100vh;
+
+}
+
+.terms-container-right{
+    width: 45%;
+    float: left;
+    padding: 15px;
+    margin: 20px;
+    background-color: #DCDEDF;
+    height: 100vh;
+    }
+
+p{
+    font-weight: bold;
+}
+
+h4{
+    font-weight: bold;
+}
+
+h2{
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 10px;
+}
