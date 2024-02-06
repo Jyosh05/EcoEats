@@ -1,6 +1,28 @@
 *{
-  margin: 0;
-  padding: 0;
+  margin: 5;
+  padding: 10;
   box-sizing: border-box;
   font-family: 'Khula', sans-serif;
 }
+
+h2{
+    font-weight: bold;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.Month{
+    background-color: #528C55;
+    color: #ffffff;
+
+}
+
+p{
+    font-weight: bold;
+}
+
+.redeem-date{
+    color: #528C55;
+    font-size: small
+}
+

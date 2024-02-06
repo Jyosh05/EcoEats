@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}redeemReward{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/redeemRewards.css')}}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
+<!-- Bootstrap 5 CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+<!-- Font Awesome CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+
+<h1 class="display-4">Redeem Rewards</h1>
+<form id="formPopUp" form method="POST" action="">
+
+     {% if membershipUser %}
+              <p>{{membershipUser[1]}} <img src="static/img/membership/leaf.png" class="leaf-icon"></p>
+              <p>Leaves Available For Redemption</p>
+              <p><span>You have {{membershipUser[1]}} Leaves.</span></p>
+              {% elif membershipUser is none %}
+             <p>No membership data found for user {{ user_id }}.</p>
+        {% endif %}
+
+    <div class="form-group">
+        {{render_field(form.rewards, class="form-control") }}
+    </div>
+
+    <input type="submit" name="Redeem" value="Redeem" class="btn btn-primary"/>
+    {% for membership in membershipUser %}
+                <a href="/redeemRewards/{{ membership[0] }}" class="btn btn-labeled btn-success">
+                    <i  class="fa fa-check"></i>Redeem</a>
+                <a href="/membership/{{ membership[0] }}" class="btn btn-labeled btn-danger">
+                    <i  class="fa fa-remove"></i>Cancel</a>
+    {% endfor %}
+</form>
+{% endblock %}
