@@ -44,7 +44,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='1234',
+    password='JYOSHNA2006!',
     port='3306',
     database='ecoeatsusers'
 )
@@ -54,7 +54,7 @@ db = mysql.connector.connect(
     user='root',
     password='JYOSHNA2006!',
     port=3306,
-    database='products'
+    database='ecoeatsusers'
 )
 
 mydb = mysql.connector.connect(
@@ -62,7 +62,7 @@ mydb = mysql.connector.connect(
     user='root',
     password='JYOSHNA2006!',
     port=3306,
-    database='products'
+    database='ecoeatsusers'
 )
 
 my_db = mysql.connector.connect(
@@ -70,7 +70,7 @@ my_db = mysql.connector.connect(
     user='root',
     password='JYOSHNA2006!',
     port=3306,
-    database='products'
+    database='ecoeatsusers'
 )
 
 mycursor = mydb.cursor()
@@ -103,9 +103,9 @@ for a in users:
 
 
 
-@app.route('/')
-def home():
-    return render_template("home.html")
+# @app.route('/')
+# def home():
+#     return render_template("home.html")
 
 cursor = db.cursor()
 cur = mydb.cursor()
@@ -118,7 +118,7 @@ for a in tableCheck:
     tableExist = cursor.fetchone()
 
     if not tableExist:
-        cursor.execute("CREATE TABLE `products`"
+        cursor.execute("CREATE TABLE `ecoeatsusers`"
                        "`products` "
                        "(`idproducts` INT NOT NULL, `name` VARCHAR(100) NULL, "
                        "`price` DECIMAL(10,2) NULL, "
@@ -139,7 +139,7 @@ for a in tableCheck:
 
     if not tableExist:
         cur.execute('''
-            CREATE TABLE `product`
+            CREATE TABLE `ecoeatsusers`
               `cart`(
                 id int NOT NULL AUTO_INCREMENT,
                 product_name VARCHAR(100) DEFAULT NULL,
@@ -160,7 +160,7 @@ for a in tableCheck:
 
     if not tableExist:
         mycursor.execute('''
-            CREATE TABLE `product`
+            CREATE TABLE `ecoeatsusers`
               `order_info`(
                 order_id int NOT NULL AUTO_INCREMENT,
                 order_type VARCHAR(45) DEFAULT NULL,
@@ -796,20 +796,11 @@ def category(category):
 
     return render_template('productBase.html', category=category, products=data)
 
+
+
+
 @app.route('/recommended')
 def recommended():
-    # Define the number of products to fetch from each category
-    products_per_category = 2
-
-    # Fetch distinct category names from the products table
-    cursor_categories = db.cursor()
-    cursor_categories.execute('SELECT DISTINCT category FROM products')
-    category_names = [category[0] for category in cursor_categories.fetchall()]
-    cursor_categories.close()
-
-
-@app.route('/reccomended')
-def reccomended():
     # Define the number of products to fetch from each category
     products_per_category = 2
 
