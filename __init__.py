@@ -32,7 +32,8 @@ from Forms import CreateProductForm, DineInForm, DeliveryForm
 from Product import Product
 from cart import CartItem
 from order_type import DineIn, Delivery
-#
+
+
 app = Flask(__name__)
 app.secret_key = 'my_super_secret_key_123'
 UPLOAD_FOLDER = 'static/img/'
@@ -125,7 +126,8 @@ for a in tableCheck:
                        "`category` VARCHAR(45) NULL, "
                        "`image` VARCHAR(200) NULL,"
                        "`description` VARCHAR(400) NULL,"
-                       "`ingredients_info` VARCHAR(1000) NULL"
+                       "`ingredients_info` VARCHAR(1000) NULL,"
+                       "`is_recommended` TINYINT(1) NULL DEFAULT 0,"
                        "PRIMARY KEY (`idproducts`)); ")
         print(f"Table 'products' Created")
 
@@ -793,32 +795,21 @@ def category(category):
     cursor.execute('SELECT * FROM products WHERE category = %s', (category,))
     data = cursor.fetchall()
     cursor.close()
-
     return render_template('productBase.html', category=category, products=data)
+
 
 
 
 
 @app.route('/recommended')
 def recommended():
-    # Define the number of products to fetch from each category
-    products_per_category = 2
-
-    # Fetch distinct category names from the products table
-    cursor_categories = db.cursor()
-    cursor_categories.execute('SELECT DISTINCT category FROM products')
-    category_names = [category[0] for category in cursor_categories.fetchall()]
-    cursor_categories.close()
-    # Fetch recommended products for each category
-    recommended_products = []
-
-    for category_name in category_names:
-        cursor = db.cursor()
-        cursor.execute('SELECT * FROM products WHERE category = %s LIMIT %s', (category_name, products_per_category))
-        recommended_products.extend(cursor.fetchall())
-        cursor.close()
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM products WHERE is_recommended = true')
+    recommended_products = cursor.fetchall()
+    cursor.close()
 
     return render_template('recommended.html', recommended_products=recommended_products)
+
 @app.route('/appetizers')
 def appetizers():
     return redirect(url_for('category', category='Appetizer')) # the category field here is
@@ -880,6 +871,7 @@ def create_product():
                 flash('Product with the same name already exists. Please choose a different name.')
                 return render_template('create_product.html', form=create_product_form)
 
+
             # Create an instance of the Product class
             product = Product(
                 name=create_product_form.name.data,
@@ -887,11 +879,12 @@ def create_product():
                 category=create_product_form.category.data,
                 image=filename,
                 description=create_product_form.description.data,
-                ingredients_info=create_product_form.ingredients_info.data
+                ingredients_info=create_product_form.ingredients_info.data,
+                is_recommended=create_product_form.is_recommended.data
             )
 
-            insert_query = "INSERT INTO products (name, price, category, image, description, ingredients_info) VALUES (%s, %s, %s, %s, %s, %s)"
-            product_data = (product.get_name(), product.get_price(), product.get_category(), product.get_image(), product.get_description(), product.get_ingredients_info())
+            insert_query = "INSERT INTO products (name, price, category, image, description, ingredients_info, is_recommended) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            product_data = (product.get_name(), product.get_price(), product.get_category(), product.get_image(), product.get_description(), product.get_ingredients_info(), product.get_is_recommended())
             cursor.execute(insert_query, product_data)
 
             db.commit()
@@ -910,12 +903,12 @@ def create_product():
 
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
-    select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info FROM products"
+    select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
     cursor.execute(select_query)
     rows = cursor.fetchall()
 
     # Create instances of the Product class
-    products = [Product(idproducts=row[0], name=row[1], price=row[2], category=row[3], image=row[4], description=row[5], ingredients_info=row[6]) for row in rows]
+    products = [Product(idproducts=row[0], name=row[1], price=row[2], category=row[3], image=row[4], description=row[5], ingredients_info=row[6], is_recommended=row[7]) for row in rows]
 
     # Calculate the count of products
     count = len(products)
@@ -931,7 +924,7 @@ def update_product(id):
     if request.method == 'POST' and update_product_form.validate():
         try:
             # Fetch existing product details from the database
-            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info FROM products WHERE idproducts = %s"
+            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products WHERE idproducts = %s"
             cursor.execute(select_query, (id,))
             product_details = cursor.fetchone()
 
@@ -943,6 +936,7 @@ def update_product(id):
                 image = update_product_form.image.data
                 description = update_product_form.description.data
                 ingredients_info = update_product_form.ingredients_info.data
+                is_recommended = update_product_form.is_recommended.data
 
                 # Handle image upload
                 if 'image' in request.files:
@@ -952,8 +946,14 @@ def update_product(id):
                         image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
                         image.save(image_path)
                         # Save the new image filename to the database
-                        update_query = "UPDATE products SET name = %s, price = %s, category = %s, image = %s, description = %s, ingredients_info = %s WHERE idproducts = %s"
-                        data = (name, price, category, filename, description, ingredients_info, id)
+                        update_query = "UPDATE products SET name = %s, price = %s, category = %s, image = %s, description = %s, ingredients_info = %s, is_recommended = %s WHERE idproducts = %s"
+                        data = (name, price, category, filename, description, ingredients_info, is_recommended, id)
+                        cursor.execute(update_query, data)
+                        db.commit()
+                    else:
+                        # If no new image provided, update without changing the image
+                        update_query = "UPDATE products SET name = %s, price = %s, category = %s, description = %s, ingredients_info = %s, is_recommended = %s WHERE idproducts = %s"
+                        data = (name, price, category, description, ingredients_info, is_recommended, id)
                         cursor.execute(update_query, data)
                         db.commit()
 
@@ -970,7 +970,7 @@ def update_product(id):
     else:
         try:
             # Fetch existing product details to prepopulate the form
-            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info FROM products WHERE idproducts = %s"
+            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products WHERE idproducts = %s"
             cursor.execute(select_query, (id,))
             product_details = cursor.fetchone()
 
@@ -981,7 +981,7 @@ def update_product(id):
                 update_product_form.category.data = product_details[3]
                 update_product_form.description.data = product_details[5]
                 update_product_form.ingredients_info.data = product_details[6]
-
+                update_product_form.is_recommended.data = product_details[7]
 
                 return render_template('update_product.html', form=update_product_form)
             else:
@@ -1028,7 +1028,7 @@ def add_to_cart(product_id):
             product_price = product_details[2]
             product_image = product_details[3]
 
-            # Adjust the form field name to include the product ID
+
             quantity = int(request.form.get(f'quantity_{product_id}', 1))
 
             # Check if the product is already in the cart
@@ -1038,7 +1038,7 @@ def add_to_cart(product_id):
 
             if cart_item:
                 # Update quantity if the product is already in the cart
-                new_quantity = cart_item[3] + quantity #existing quantity in the cart + new quantity
+                new_quantity = cart_item[4] + quantity #existing quantity in the cart + new quantity
                 update_cart_query = "UPDATE cart SET quantity = %s WHERE product_name = %s"
                 cur.execute(update_cart_query, (new_quantity, product_name))
             else:
@@ -1120,7 +1120,7 @@ def dine_in():
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
 
-    dine_in = DineIn(time="", pax="")
+    dine_in = DineIn(order_id=None, time="", pax="")
 
     dine_in_form = DineInForm(request.form)
 
@@ -1128,17 +1128,31 @@ def dine_in():
         time = dine_in_form.time.data
         pax = dine_in_form.pax.data
 
+        # Check if pax is not empty and is a valid integer
+        if pax and pax.isdigit():
+            dine_in = DineIn(time, int(pax))
+        else:
+            dine_in = DineIn(time, 0)  # Set a default value or handle it according to your needs
 
-        dine_in = DineIn(time, pax)
 
-        # Store the information in the database (modify this part based on your database structure)
-        insert_order_info_query = "INSERT INTO order_info (order_type, dine_in_time, pax) VALUES (%s, %s, %s)"
-        mycursor.execute(insert_order_info_query, ('dine_in', dine_in.get_time(), dine_in.get_pax()))
+        # Explicitly fetch any previous result sets before executing the INSERT query
+        mycursor.fetchall()
+
+        # Store the information in the database
+        order_id = dine_in_form.order_id.data
+
+        if order_id:
+            update_order_info_query = "UPDATE order_info SET dine_in_time=%s, pax=%s WHERE order_id=%s"
+            mycursor.execute(update_order_info_query, (dine_in.get_time(), dine_in.get_pax(), order_id))
+        else:
+            insert_order_info_query = "INSERT INTO order_info (order_type, dine_in_time, pax) VALUES (%s, %s, %s)"
+            mycursor.execute(insert_order_info_query, ('dine_in', dine_in.get_time(), dine_in.get_pax()))
+
         my_db.commit()
 
-        return render_template('dine_in.html', cart_items=cart_items, total_price=total_price, dine_in=dine_in, form=dine_in_form)
+    return render_template('dine_in.html', cart_items=cart_items, total_price=total_price, dine_in=dine_in, form=dine_in_form)
 
-    return render_template('dine_in.html', cart_items=cart_items, total_price=total_price, dine_in=dine_in,form=dine_in_form)
+
 
 
 
@@ -1337,10 +1351,6 @@ def reviews():
 
 
 
-
-@app.route("/cart")
-def cart():
-    return render_template('cart.html')
 
 #checking if user is logged in to access their membership
 

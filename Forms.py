@@ -1,7 +1,7 @@
 import wtforms.fields
 
 from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators, EmailField, \
-    ValidationError, FileField, IntegerField
+    ValidationError, FileField, IntegerField, HiddenField, BooleanField
 from wtforms.fields import EmailField, DateField, SubmitField
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed
@@ -72,6 +72,7 @@ class CreateProductForm(Form):
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     description = TextAreaField('Description', [validators.Length(min=1, max=400), validators.DataRequired()])
     ingredients_info = TextAreaField('Ingredients Info', [validators.Length(min=1, max=600), validators.DataRequired()])
+    is_recommended = BooleanField('Recommended?')
 
 
 
@@ -91,6 +92,7 @@ class CreateProductForm(Form):
 
 
 class DineInForm(Form):
+    order_id = HiddenField('order_id')
     time = StringField('Approximated Dine-in Timing',[validators.Length(min=1, max=4), validators.DataRequired()])
     pax = StringField('No. of People Dining-In', [validators.Length(min=1, max=150), validators.DataRequired()])
 
