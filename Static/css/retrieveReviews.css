@@ -1,0 +1,34 @@
+h4{
+text-align: center;
+justify-content: center;
+font-size: 40px;
+}
+
+h5{
+text-align: center;
+justify-content: center;
+}
+
+.review {
+border: 3px solid #9CAF88;
+padding: 10px;
+margin: 10px 0;
+border-radius: 15px;
+position: relative;
+max-width: 500px;
+word-wrap: break-word;
+height: 300px;
+overflow: hidden;
+}
+
+.actionButton{
+position: relative;
+padding: 10px;
+right: 75px;
+top:130px;
+}
+
+.checked-star{
+font-size: 25px;
+color: gold;
+}

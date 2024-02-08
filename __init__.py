@@ -11,7 +11,7 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm
 import ReviewUser
 
 # 1:56pm
@@ -1212,128 +1212,144 @@ def profile():
 def reviews():
     return render_template('reviews.html')
 
-# @app.route('/createReviews', methods=['GET', 'POST'])
-# def create_reviews():
-#     create_reviews_form = CreateReviewsForm(request.form)
-#
-#     if request.method == 'POST' and create_reviews_form.validate():
-#         try:
-#             # Create the reviews table if it doesn't exist
-#             mycursor.execute(
-#                 "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
-#                 "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
-#                 "`name` VARCHAR(100) DEFAULT NULL,"
-#                 "`email` VARCHAR(100) DEFAULT NULL,"
-#                 "`stars` INT DEFAULT NULL,"
-#                 "`feedback` VARCHAR(1000) DEFAULT NULL"
-#                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
-#             )
-#
-#             # Insert data into the reviews table
-#             insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
-#             reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
-#                                             create_reviews_form.stars.data,
-#                                             create_reviews_form.feedback.data)
-#             reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
-#             mycursor.execute(insert_query, reviews_data)
-#             mydb.commit()
-#
-#             return redirect(url_for('retrieve_reviews'))
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred. Check logs for details."
-#
-#     return render_template('createReviews.html', form=create_reviews_form)
-#
-# @app.route('/retrieveReviews')
-# def retrieve_reviews():
-#     select_query = "SELECT * FROM reviews"
-#     mycursor.execute(select_query)
-#     reviews = mycursor.fetchall()
-#
-#     return render_template('retrieveReviews.html', reviews=reviews)
-#
-#
-# @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
-# def update_reviews(user_id):
-#     update_reviews_form = CreateReviewsForm(request.form)
-#
-#     if request.method == 'POST' and update_reviews_form.validate():
-#         try:
-#             # retrieve user data from db
-#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-#
-#             mycursor.execute(select_query, (user_id,))
-#             reviews = mycursor.fetchone()
-#
-#             if reviews:
-#                 name = update_reviews_form.name.data
-#                 email = update_reviews_form.email.data
-#                 stars = update_reviews_form.stars.data
-#                 feedback = update_reviews_form.feedback.data
-#
-#                 update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
-#                 data = (user_id, name, email, stars, feedback)
-#                 mycursor.execute(update_query, data)
-#
-#                 mydb.commit()
-#
-#                 print(f"USER ID: {user_id} updated successfully.")
-#                 return redirect(url_for('retrieve_reviews'))
-#             else:
-#                 return "Reviews not found."
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred while updating reviews."
-#     else:
-#         try:
-#
-#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-#             mycursor.execute(select_query, (user_id,))
-#             reviews = mycursor.fetchone()
-#
-#             if reviews:
-#
-#                 update_reviews_form.name.data = reviews[0]
-#                 update_reviews_form.email.data = reviews[1]
-#                 update_reviews_form.stars.data = reviews[2]
-#                 update_reviews_form.feedback.data = reviews[3]
-#
-#                 return render_template('createReviews.html', form=update_reviews_form)
-#
-#             else:
-#                 return "Reviews not found."
-#         except Exception as e:
-#
-#             print("Error:", e)
-#
-#             mydb.rollback()
-#
-#             return "Error occurred while updating reviews."
-#
-#
-# @app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
-# def delete_reviews(user_id):
-#     try:
-#         select_query = "SELECT * FROM reviews WHERE user_id = %s"
-#         mycursor.execute(select_query, (user_id,))
-#         reviews = mycursor.fetchone()
-#
-#         if reviews:
-#             delete_query = "DELETE FROM reviews WHERE user_id = %s"
-#             mycursor.execute(delete_query, (user_id,))
-#             mydb.commit()
-#
-#             print(f"USER ID: {user_id} deleted successfully.")
-#             return redirect(url_for('retrieve_reviews'))
-#         else:
-#             return "Reviews not found."
-#     except Exception as e:
-#         print("Error:", e)
-#         mydb.rollback()
-#         return "Error occurred while deleting reviews."
+@app.route('/createReviews', methods=['GET', 'POST'])
+def create_reviews():
+    create_reviews_form = CreateReviewsForm(request.form)
+
+    if request.method == 'POST' and create_reviews_form.validate():
+        try:
+            mydb = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='ecoeats',
+                port='3306',
+                database='ecoeatsusers'
+            )
+
+            mycursor = mydb.cursor()
+            # mycursor.execute(
+            #     "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
+            #     "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
+            #     "`name` VARCHAR(100) DEFAULT NULL,"
+            #     "`email` VARCHAR(100) DEFAULT NULL,"
+            #     "`stars` INT DEFAULT NULL,"
+            #     "`feedback` VARCHAR(1000) DEFAULT NULL"
+            #     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+            # )
+
+            # Insert data into the reviews table
+            insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
+            reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
+                                            create_reviews_form.stars.data,
+                                            create_reviews_form.feedback.data)
+            reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
+            mycursor.execute(insert_query, reviews_data)
+            mydb.commit()
+
+            return redirect(url_for('retrieve_reviews'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
+
+    return render_template('createReviews.html', form=create_reviews_form)
+
+@app.route('/retrieveReviews')
+def retrieve_reviews():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
+    select_query = "SELECT * FROM reviews"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+    return render_template('retrieveReviews.html', reviews=reviews)
+
+
+@app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
+def update_reviews(user_id):
+    update_reviews_form = CreateReviewsForm(request.form)
+
+    if request.method == 'POST' and update_reviews_form.validate():
+        try:
+            # retrieve user data from db
+            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+                name = update_reviews_form.name.data
+                email = update_reviews_form.email.data
+                stars = update_reviews_form.stars.data
+                feedback = update_reviews_form.feedback.data
+
+                update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
+                data = (user_id, name, email, stars, feedback)
+                mycursor.execute(update_query, data)
+
+                mydb.commit()
+
+                print(f"USER ID: {user_id} updated successfully.")
+                return redirect(url_for('retrieve_reviews'))
+            else:
+                return "Reviews not found."
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while updating reviews."
+    else:
+        try:
+
+            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+
+                update_reviews_form.name.data = reviews[0]
+                update_reviews_form.email.data = reviews[1]
+                update_reviews_form.stars.data = reviews[2]
+                update_reviews_form.feedback.data = reviews[3]
+
+                return render_template('createReviews.html', form=update_reviews_form)
+
+            else:
+                return "Reviews not found."
+        except Exception as e:
+
+            print("Error:", e)
+
+            mydb.rollback()
+
+            return "Error occurred while updating reviews."
+
+
+@app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
+def delete_reviews(user_id):
+    try:
+        select_query = "SELECT * FROM reviews WHERE user_id = %s"
+        mycursor.execute(select_query, (user_id,))
+        reviews = mycursor.fetchone()
+
+        if reviews:
+            delete_query = "DELETE FROM reviews WHERE user_id = %s"
+            mycursor.execute(delete_query, (user_id,))
+            mydb.commit()
+
+            print(f"USER ID: {user_id} deleted successfully.")
+            return redirect(url_for('retrieve_reviews'))
+        else:
+            return "Reviews not found."
+    except Exception as e:
+        print("Error:", e)
+        mydb.rollback()
+        return "Error occurred while deleting reviews."
 
 
 
