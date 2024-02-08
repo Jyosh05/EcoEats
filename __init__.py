@@ -777,9 +777,6 @@ def category(category):
     return render_template('productBase.html', category=category, products=data)
 
 
-
-
-
 @app.route('/recommended')
 def recommended():
     mycursor.execute('SELECT * FROM products WHERE is_recommended = true')
@@ -787,12 +784,13 @@ def recommended():
 
     return render_template('recommended.html', recommended_products=recommended_products)
 
+
 @app.route('/appetizers')
 def appetizers():
-    return redirect(url_for('category', category='Appetizer')) # the category field here is
+    return redirect(url_for('category', category='Appetizer'))  # the category field here is
     # what helps to input the page title in then respective html pages
-    
-    
+
+
 @app.route('/breakfast')
 def breakfast():
     return redirect(url_for('category', category='Breakfast'))
@@ -847,7 +845,6 @@ def create_product():
                 flash('Product with the same name already exists. Please choose a different name.')
                 return render_template('create_product.html', form=create_product_form)
 
-
             # Create an instance of the Product class
             product = Product(
                 name=create_product_form.name.data,
@@ -860,7 +857,8 @@ def create_product():
             )
 
             insert_query = "INSERT INTO products (name, price, category, image, description, ingredients_info, is_recommended) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-            product_data = (product.get_name(), product.get_price(), product.get_category(), product.get_image(), product.get_description(), product.get_ingredients_info(), product.get_is_recommended())
+            product_data = (product.get_name(), product.get_price(), product.get_category(), product.get_image(),
+                            product.get_description(), product.get_ingredients_info(), product.get_is_recommended())
             mycursor.execute(insert_query, product_data)
 
             mydb.commit()
@@ -876,7 +874,6 @@ def create_product():
     return render_template('create_product.html', form=create_product_form)
 
 
-
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
     select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
@@ -884,13 +881,13 @@ def retrieve_product():
     rows = mycursor.fetchall()
 
     # Create instances of the Product class
-    products = [Product(idproducts=row[0], name=row[1], price=row[2], category=row[3], image=row[4], description=row[5], ingredients_info=row[6], is_recommended=row[7]) for row in rows]
+    products = [Product(idproducts=row[0], name=row[1], price=row[2], category=row[3], image=row[4], description=row[5],
+                        ingredients_info=row[6], is_recommended=row[7]) for row in rows]
 
     # Calculate the count of products
     count = len(products)
 
     return render_template('retrieve_product.html', products=products, count=count)
-
 
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
@@ -968,8 +965,6 @@ def update_product(id):
             return "Error occurred while fetching product details"
 
 
-
-
 @app.route('/delete_product/<int:id>', methods=['GET', 'POST'])
 def delete_product(id):
     try:
@@ -991,6 +986,7 @@ def delete_product(id):
         mydb.rollback()
         return "Error occurred while deleting product"
 
+
 tableCheck = ['cart']
 for a in tableCheck:
     mycursor.execute(f"SHOW TABLES LIKE 'cart'")
@@ -1010,6 +1006,7 @@ for a in tableCheck:
 
 mycursor.execute('SELECT * FROM cart')
 print(f"Using table 'cart' ")
+
 
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
@@ -1067,11 +1064,6 @@ def add_to_cart(product_id):
         return redirect(referring_page)
 
 
-
-
-
-
-
 @app.route('/remove_from_cart', methods=['POST'])
 def remove_from_cart():
     if request.method == 'POST':
@@ -1087,8 +1079,8 @@ def remove_from_cart():
         total_quantity = mycursor.fetchone()[0] or 0  # handle None result
         session['cart_quantity'] = total_quantity
 
-
     return redirect(url_for('view_cart'))
+
 
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
@@ -1108,6 +1100,10 @@ def update_cart():
             mycursor.execute(update_cart_query, (new_quantity, product_name))
             mydb.commit()
             flash('Cart updated')
+            total_quantity_query = "SELECT SUM(quantity) FROM cart"
+            mycursor.execute(total_quantity_query)
+            total_quantity = mycursor.fetchone()[0] or 0  # handle None result
+            session['cart_quantity'] = total_quantity
 
         else:
             flash('Product not found')
@@ -1133,14 +1129,19 @@ def get_cart_items():
 
     return cart_items
 
+
 def calculate_total_price(cart_items):
-    return sum(item.get_price() * item.get_quantity() if item.get_price() is not None and item.get_quantity() is not None else 0 for item in cart_items)
+    return sum(
+        item.get_price() * item.get_quantity() if item.get_price() is not None and item.get_quantity() is not None else 0
+        for item in cart_items)
+
 
 @app.route('/cart', methods=['GET'])
 def view_cart():
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+
 
 # tableCheck = ['order_info']
 # for a in tableCheck:
