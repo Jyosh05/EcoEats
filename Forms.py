@@ -101,3 +101,10 @@ class DeliveryForm(Form):
     block = StringField('Block', [validators.Length(min=1, max=150), validators.DataRequired()])
     unit_no = StringField('Unit No', [validators.Length(min=1, max=150), validators.DataRequired()])
     postal_code = StringField('Postal Code', [validators.Length(min=1, max=150), validators.DataRequired()])
+
+class CreateStaffForm(Form):
+    first_name = StringField('First Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    last_name = StringField('Last Name', [validators.Length(min=1, max=150), validators.DataRequired()])
+    gender = SelectField('Gender', [validators.DataRequired()], choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')], default='')
+    role = RadioField('Role', choices=[('A', 'Admin'), ('M', 'Manager'), ('S', 'Staff')], default='S')
+    email = EmailField('Email', [validators.DataRequired()])

@@ -1,0 +1,79 @@
+{% extends "baseAdmin.html" %}
+{% block title %}EcoEats Staff System - Create User{% endblock %}
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+
+<style>
+
+         h1.display-4 {
+        text-align: center;
+    }
+
+        form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Style form fields */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* Style submit button */
+        input[type="submit"] {
+            padding: auto;
+            font-size: 16px;
+        }
+
+        .mainBody {
+        padding-bottom: 20px;
+    }
+
+    .back-button {
+        display: block;
+        margin: 20px;
+        text-align: left;
+        width: 45px;
+    }
+
+    .back-button a {
+        padding: 10px;
+
+    }
+
+
+
+</style>
+
+
+<div class="mainBody">
+
+    <a href="/retrieveStaff" class="btn btn-secondary back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+
+    <h1 class="display-4">Create Staff</h1>
+
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.first_name, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.last_name, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.gender, class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.role, class="form-check", style="list-style-type:none") }}
+        </div>
+        <div id="prof">
+            <div class="form-group">
+                {{ render_field(form.email, class="form-control") }}
+            </div>
+        </div>
+        <input type="submit" value="Submit" class="btn btn-primary"/>
+    </form>
+</div>
+{% endblock %}
