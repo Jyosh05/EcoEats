@@ -1,3 +1,14 @@
+
+import mysql.connector
+mydb = mysql.connector.connect(
+                host='localhost',
+                user='root',
+                password='JYOSHNA2006!',
+                port='3306',
+                database='ecoeatsusers'
+            )
+
+mycursor = mydb.cursor()
 class Product:
     count_id = 0
 
