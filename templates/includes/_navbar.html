@@ -17,7 +17,7 @@
 <script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
 
 <div class="welcome-bar">
-        <img src="static/img/Logo1.png">
+        <img src="/static/img/Logo1.png">
         <span>Welcome to EcoEats</span>
 </div>
 
@@ -75,9 +75,10 @@
     </div>
 
     <div class="cart">
-      <a class="nav-link" href="/cart"><i class="fa-solid fa-basket-shopping"></i></a>
-      <span id="quantity" class="quantity">{{ cart_quantity }}</span>
-  </div>
+    <a class="nav-link" href="/cart"><i class="fa-solid fa-basket-shopping"></i></a>
+    <span id="quantity" class="quantity">{{ session['cart_quantity'] }}</span>
+</div>
+
 
     <a href="/profile">
       <div class="profile">
