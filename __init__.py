@@ -1,6 +1,7 @@
 # first file to run when starting the web application
 import datetime
 
+from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import User, Membership
 
@@ -11,7 +12,7 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm
 import ReviewUser
 
 # 1:56pm
@@ -44,7 +45,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='1234',
     port='3306',
     database='ecoeatsusers'
 )
@@ -1703,7 +1704,98 @@ def redeem_rewards(user_id):
             return "Error occurred while redeeming reward."
     return render_template('redeemRewards.html', form=redeem_rewards_form)
 
+mycursor = mydb.cursor()
 
+def create_staff_table():
+    try:
+        mycursor.execute("""
+            CREATE TABLE IF NOT EXISTS staff_info2 (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                first_name VARCHAR(255),
+                last_name VARCHAR(255),
+                gender VARCHAR(10),
+                role VARCHAR(50),
+                email VARCHAR(255)
+            )
+        """)
+        mydb.commit()
+    except Exception as e:
+        print(f"Error creating table: {str(e)}")
+
+create_staff_table()
+
+@app.route('/createStaff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_table()
+
+    create_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+        first_name = create_staff_form.first_name.data
+        last_name = create_staff_form.last_name.data
+        gender = create_staff_form.gender.data
+        role = create_staff_form.role.data
+        email = create_staff_form.email.data
+
+        query = "INSERT INTO staff_info2 (first_name, last_name, gender, role, email) VALUES (%s, %s, %s, %s, %s)"
+        values = (first_name, last_name, gender, role, email)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+    return render_template('createStaff.html', form=create_staff_form)
+
+@app.route('/retrieveStaff')
+def retrieve_staff():
+    try:
+        query = "SELECT * FROM staff_info2"
+        mycursor.execute(query)
+        staff_list = mycursor.fetchall()
+
+        users_list = [Staff(*user) for user in staff_list]
+
+        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list)
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+@app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
+def update_staff(id):
+    update_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and update_staff_form.validate():
+        query = "UPDATE staff_info2 SET first_name=%s, last_name=%s, gender=%s, role=%s, email=%s WHERE id=%s"
+        values = (update_staff_form.first_name.data, update_staff_form.last_name.data,
+                  update_staff_form.gender.data, update_staff_form.role.data,
+                  update_staff_form.email.data, id)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+    else:
+        query = "SELECT * FROM staff_info2 WHERE id=%s"
+        values = (id,)
+        mycursor.execute(query, values)
+        staff_data = mycursor.fetchone()
+
+        update_staff_form.first_name.data = staff_data[1]
+        update_staff_form.last_name.data = staff_data[2]
+        update_staff_form.gender.data = staff_data[3]
+        update_staff_form.role.data = staff_data[4]
+        update_staff_form.email.data = staff_data[5]
+
+        return render_template('updateStaff.html', form=update_staff_form)
+
+@app.route('/deleteStaff/<int:id>', methods=['POST'])
+def delete_staff(id):
+    try:
+        query = "DELETE FROM staff_info2 WHERE id=%s"
+        values = (id,)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 if __name__ == '__main__':
     app.run()
