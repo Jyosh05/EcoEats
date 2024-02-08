@@ -2,7 +2,7 @@
 import datetime
 
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-import User, Membership
+import shelve, User, Membership
 
 import random
 import json
@@ -20,6 +20,8 @@ import mysql.connector
 from flask import session
 from functools import wraps
 from flask import flash
+
+import stripe
 
 
 
@@ -57,13 +59,13 @@ db = mysql.connector.connect(
     database='ecoeatsusers'
 )
 
-mydb = mysql.connector.connect(
-    host='localhost',
-    user='root',
-    password='ecoeats',
-    port='3306',
-    database='ecoeatsusers'
-)
+# mydb = mysql.connector.connect(
+#     host='localhost',
+#     user='root',
+#     password='ecoeats',
+#     port='3306',
+#     database='ecoeatsusers'
+# )
 
 my_db = mysql.connector.connect(
     host='localhost',
@@ -104,8 +106,7 @@ for a in users:
 
 
 # @app.route('/')
-# def home():
-#     return render_template("home.html")
+# def home():#     return render_template("home.html")
 
 cursor = db.cursor()
 cur = mydb.cursor()
@@ -120,7 +121,7 @@ for a in tableCheck:
     if not tableExist:
         cursor.execute("CREATE TABLE `ecoeatsusers`"
                        ".`products` "
-                       "(`idproducts` INT NOT NULL, `name` VARCHAR(100) NULL, "
+                       "(`idproducts` INT AUTO_INCREMENT NOT NULL, `name` VARCHAR(100) NULL, "
                        "`price` DECIMAL(10,2) NULL, "
                        "`category` VARCHAR(45) NULL, "
                        "`image` VARCHAR(200) NULL,"
@@ -178,9 +179,22 @@ mycursor.execute('SELECT * FROM order_info')
 print(f"Using table 'order_info' ")
 
 
-products = cursor.fetchall()
-cart = cur.fetchall()
-order_info = mycursor.fetchall()
+# products = cursor.fetchall()
+# cart = cur.fetchall()
+# order_info = mycursor.fetchall()
+
+
+
+
+mydb = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='ecoeats',
+    port='3306',
+    database='ecoeatsusers'
+)
+
+mycursor = mydb.cursor()
 
 
 @app.route('/createUser', methods=['GET', 'POST'])
@@ -335,6 +349,16 @@ def delete_users():
 def login():
     loginForm = CreateUserForm(request.form)
 
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -343,6 +367,7 @@ def login():
         select_query = "SELECT * FROM users WHERE username = %s AND password = %s"
         mycursor.execute(select_query, (username, password))
         user = mycursor.fetchone()
+        print(user)
 
         if user:
             user_id = user[0]
@@ -710,62 +735,72 @@ def plot_to_base64():
 #     return render_template('createUser.html', form = create_user_form)
 
 
-intents = json.loads(open('intents.json').read())
-
-lemmatizer = WordNetLemmatizer()
-words = pickle.load(open('words.pkl', 'rb'))
-classes = pickle.load(open('classes.pkl', 'rb'))
-model = load_model('chatbotmodel.h5')
-
-def clean_up_sentence(sentence):
-    sentence_words = nltk.word_tokenize(sentence)
-    sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
-    return sentence_words
-
-def bag_of_words(sentence):
-    sentence_words = clean_up_sentence(sentence)
-    bag = [0] * len(words)
-    for w in sentence_words:
-        for i, word in enumerate(words):
-            if word == w:
-                bag[i] = 133
-    return np.array(bag)
-
-def predict_class(sentence):
-    bow = bag_of_words(sentence)
-    res = model.predict(np.array([bow]))[0]
-    ERROR_THRESHOLD = 0.25
-    results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
-
-    results.sort(key=lambda x: x[1], reverse=True)
-    return_list = []
-    for r in results:
-        return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
-    return return_list
-
-def get_response(intents_list, intents_json):
-    tag = intents_list[0]['intent']
-    list_of_intents = intents_json['intents']
-    for i in list_of_intents:
-        if i['tag'] == tag:
-            result = random.choice(i['responses'])
-            break
-    return result
-
-
-@app.route("/get")
-def get_bot_response():
-    user_message = request.args.get("msg")
-    ints = predict_class(user_message)
-    res = get_response(ints, intents)
-    return res
+# intents = json.loads(open('intents.json').read())
+#
+# lemmatizer = WordNetLemmatizer()
+# words = pickle.load(open('words.pkl', 'rb'))
+# classes = pickle.load(open('classes.pkl', 'rb'))
+# model = load_model('chatbotmodel.h5')
+#
+# def clean_up_sentence(sentence):
+#     sentence_words = nltk.word_tokenize(sentence)
+#     sentence_words = [lemmatizer.lemmatize(word) for word in sentence_words]
+#     return sentence_words
+#
+# def bag_of_words(sentence):
+#     sentence_words = clean_up_sentence(sentence)
+#     bag = [0] * len(words)
+#     for w in sentence_words:
+#         for i, word in enumerate(words):
+#             if word == w:
+#                 bag[i] = 133
+#     return np.array(bag)
+#
+# def predict_class(sentence):
+#     bow = bag_of_words(sentence)
+#     res = model.predict(np.array([bow]))[0]
+#     ERROR_THRESHOLD = 0.25
+#     results = [[i, r] for i, r in enumerate(res) if r > ERROR_THRESHOLD]
+#
+#     results.sort(key=lambda x: x[1], reverse=True)
+#     return_list = []
+#     for r in results:
+#         return_list.append({'intent': classes[r[0]], 'probability': str(r[1])})
+#     return return_list
+#
+# def get_response(intents_list, intents_json):
+#     tag = intents_list[0]['intent']
+#     list_of_intents = intents_json['intents']
+#     for i in list_of_intents:
+#         if i['tag'] == tag:
+#             result = random.choice(i['responses'])
+#             break
+#     return result
+#
+#
+# @app.route("/get")
+# def get_bot_response():
+#     user_message = request.args.get("msg")
+#     ints = predict_class(user_message)
+#     res = get_response(ints, intents)
+#     return res
 
 @app.route('/dashboard')
-@login_required(role='admin')
+# @login_required(role='admin')
 def dashboard():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
     select_query = "SELECT * FROM reviews"
     mycursor.execute(select_query)
     reviews = mycursor.fetchall()
+    mycursor.close()
     print('a')
     return render_template("dashboard.html", User=User, reviews=reviews)
 # to redirect back to previous page
@@ -789,6 +824,18 @@ def home():
 
 @app.route('/productBase/<category>')
 def category(category):
+
+
+    db = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+
+
     cursor = db.cursor()
     cursor.execute('SELECT * FROM products WHERE category = %s', (category,))
     data = cursor.fetchall()
@@ -854,6 +901,16 @@ def allowed_file(filename):
 def create_product():
     create_product_form = CreateProductForm(request.form)
 
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cursor = mydb.cursor()
+
     if request.method == 'POST' and create_product_form.validate():
         try:
             # Handle image upload
@@ -874,7 +931,7 @@ def create_product():
             # Check if a product with the same name already exists
             existing_product_query = "SELECT * FROM products WHERE name = %s"
             cursor.execute(existing_product_query, (create_product_form.name.data,))
-            existing_product = cursor.fetchone()
+            existing_product = cursor.fetchall()
 
             if existing_product:
                 flash('Product with the same name already exists. Please choose a different name.')
@@ -910,12 +967,25 @@ def create_product():
 
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
+
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cursor = mydb.cursor()
+
     select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info FROM products"
     cursor.execute(select_query)
     rows = cursor.fetchall()
 
     # Create instances of the Product class
     products = [Product(idproducts=row[0], name=row[1], price=row[2], category=row[3], image=row[4], description=row[5], ingredients_info=row[6]) for row in rows]
+
+    cursor.fetchall()
 
     # Calculate the count of products
     count = len(products)
@@ -926,6 +996,18 @@ def retrieve_product():
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
 def update_product(id):
+
+
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cursor = mydb.cursor()
+
     update_product_form = CreateProductForm(request.form)
 
     if request.method == 'POST' and update_product_form.validate():
@@ -996,6 +1078,18 @@ def update_product(id):
 
 @app.route('/delete_product/<int:id>', methods=['GET', 'POST'])
 def delete_product(id):
+
+
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cursor = mydb.cursor()
+
     try:
         select_query = "SELECT * FROM products WHERE idproducts = %s"
         cursor.execute(select_query, (id,))
@@ -1017,6 +1111,15 @@ def delete_product(id):
 
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cur = mydb.cursor()
     if request.method == 'POST':
         # Fetch product details from the database
         select_query = "SELECT idproducts, name, price, image FROM products WHERE idproducts = %s"
@@ -1038,7 +1141,7 @@ def add_to_cart(product_id):
 
             if cart_item:
                 # Update quantity if the product is already in the cart
-                new_quantity = cart_item[3] + quantity #existing quantity in the cart + new quantity
+                new_quantity = cart_item[4] + quantity #existing quantity in the cart + new quantity
                 update_cart_query = "UPDATE cart SET quantity = %s WHERE product_name = %s"
                 cur.execute(update_cart_query, (new_quantity, product_name))
             else:
@@ -1098,6 +1201,16 @@ def update_cart():
 
 
 def get_cart_items():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    cur = mydb.cursor()
+
     select_cart_query = "SELECT product_name, product_price, quantity, product_image FROM cart WHERE product_name IS NOT NULL AND product_price IS NOT NULL AND product_image IS NOT NULL"
     cur.execute(select_cart_query)
     cart_items_data = cur.fetchall()
@@ -1117,6 +1230,17 @@ def view_cart():
 
 @app.route('/dine_in', methods=['GET', 'POST'])
 def dine_in():
+
+    my_db = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = my_db.cursor()
+
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
 
@@ -1144,6 +1268,17 @@ def dine_in():
 
 @app.route("/delivery", methods=['GET', 'POST'])
 def delivery():
+
+    my_db = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = my_db.cursor()
+
     # Fetch cart items
     cart_items = get_cart_items()
     delivery_fee = 5
@@ -1179,6 +1314,17 @@ def delivery():
 
 @app.route("/collection", methods=['GET', 'POST'])
 def collection():
+
+    my_db = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = my_db.cursor()
+
     # Fetch cart items
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
@@ -1212,128 +1358,164 @@ def profile():
 def reviews():
     return render_template('reviews.html')
 
-# @app.route('/createReviews', methods=['GET', 'POST'])
-# def create_reviews():
-#     create_reviews_form = CreateReviewsForm(request.form)
-#
-#     if request.method == 'POST' and create_reviews_form.validate():
-#         try:
-#             # Create the reviews table if it doesn't exist
-#             mycursor.execute(
-#                 "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
-#                 "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
-#                 "`name` VARCHAR(100) DEFAULT NULL,"
-#                 "`email` VARCHAR(100) DEFAULT NULL,"
-#                 "`stars` INT DEFAULT NULL,"
-#                 "`feedback` VARCHAR(1000) DEFAULT NULL"
-#                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
-#             )
-#
-#             # Insert data into the reviews table
-#             insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
-#             reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
-#                                             create_reviews_form.stars.data,
-#                                             create_reviews_form.feedback.data)
-#             reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
-#             mycursor.execute(insert_query, reviews_data)
-#             mydb.commit()
-#
-#             return redirect(url_for('retrieve_reviews'))
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred. Check logs for details."
-#
-#     return render_template('createReviews.html', form=create_reviews_form)
-#
-# @app.route('/retrieveReviews')
-# def retrieve_reviews():
-#     select_query = "SELECT * FROM reviews"
-#     mycursor.execute(select_query)
-#     reviews = mycursor.fetchall()
-#
-#     return render_template('retrieveReviews.html', reviews=reviews)
-#
-#
-# @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
-# def update_reviews(user_id):
-#     update_reviews_form = CreateReviewsForm(request.form)
-#
-#     if request.method == 'POST' and update_reviews_form.validate():
-#         try:
-#             # retrieve user data from db
-#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-#
-#             mycursor.execute(select_query, (user_id,))
-#             reviews = mycursor.fetchone()
-#
-#             if reviews:
-#                 name = update_reviews_form.name.data
-#                 email = update_reviews_form.email.data
-#                 stars = update_reviews_form.stars.data
-#                 feedback = update_reviews_form.feedback.data
-#
-#                 update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
-#                 data = (user_id, name, email, stars, feedback)
-#                 mycursor.execute(update_query, data)
-#
-#                 mydb.commit()
-#
-#                 print(f"USER ID: {user_id} updated successfully.")
-#                 return redirect(url_for('retrieve_reviews'))
-#             else:
-#                 return "Reviews not found."
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred while updating reviews."
-#     else:
-#         try:
-#
-#             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
-#             mycursor.execute(select_query, (user_id,))
-#             reviews = mycursor.fetchone()
-#
-#             if reviews:
-#
-#                 update_reviews_form.name.data = reviews[0]
-#                 update_reviews_form.email.data = reviews[1]
-#                 update_reviews_form.stars.data = reviews[2]
-#                 update_reviews_form.feedback.data = reviews[3]
-#
-#                 return render_template('createReviews.html', form=update_reviews_form)
-#
-#             else:
-#                 return "Reviews not found."
-#         except Exception as e:
-#
-#             print("Error:", e)
-#
-#             mydb.rollback()
-#
-#             return "Error occurred while updating reviews."
-#
-#
-# @app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
-# def delete_reviews(user_id):
-#     try:
-#         select_query = "SELECT * FROM reviews WHERE user_id = %s"
-#         mycursor.execute(select_query, (user_id,))
-#         reviews = mycursor.fetchone()
-#
-#         if reviews:
-#             delete_query = "DELETE FROM reviews WHERE user_id = %s"
-#             mycursor.execute(delete_query, (user_id,))
-#             mydb.commit()
-#
-#             print(f"USER ID: {user_id} deleted successfully.")
-#             return redirect(url_for('retrieve_reviews'))
-#         else:
-#             return "Reviews not found."
-#     except Exception as e:
-#         print("Error:", e)
-#         mydb.rollback()
-#         return "Error occurred while deleting reviews."
+@app.route('/createReviews', methods=['GET', 'POST'])
+def create_reviews():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
+    create_reviews_form = CreateReviewsForm(request.form)
+
+    if request.method == 'POST' and create_reviews_form.validate():
+        try:
+            # Create the reviews table if it doesn't exist
+            mycursor.execute(
+                "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
+                "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                "`name` VARCHAR(100) DEFAULT NULL,"
+                "`email` VARCHAR(100) DEFAULT NULL,"
+                "`stars` INT DEFAULT NULL,"
+                "`feedback` VARCHAR(1000) DEFAULT NULL"
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+            )
+
+            # Insert data into the reviews table
+            insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
+            reviews = ReviewUser.UserReview(create_reviews_form.name.data, create_reviews_form.email.data,
+                                            create_reviews_form.stars.data,
+                                            create_reviews_form.feedback.data)
+            reviews_data = (reviews.get_name(), reviews.get_email(), reviews.get_stars(), reviews.get_feedback())
+            mycursor.execute(insert_query, reviews_data)
+            mydb.commit()
+
+            return redirect(url_for('retrieve_reviews'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details."
+
+    return render_template('createReviews.html', form=create_reviews_form)
+
+@app.route('/retrieveReviews')
+def retrieve_reviews():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
+    select_query = "SELECT * FROM reviews"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+    return render_template('retrieveReviews.html', reviews=reviews)
+
+
+@app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
+def update_reviews(user_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
+    update_reviews_form = CreateReviewsForm(request.form)
+
+    if request.method == 'POST' and update_reviews_form.validate():
+        try:
+            # retrieve user data from db
+            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+                name = update_reviews_form.name.data
+                email = update_reviews_form.email.data
+                stars = update_reviews_form.stars.data
+                feedback = update_reviews_form.feedback.data
+
+                update_query = "UPDATE reviews SET name = %s, email = %s, stars = %s, feedback = %s WHERE user_id = %s"
+                data = (user_id, name, email, stars, feedback)
+                mycursor.execute(update_query, data)
+
+                mydb.commit()
+
+                print(f"USER ID: {user_id} updated successfully.")
+                return redirect(url_for('retrieve_reviews'))
+            else:
+                return "Reviews not found."
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred while updating reviews."
+    else:
+        try:
+
+            select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
+            mycursor.execute(select_query, (user_id,))
+            reviews = mycursor.fetchone()
+
+            if reviews:
+
+                update_reviews_form.name.data = reviews[0]
+                update_reviews_form.email.data = reviews[1]
+                update_reviews_form.stars.data = reviews[2]
+                update_reviews_form.feedback.data = reviews[3]
+
+                return render_template('createReviews.html', form=update_reviews_form)
+
+            else:
+                return "Reviews not found."
+        except Exception as e:
+
+            print("Error:", e)
+
+            mydb.rollback()
+
+            return "Error occurred while updating reviews."
+
+
+@app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
+def delete_reviews(user_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+
+    mycursor = mydb.cursor()
+    try:
+        select_query = "SELECT * FROM reviews WHERE user_id = %s"
+        mycursor.execute(select_query, (user_id,))
+        reviews = mycursor.fetchone()
+
+        if reviews:
+            delete_query = "DELETE FROM reviews WHERE user_id = %s"
+            mycursor.execute(delete_query, (user_id,))
+            mydb.commit()
+
+            print(f"USER ID: {user_id} deleted successfully.")
+            return redirect(url_for('retrieve_reviews'))
+        else:
+            return "Reviews not found."
+    except Exception as e:
+        print("Error:", e)
+        mydb.rollback()
+        return "Error occurred while deleting reviews."
 
 
 
