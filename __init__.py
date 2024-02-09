@@ -45,7 +45,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='1234',
+    password='JYOSHNA2006!',
     port='3306',
     database='ecoeatsusers'
 )
@@ -104,10 +104,14 @@ for a in users:
 
 
 
+# @app.route('/')
+# def home():
+#     return render_template("home.html")
 
 
 tableCheck = ['products']
 for a in tableCheck:
+
     mycursor.execute(f"SHOW TABLES LIKE 'products'")
     tableExist = mycursor.fetchone()
 
@@ -126,6 +130,7 @@ for a in tableCheck:
 
 mycursor.execute('SELECT * FROM products')
 print(f"Using table 'products' ")
+
 
 # tableCheck = ['cart']
 # for a in tableCheck:
@@ -147,6 +152,7 @@ print(f"Using table 'products' ")
 #
 # mycursor.execute('SELECT * FROM cart')
 # print(f"Using table 'cart' ")
+
 
 
 
@@ -759,6 +765,7 @@ def home():
     return render_template("home.html", User=User)
 
 
+
 @app.route('/productBase/<category>')
 def category(category):
     mycursor.execute('SELECT * FROM products WHERE category = %s', (category,))
@@ -1004,7 +1011,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='ecoeats',
+            password='JYOSHNA2006!'
             port='3306',
             database='ecoeatsusers'
         )
@@ -1105,7 +1112,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ecoeats',
+        password='JYOSHNA2006!'
         port='3306',
         database='ecoeatsusers'
     )
@@ -1131,7 +1138,6 @@ def view_cart():
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
-
 
 import stripe
 from flask import redirect
@@ -1274,7 +1280,6 @@ def display_purchased_items(purchased_id):
 
 
 
-
 # tableCheck = ['order_info']
 # for a in tableCheck:
 #     mycursor.execute(f"SHOW TABLES LIKE 'order_info'")
@@ -1298,8 +1303,9 @@ def display_purchased_items(purchased_id):
 #
 # mycursor.execute('SELECT * FROM order_info')
 # print(f"Using table 'order_info' ")
-#
-#
+
+
+
 # @app.route('/dine_in', methods=['GET', 'POST'])
 # def dine_in():
 #     cart_items = get_cart_items()
@@ -1444,7 +1450,7 @@ def retrieve_reviews():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ecoeats',
+        password='JYOSHNA2006!',
         port='3306',
         database='ecoeatsusers'
     )
