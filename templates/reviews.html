@@ -3,92 +3,74 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css')}}">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet"/>
 
-
-<div class="rectangle1">
-    <div class="daily-ratings">
-        <span class="fa fa-star checked"></span>
+<div class="section_container">
+    <div class="header">
+        <p>FEEDBACKS</p>
+        <h1>What Our Customers Says About Us</h1>
     </div>
-    <h5>Average Rating</h5>
-    <p class="rate">4.5</p>
-
-    <p class="star-5">5-star</p>
-    <div class="chart-5"></div>
-    <div class="chart-percent5"></div>
-    <p class="percent5">40%</p>
-
-    <p class="star-4">4-star</p>
-    <div class="chart-4"></div>
-    <div class="chart-percent4"></div>
-    <p class="percent4">35%</p>
-
-    <p class="star-3">3-star</p>
-    <div class="chart-3"></div>
-    <div class="chart-percent3"></div>
-    <p class="percent3">15%</p>
-
-    <p class="star-2">2-star</p>
-    <div class="chart-2"></div>
-    <div class="chart-percent2"></div>
-    <p class="percent2">7%</p>
-
-    <p class="star-1">1-star</p>
-    <div class="chart-1"></div>
-    <div class="chart-percent1"></div>
-    <p class="percent1">3%</p>
+    <div class="feedback_grid">
+        <div class="card">
+            <span><i class="ri-double-quotes-l"></i></span>
+            <p>
+            EcoEats captivated my senses with its impeccable blend of ambiance, service and culinary mastery.
+            The chef’s dedication to quality ingredients and the attentive staff makes this restaurant a must-visit!
+            I also loved the idea of sustainability!
+            </p>
+            <div class="star1">
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+            </div>
+            <hr>
+            <img src="static/img/pic1.jpg" alt="icon1" class="icon1">
+            <p class="name">Alan Collins</p>
+        </div>
+        <div class="card">
+            <span><i class="ri-double-quotes-l"></i></span>
+            <p>
+            EcoEats is not just a dining establishment; it's a testament to sustainable gastronomy done right.
+            From the moment you step inside, the commitment to Eco-friendly practices is evident, with recycled decor and an
+            ambiance that reflects the restaurant's dedication to the planet.
+            </p>
+            <div class="star2">
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+            </div>
+            <hr>
+            <img src="static/img/pic2.jpg" alt="icon2" class="icon2">
+            <p class="name">Clint Matt</p>
+        </div>
+        <div class="card">
+            <span><i class="ri-double-quotes-l"></i></span>
+            <p>
+            This restaurant stands out with its commitment to sustainability, serving delicious meals crafted from Eco-friendly ingredients.
+            The menu's green ethos, combined with a cozy atmosphere, makes it a guilt-free and delightful dining experience!
+            </p>
+            <div class="star3">
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+                <span class="checked">&#9733;</span>
+            </div>
+            <hr>
+            <img src="static/img/pic3.jpg" alt="icon3" class="icon3">
+            <p class="name">Novaria A.</p>
+        </div>
+        <div class="footer">
+            <h4>Leave A Review!</h4>
+            <p>Your feedback is our compass, guiding us to excellence. <br> Share your experience with us by leaving a review. </p>
+        </div>
+        <div class="add-review">
+            <a href="createReviews" class="button">Feedback To Us</a>
+        </div>
+    </div>
 </div>
 
-
-
-<div class="rectangle2">
-    <div class="add-review">
-        <a href="createReviews" class="button">+ ADD REVIEWS</a>
-    </div>
-    <img src="static/img/picture1.jpg" alt="icon1" class="icon1">
-    <div class="star-rating">
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star"></span>
-    </div>
-    <p class="person1">Sarah P.</p>
-    <p class="text1">
-        EcoEats captivated my senses with its impeccable blend of ambiance, service and culinary mastery.
-        The chef’s dedication to quality ingredients and the attentive staff makes this restaurant a must-visit!
-        I also loved the idea of sustainability!
-    </p>
-
-    <img src="static/img/picture2.png" alt="icon2" class="icon2">
-    <div class="star-rating1">
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-    </div>
-    <p class="person2">Mike Jordan</p>
-    <p class="text2">
-        EcoEats is not just a dining establishment; it's a testament to sustainable gastronomy done right.
-        From the moment you step inside, the commitment to Eco-friendly practices is evident, with recycled decor and an
-        ambiance that reflects the restaurant's dedication to the planet.
-    </p>
-
-    <img src="static/img/picture3.jpg" alt="icon3" class="icon3">
-    <div class="star-rating2">
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-        <span class="fa fa-star checked"></span>
-    </div>
-    <p class="person3">Margot Robbie</p>
-    <p class="text3">
-        This restaurant stands out with its commitment to sustainability, serving delicious meals crafted from Eco-friendly ingredients.
-        The menu's green ethos, combined with a cozy atmosphere, makes it a guilt-free and delightful dining experience!
-    </p>
-</div>
-
-
-
-{% endblock %}
+{%endblock%}

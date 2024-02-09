@@ -1,0 +1,198 @@
+{% extends "baseAdmin.html" %}
+{% block title %}EcoEats-Staff{% endblock %}
+
+
+{% block content %}
+
+<style>
+
+    :root {
+  --table-cell-padding-y: .5rem;
+  --table-cell-padding-x: .5rem;
+  --table-cell-padding-y-sm: .25rem;
+  --table-cell-padding-x-sm: .25rem;
+
+  --table-cell-vertical-align: top;
+
+  --table-color: var(--#{$prefix}emphasis-color);
+  --table-bg: var(--#{$prefix}body-bg);
+  --table-accent-bg: transparent;
+
+  --table-th-font-weight: null;
+
+  --table-striped-color: var(--table-color);
+  --table-striped-bg-factor: .05;
+  --table-striped-bg: rgba(var(--#{$prefix}emphasis-color-rgb), var(--table-striped-bg-factor));
+
+  --table-active-color: var(--table-color);
+  --table-active-bg-factor: .1;
+  --table-active-bg: rgba(var(--#{$prefix}emphasis-color-rgb), var(--table-active-bg-factor));
+
+  --table-hover-color: var(--table-color);
+  --table-hover-bg-factor: .075;
+  --table-hover-bg: rgba(var(--#{$prefix}emphasis-color-rgb), var(--table-hover-bg-factor));
+
+  --table-border-factor: .2;
+  --table-border-width: var(--#{$prefix}border-width);
+  --table-border-color: var(--#{$prefix}border-color);
+
+  --table-striped-order: odd;
+  --table-striped-columns-order: even;
+
+  --table-group-separator-color: currentcolor;
+
+  --table-caption-color: var(--#{$prefix}secondary-color);
+
+  --table-bg-scale: -80%;
+}
+
+/* Basic reset */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Styling for the table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.table thead {
+  background-color: #D3EACC;
+  color: black;
+}
+
+.table th,
+.styled-table td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table tbody tr:last-of-type {
+  border-bottom: 2px solid #000000;
+}
+
+
+.table a {
+color:rgb(69,69,69);}
+
+.table {
+border: 1px solid black;
+}
+
+table {
+border-radius:15px;}
+
+</style>
+<div class="mainBody">
+<div class="container">
+    <h1 class="display-4">Retrieve Staff</h1>
+    <div>
+        {% if count == 0 %}
+        <p>There are no staff.</p>
+        {% elif count == 1 %}
+        <p>There is 1 staff.</p>
+        {% else %}
+        <p>There are currently {{ count }} staff members.</p>
+        {% endif %}
+    </div>
+    <div class="d-flex justify-content-center">
+        <table class="table table-hover " style="border-radius: 2x; overflow: hidden">
+            <thead>
+            <tr>
+                <th>Staff ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Gender</th>
+                <th>Role</th>
+                <th>Email</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users_list %}
+            <tr>
+                <td>{{ user.get_user_id() }}</td>
+                <td>{{ user.get_first_name() }}</td>
+                <td>{{ user.get_last_name() }}</td>
+                <td>{{ user.get_gender() }}</td>
+                {% if user.get_role() == "A" %}
+                <td>Admin</td>
+                {% elif user.get_role() == "M" %}
+                <td>Manager</td>
+                {% elif user.get_role() == "S" %}
+                <td>Staff</td>
+                {% endif %}
+                <td>{{ user.get_email() }}</td>
+                <td>
+                    <a href="/updateStaff/{{user.get_user_id()}}" class="btn">
+                        <i class="fas fa-pencil-alt"></i> <!-- Font Awesome icon for update -->
+                    </a>
+                </td>
+                <td>
+                    <form action="{{url_for('delete_staff', id=user.get_user_id())}}" method="POST">
+                        <!--            <input type="submit" value="Delete" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete {{user.get_first_name()}} {{user.get_last_name()}}?');">-->
+                        <!-- Button to Open the Modal -->
+                        <button type="button" class="btn" data-bs-toggle="modal"
+                                data-bs-target="#myModal_{{user.get_user_id()}}">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <!-- The Modal -->
+                        <div class="modal" id="myModal_{{user.get_user_id()}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Delete Confirmation</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        Are you sure you want to delete {{user.get_first_name()}}
+                                        {{user.get_last_name()}}?
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <input type="submit" value="Delete" class="btn btn-danger">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+    <a href="/createStaff" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Create New Staff Member
+    </a>
+
+</div>
+</div>
+
+{% endblock %}

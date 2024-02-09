@@ -1,0 +1,39 @@
+* {
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: rgb(220, 220, 220);
+}
+
+.createProduct_container{
+    margin: auto;
+    margin-top: 30px;
+    border:1px black solid;
+    width: 35%;
+
+
+    background-color: #d3eacc;
+    border-radius: 10px;
+}
+
+.display-4{
+    font-weight: bold;
+    text-align: center;
+
+}
+
+.form-group{
+    padding: 10px;
+}
+
+.form-check{
+    padding-left: 40px;
+}
+
+#submit-Button{
+    background-color: #212427;
+    color: white;
+    margin-top:10px
+    width:100px;
+}
