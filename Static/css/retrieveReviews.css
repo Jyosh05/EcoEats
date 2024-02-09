@@ -8,8 +8,9 @@ border: 3px solid #9CAF88;
 padding: 10px;
 margin: 10px;
 border-radius: 15px;
-width: 300px;
+width: 400px;
 word-wrap: break-word;
+font-size: 18px;
 }
 
 h4{
@@ -24,4 +25,10 @@ text-align: center;
 .checked-star{
 color: gold;
 font-size: 27px;
+}
+
+.actionButtons{
+position: relative;
+left: 80%;
+top: 5%;
 }
