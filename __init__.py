@@ -104,10 +104,6 @@ for a in users:
 
 
 
-# @app.route('/')
-# def home():
-#     return render_template("home.html")
-
 
 
 tableCheck = ['products']
@@ -1292,7 +1288,7 @@ def create_reviews():
             mycursor.execute(insert_query, reviews_data)
             mydb.commit()
 
-            return redirect(url_for('retrieve_reviews'))
+            return redirect(url_for('thankyou'))
         except Exception as e:
             print("Error:", e)
             mydb.rollback()
@@ -1321,7 +1317,16 @@ def retrieve_reviews():
 def update_reviews(user_id):
     update_reviews_form = CreateReviewsForm(request.form)
 
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
     if request.method == 'POST' and update_reviews_form.validate():
+
         try:
             # retrieve user data from db
             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
@@ -1378,6 +1383,14 @@ def update_reviews(user_id):
 
 @app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
 def delete_reviews(user_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
     try:
         select_query = "SELECT * FROM reviews WHERE user_id = %s"
         mycursor.execute(select_query, (user_id,))
@@ -1397,7 +1410,9 @@ def delete_reviews(user_id):
         mydb.rollback()
         return "Error occurred while deleting reviews."
 
-
+@app.route("/thankyou_page")
+def thankyou():
+    return render_template('thankyou_page.html')
 
 
 @app.route("/cart")
