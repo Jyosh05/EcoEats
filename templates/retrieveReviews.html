@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Library Loan System - Retrieve Users{% endblock %}
+{% block title %}Library Loan System - Retrieve Reviews{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveReviews.css')}}">
 <div class="review-box">
@@ -9,7 +9,7 @@
             <p><strong>No. of Reviews:</strong> {{ review[0] }}</p>
             <p><strong>Name:</strong> {{ review[1] }}</p>
             <p><strong>Email:</strong> {{ review[2] }}</p>
-            <p><strong>Stars (1-5):</strong> {{ review[3] }}</p>
+            <p><strong>Stars (1-5):</strong></p>
                 {% for i in range(1, review[3]+1) %}
                     <span class="checked-star">&#9733;</span>
                 {% endfor %}
