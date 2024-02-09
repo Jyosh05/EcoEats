@@ -1,0 +1,70 @@
+
+
+{% extends 'productBase.html' %}
+{% block title %}displayJSON{% endblock %}
+{% block heading %}disaplyJSON{% endblock %}
+
+{% block content %}
+
+
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchased Items</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+        #purchased-items {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        div.item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Purchased Items</h1>
+    <div id="purchased-items">
+
+        {% for item in order_data %}
+            <div>
+                <strong>{{ item.product_name }}</strong>: ${{ item.product_price }} ({{ item.quantity }} items)
+            </div>
+        {% endfor %}
+
+        <div class="total-price">
+
+            <strong>Total Price:</strong> ${{ total_amt }}
+
+        </div>
+
+    </div>
+</body>
+</html>
+
+
+
+{% endblock %}

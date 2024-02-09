@@ -1007,7 +1007,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!',
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1108,7 +1108,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1134,6 +1134,149 @@ def view_cart():
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+
+
+import stripe
+from flask import redirect
+
+purchasedTableCheck = ['purchased']
+for a in purchasedTableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'purchased'")
+    tableExist = mycursor.fetchone()
+
+
+    if not tableExist:
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
+        "`id` int NOT NULL AUTO_INCREMENT,"
+        "`total_amt` decimal(10,2) DEFAULT NULL,"
+        "`cart_data` json DEFAULT NULL,"
+        "`user_id` int DEFAULT NULL,"
+        "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+        "PRIMARY KEY (`id`)"
+        ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
+
+
+@app.route('/create-checkout-session', methods=['GET', 'POST'])
+def create_checkout_session():
+    try:
+        cart_items = get_cart_items()
+
+        # Create line items for the checkout session
+        line_items = []
+        for item in cart_items:
+            # Convert the price to an integer in cents
+            unit_amount_cents = int(item.get_price() * 100)
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'sgd',
+                    'product_data': {
+                        'name': item.get_name(),
+                        'images': [item.get_image()],
+                    },
+                    'unit_amount': unit_amount_cents,
+                },
+                'quantity': item.get_quantity(),
+            })
+
+        #checkout session with line items
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url='http://localhost:5000/checkout-success',
+            cancel_url='http://localhost:5000/cart',
+        )
+
+
+        return redirect(session.url)
+        # return jsonify({'sessionId': session.id})
+    except Exception as e:
+        return str(e)
+
+
+
+
+stripe.api_key = 'sk_test_51OhFjILCE6DWXaJnZarhEhPjiONUxnuWTq7GvUS7NrOoH4NmnLwRQ2jEMjLIBBPegjRzOfzwqrbsLNk4pn7KwJGd00NhsOKbuy'
+
+
+@app.route('/checkout-success', methods=['GET', 'POST'])
+@login_required()
+def checkout_success():
+    try:
+        mycursor = mydb.cursor()
+
+        user_id = session['user_id']
+        cart = get_cart_items()
+        total_amt = calculate_total_price(cart)
+
+        # Convert cart data to JSON
+        cart_data = json.dumps([{'product_name': item.get_name(),
+        'product_price': float(item.get_price()),
+        'quantity': item.get_quantity()
+    } for item in cart])
+
+        print(cart_data)
+
+        query = 'INSERT INTO purchased (total_amt, cart_data, user_id ) VALUES (%s, %s, %s)'
+        value = (total_amt, cart_data, user_id)
+        mycursor.execute(query, value)
+        mydb.commit()
+
+
+
+        return redirect(url_for('home'))
+
+    except Exception as e:
+        return str(e)
+
+
+@app.route('/display-purchased', methods=['GET'])
+@login_required()
+def display_carts():
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT id, datetime, total_amt FROM purchased WHERE user_id = %s", (user_id,))
+    purchased_ids = mycursor.fetchall()
+
+
+
+    return render_template('order.html', purchased_ids=purchased_ids, user_id=user_id, User=User)
+
+
+
+@app.route('/display-purchased/<int:purchased_id>', methods=['GET'])
+@login_required()
+def display_purchased_items(purchased_id):
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT cart_data FROM purchased WHERE user_id = %s AND id = %s", (user_id, purchased_id))
+    order_data = mycursor.fetchall()
+
+    formatted_order_data = []
+
+
+    for row in order_data:
+        cart_data = json.loads(row[0])  # Convert JSON string to Python dictionary
+        formatted_order_data.extend(cart_data)  # Add each item to the formatted list
+
+    print(formatted_order_data)
+
+    mycursor.execute('SELECT total_amt FROM purchased WHERE user_id = %s AND id = %s', (user_id, purchased_id))
+    total_amt = mycursor.fetchone()[0]
+    total_amt = float(total_amt)
+
+    return render_template('orderSpec.html', total_amt = total_amt, order_data=formatted_order_data, User=User)
+
+
+
+
+
+
+
+
 
 # tableCheck = ['order_info']
 # for a in tableCheck:
@@ -1250,7 +1393,7 @@ def view_cart():
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html')
+    return render_template('profile.html', User=User)
 
 
 @app.route('/reviews')
