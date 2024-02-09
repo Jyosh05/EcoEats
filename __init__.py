@@ -945,6 +945,7 @@ def update_product(id):
             product_details = mycursor.fetchone()
 
             if product_details:
+                update_product_form.idproducts.data = product_details[0]  # Set the product ID in the form
                 update_product_form.name.data = product_details[1]
                 update_product_form.price.data = product_details[2]
                 update_product_form.image.data = product_details[4]
@@ -953,9 +954,11 @@ def update_product(id):
                 update_product_form.ingredients_info.data = product_details[6]
                 update_product_form.is_recommended.data = product_details[7]
 
-                return render_template('update_product.html', form=update_product_form)
+                return render_template('update_product.html', form=update_product_form, product_id_error=None,
+                                       product_details=product_details)
             else:
-                return "Product not found"
+                return render_template('update_product.html', form=update_product_form,
+                                       product_id_error="Product not found", product_details=None)
 
         except Exception as e:
             print('Error:', e)
@@ -1011,7 +1014,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!'
+            password='JYOSHNA2006!',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1112,7 +1115,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!'
+        password='JYOSHNA2006!',
         port='3306',
         database='ecoeatsusers'
     )

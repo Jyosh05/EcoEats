@@ -66,6 +66,7 @@ class RedeemForm(Form):
     rewards = SelectField('rewards', choices=[(1, '$5 off'), (2, '$10 off'), (3, '$15 off')])
 
 class CreateProductForm(Form):
+    idproducts = IntegerField('Product ID', render_kw={'readonly': True})
     name = StringField(' Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     price = StringField('Price', [validators.Length(min=1, max=150),validators.DataRequired()])
     category = StringField('Category', [validators.Length(min=1, max=150), validators.DataRequired()])
