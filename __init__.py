@@ -1,6 +1,7 @@
 # first file to run when starting the web application
 import datetime
 
+from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import User, Membership
 
@@ -11,7 +12,7 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm
 import ReviewUser
 
 # 1:56pm
@@ -108,7 +109,6 @@ for a in users:
 #     return render_template("home.html")
 
 
-
 tableCheck = ['products']
 for a in tableCheck:
 
@@ -131,7 +131,7 @@ for a in tableCheck:
 mycursor.execute('SELECT * FROM products')
 print(f"Using table 'products' ")
 
-#
+
 # tableCheck = ['cart']
 # for a in tableCheck:
 #     mycursor.execute(f"SHOW TABLES LIKE 'cart'")
@@ -811,6 +811,7 @@ def dessert():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+
 @app.route('/create_product', methods=['GET', 'POST'])
 def create_product():
     create_product_form = CreateProductForm(request.form)
@@ -870,7 +871,6 @@ def create_product():
     return render_template('create_product.html', form=create_product_form)
 
 
-
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
     select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
@@ -885,6 +885,7 @@ def retrieve_product():
     count = len(products)
 
     return render_template('retrieve_product.html', products=products, count=count)
+
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
 def update_product(id):
@@ -961,7 +962,6 @@ def update_product(id):
             return "Error occurred while fetching product details"
 
 
-
 @app.route('/delete_product/<int:id>', methods=['GET', 'POST'])
 def delete_product(id):
     try:
@@ -1011,7 +1011,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!',
+            password='JYOSHNA2006!'
             port='3306',
             database='ecoeatsusers'
         )
@@ -1079,7 +1079,6 @@ def remove_from_cart():
     return redirect(url_for('view_cart'))
 
 
-
 @app.route('/update_cart', methods=['POST'])
 def update_cart():
     if request.method == 'POST':
@@ -1113,7 +1112,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='JYOSHNA2006!'
         port='3306',
         database='ecoeatsusers'
     )
@@ -1140,6 +1139,147 @@ def view_cart():
     total_price = calculate_total_price(cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
+import stripe
+from flask import redirect
+
+purchasedTableCheck = ['purchased']
+for a in purchasedTableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'purchased'")
+    tableExist = mycursor.fetchone()
+
+
+    if not tableExist:
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
+        "`id` int NOT NULL AUTO_INCREMENT,"
+        "`total_amt` decimal(10,2) DEFAULT NULL,"
+        "`cart_data` json DEFAULT NULL,"
+        "`user_id` int DEFAULT NULL,"
+        "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+        "PRIMARY KEY (`id`)"
+        ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
+
+
+@app.route('/create-checkout-session', methods=['GET', 'POST'])
+def create_checkout_session():
+    try:
+        cart_items = get_cart_items()
+
+        # Create line items for the checkout session
+        line_items = []
+        for item in cart_items:
+            # Convert the price to an integer in cents
+            unit_amount_cents = int(item.get_price() * 100)
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'sgd',
+                    'product_data': {
+                        'name': item.get_name(),
+                        'images': [item.get_image()],
+                    },
+                    'unit_amount': unit_amount_cents,
+                },
+                'quantity': item.get_quantity(),
+            })
+
+        #checkout session with line items
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url='http://localhost:5000/checkout-success',
+            cancel_url='http://localhost:5000/cart',
+        )
+
+
+        return redirect(session.url)
+        # return jsonify({'sessionId': session.id})
+    except Exception as e:
+        return str(e)
+
+
+
+
+stripe.api_key = 'sk_test_51OhFjILCE6DWXaJnZarhEhPjiONUxnuWTq7GvUS7NrOoH4NmnLwRQ2jEMjLIBBPegjRzOfzwqrbsLNk4pn7KwJGd00NhsOKbuy'
+
+
+@app.route('/checkout-success', methods=['GET', 'POST'])
+@login_required()
+def checkout_success():
+    try:
+        mycursor = mydb.cursor()
+
+        user_id = session['user_id']
+        cart = get_cart_items()
+        total_amt = calculate_total_price(cart)
+
+        # Convert cart data to JSON
+        cart_data = json.dumps([{'product_name': item.get_name(),
+        'product_price': float(item.get_price()),
+        'quantity': item.get_quantity()
+    } for item in cart])
+
+        print(cart_data)
+
+        query = 'INSERT INTO purchased (total_amt, cart_data, user_id ) VALUES (%s, %s, %s)'
+        value = (total_amt, cart_data, user_id)
+        mycursor.execute(query, value)
+        mydb.commit()
+
+
+
+        return redirect(url_for('home'))
+
+    except Exception as e:
+        return str(e)
+
+
+@app.route('/display-purchased', methods=['GET'])
+@login_required()
+def display_carts():
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT id, datetime, total_amt FROM purchased WHERE user_id = %s", (user_id,))
+    purchased_ids = mycursor.fetchall()
+
+
+
+    return render_template('order.html', purchased_ids=purchased_ids, user_id=user_id, User=User)
+
+
+
+@app.route('/display-purchased/<int:purchased_id>', methods=['GET'])
+@login_required()
+def display_purchased_items(purchased_id):
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT cart_data FROM purchased WHERE user_id = %s AND id = %s", (user_id, purchased_id))
+    order_data = mycursor.fetchall()
+
+    formatted_order_data = []
+
+
+    for row in order_data:
+        cart_data = json.loads(row[0])  # Convert JSON string to Python dictionary
+        formatted_order_data.extend(cart_data)  # Add each item to the formatted list
+
+    print(formatted_order_data)
+
+    mycursor.execute('SELECT total_amt FROM purchased WHERE user_id = %s AND id = %s', (user_id, purchased_id))
+    total_amt = mycursor.fetchone()[0]
+    total_amt = float(total_amt)
+
+    return render_template('orderSpec.html', total_amt = total_amt, order_data=formatted_order_data, User=User)
+
+
+
+
+
+
+
+
 # tableCheck = ['order_info']
 # for a in tableCheck:
 #     mycursor.execute(f"SHOW TABLES LIKE 'order_info'")
@@ -1163,6 +1303,9 @@ def view_cart():
 #
 # mycursor.execute('SELECT * FROM order_info')
 # print(f"Using table 'order_info' ")
+
+
+
 # @app.route('/dine_in', methods=['GET', 'POST'])
 # def dine_in():
 #     cart_items = get_cart_items()
@@ -1222,9 +1365,9 @@ def view_cart():
 #         return render_template('delivery.html', cart_items=cart_items, new_total=new_total, total_price=total_price, delivery_fee=delivery_fee, delivery=delivery, form=delivery_form)
 #
 #     return render_template("delivery.html", cart_items=cart_items, new_total=new_total, total_price=total_price, delivery_fee=delivery_fee, form=delivery_form)
-#
-#
-#
+
+
+
 # @app.route("/collection", methods=['GET', 'POST'])
 # def collection():
 #     # Fetch cart items
@@ -1253,7 +1396,7 @@ def view_cart():
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html')
+    return render_template('profile.html', User=User)
 
 
 @app.route('/reviews')
@@ -1294,7 +1437,7 @@ def create_reviews():
             mycursor.execute(insert_query, reviews_data)
             mydb.commit()
 
-            return redirect(url_for('retrieve_reviews'))
+            return redirect(url_for('thankyou'))
         except Exception as e:
             print("Error:", e)
             mydb.rollback()
@@ -1323,7 +1466,16 @@ def retrieve_reviews():
 def update_reviews(user_id):
     update_reviews_form = CreateReviewsForm(request.form)
 
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
     if request.method == 'POST' and update_reviews_form.validate():
+
         try:
             # retrieve user data from db
             select_query = "SELECT name, email, stars, feedback FROM reviews WHERE user_id = %s"
@@ -1380,6 +1532,14 @@ def update_reviews(user_id):
 
 @app.route('/deleteReviews/<int:user_id>/', methods=['GET', 'POST'])
 def delete_reviews(user_id):
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
     try:
         select_query = "SELECT * FROM reviews WHERE user_id = %s"
         mycursor.execute(select_query, (user_id,))
@@ -1399,7 +1559,9 @@ def delete_reviews(user_id):
         mydb.rollback()
         return "Error occurred while deleting reviews."
 
-
+@app.route("/thankyou_page")
+def thankyou():
+    return render_template('thankyou_page.html')
 
 
 @app.route("/cart")
@@ -1706,7 +1868,98 @@ def redeem_rewards(user_id):
             return "Error occurred while redeeming reward."
     return render_template('redeemRewards.html', form=redeem_rewards_form)
 
+mycursor = mydb.cursor()
 
+def create_staff_table():
+    try:
+        mycursor.execute("""
+            CREATE TABLE IF NOT EXISTS staff_info2 (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                first_name VARCHAR(255),
+                last_name VARCHAR(255),
+                gender VARCHAR(10),
+                role VARCHAR(50),
+                email VARCHAR(255)
+            )
+        """)
+        mydb.commit()
+    except Exception as e:
+        print(f"Error creating table: {str(e)}")
+
+create_staff_table()
+
+@app.route('/createStaff', methods=['GET', 'POST'])
+def create_staff():
+    create_staff_table()
+
+    create_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and create_staff_form.validate():
+        first_name = create_staff_form.first_name.data
+        last_name = create_staff_form.last_name.data
+        gender = create_staff_form.gender.data
+        role = create_staff_form.role.data
+        email = create_staff_form.email.data
+
+        query = "INSERT INTO staff_info2 (first_name, last_name, gender, role, email) VALUES (%s, %s, %s, %s, %s)"
+        values = (first_name, last_name, gender, role, email)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+    return render_template('createStaff.html', form=create_staff_form)
+
+@app.route('/retrieveStaff')
+def retrieve_staff():
+    try:
+        query = "SELECT * FROM staff_info2"
+        mycursor.execute(query)
+        staff_list = mycursor.fetchall()
+
+        users_list = [Staff(*user) for user in staff_list]
+
+        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list)
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+@app.route('/updateStaff/<int:id>/', methods=['GET', 'POST'])
+def update_staff(id):
+    update_staff_form = CreateStaffForm(request.form)
+    if request.method == 'POST' and update_staff_form.validate():
+        query = "UPDATE staff_info2 SET first_name=%s, last_name=%s, gender=%s, role=%s, email=%s WHERE id=%s"
+        values = (update_staff_form.first_name.data, update_staff_form.last_name.data,
+                  update_staff_form.gender.data, update_staff_form.role.data,
+                  update_staff_form.email.data, id)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+    else:
+        query = "SELECT * FROM staff_info2 WHERE id=%s"
+        values = (id,)
+        mycursor.execute(query, values)
+        staff_data = mycursor.fetchone()
+
+        update_staff_form.first_name.data = staff_data[1]
+        update_staff_form.last_name.data = staff_data[2]
+        update_staff_form.gender.data = staff_data[3]
+        update_staff_form.role.data = staff_data[4]
+        update_staff_form.email.data = staff_data[5]
+
+        return render_template('updateStaff.html', form=update_staff_form)
+
+@app.route('/deleteStaff/<int:id>', methods=['POST'])
+def delete_staff(id):
+    try:
+        query = "DELETE FROM staff_info2 WHERE id=%s"
+        values = (id,)
+        mycursor.execute(query, values)
+        mydb.commit()
+
+        return redirect(url_for('retrieve_staff'))
+
+    except Exception as e:
+        return f"Error: {str(e)}"
 
 if __name__ == '__main__':
     app.run()

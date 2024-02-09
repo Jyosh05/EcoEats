@@ -62,6 +62,9 @@ class Product:
 
     def set_ingredients_info(self, ingredients_info):
         self.__ingredients_info = ingredients_info
-
+        
     def set_is_recommended(self, is_recommended):
         self.__is_recommended = is_recommended
+
+
+        
