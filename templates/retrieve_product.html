@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Recommended{% endblock %}
+{% block title %}Products{% endblock %}
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
@@ -71,7 +71,7 @@
 
       <!-- Modal body -->
       <div class="modal-body">
-        Are you sure you want to delete {{product.get_name()}} {{product.get_price()}}?
+        Are you sure you want to delete {{product.get_name()}} S${{product.get_price()}}?
       </div>
 
       <!-- Modal footer -->

@@ -44,20 +44,20 @@
                                 <h4>S${{ product[2] }}</h4>
                             </div>
                             <p> {{ product[5] }} </p>
+                            <hr>
+                            <p>{{ product[6] }}</p>
 
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post">
-                                <!-- Include other product information if needed -->
+                            <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post" style="display: flex; align-items: center;">
                                 <div class="quantity-input">
-                                    <label for="quantity_{{ product[0] }}">Quantity:</label>
-                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1">
+                                    <label for="quantity_{{ product[0] }}" style="display: inline-block;">Quantity:</label>
+                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1" style="display: inline-block;">
                                 </div>
-                                <button type="submit" class="btn btn-secondary">Add to Cart</button>
+                                <button type="submit" class="btn btn-secondary" style="display: inline-block; margin-left: 220px;">Add to Cart</button>
                             </form>
+                        </div>
 
-
-                            </div>
                     </div>
                 </div>
             </div>

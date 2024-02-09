@@ -1,8 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Recommended{% endblock %}
+{% block title %}Update Product{% endblock %}
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/updateProduct.css') }}">
+
 <!-- Update products -->
 <h1 class="display-4">Update Product</h1>
 
@@ -10,6 +12,7 @@
         Only use the following terms (follow the structure given here): appetizer, breakfast, lunch, dinner, dessert! </span>
 
 <form method="POST" action="" enctype="multipart/form-data">
+  <div class="updateProduct_container">
   <div class="form-group">
     <label for="idproducts">Product ID:</label>
     <input type="number" id="idproducts" name="idproducts" class="form-control" required>
@@ -39,8 +42,10 @@
     {{ form.is_recommended.label(class="form-check-label", for="is_recommended") }}
 </div>
 
-  <div style="margin-top: 10px;">
-    <input type="submit" value="Update" class="btn btn-primary"/>
+
+  <input style="width:100%; margin-top:25px;" id="submit-Button" type="submit" value="Submit"
+           class="btn btn-primary"/>
+
     </div>
 
 </form>

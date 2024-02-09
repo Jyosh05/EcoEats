@@ -109,9 +109,9 @@ for a in users:
 
 
 
-
 tableCheck = ['products']
 for a in tableCheck:
+
     mycursor.execute(f"SHOW TABLES LIKE 'products'")
     tableExist = mycursor.fetchone()
 
@@ -130,6 +130,7 @@ for a in tableCheck:
 
 mycursor.execute('SELECT * FROM products')
 print(f"Using table 'products' ")
+
 #
 # tableCheck = ['cart']
 # for a in tableCheck:
@@ -764,6 +765,7 @@ def home():
     return render_template("home.html", User=User)
 
 
+
 @app.route('/productBase/<category>')
 def category(category):
     mycursor.execute('SELECT * FROM products WHERE category = %s', (category,))
@@ -808,7 +810,6 @@ def dessert():
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @app.route('/create_product', methods=['GET', 'POST'])
 def create_product():
@@ -869,6 +870,7 @@ def create_product():
     return render_template('create_product.html', form=create_product_form)
 
 
+
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
     select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
@@ -883,7 +885,6 @@ def retrieve_product():
     count = len(products)
 
     return render_template('retrieve_product.html', products=products, count=count)
-
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
 def update_product(id):
@@ -958,6 +959,7 @@ def update_product(id):
         except Exception as e:
             print('Error:', e)
             return "Error occurred while fetching product details"
+
 
 
 @app.route('/delete_product/<int:id>', methods=['GET', 'POST'])
@@ -1075,6 +1077,7 @@ def remove_from_cart():
         session['cart_quantity'] = total_quantity
 
     return redirect(url_for('view_cart'))
+
 
 
 @app.route('/update_cart', methods=['POST'])
@@ -1304,7 +1307,7 @@ def retrieve_reviews():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ecoeats',
+        password='JYOSHNA2006!',
         port='3306',
         database='ecoeatsusers'
     )

@@ -72,7 +72,7 @@ class CreateProductForm(Form):
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     description = TextAreaField('Description', [validators.Length(min=1, max=400), validators.DataRequired()])
     ingredients_info = TextAreaField('Ingredients Info', [validators.Length(min=1, max=600), validators.DataRequired()])
-    is_recommended = BooleanField('Recommended?')
+    is_recommended = BooleanField('Display in Recommended?')
 
 
 
