@@ -1,0 +1,79 @@
+{% extends 'productBase.html' %}
+{% block title %}Carts{% endblock %}
+{% block heading %}Carts{% endblock %}
+
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <style>
+        .bodyOrder {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        tr:hover {
+            background-color: #e9e9e9; /* Change background color on hover */
+        }
+    </style>
+</head>
+<body class="bodyOrder">
+    <h1>Order History</h1>
+    <div id="carts">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date & Time</th>
+                    <th>Cart ID</th>
+                    <th>Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cart_id in purchased_ids %}
+                <tr onclick="window.location='{{ url_for('display_purchased_items', user_id=user_id, purchased_id=cart_id[0]) }}';" style="cursor:pointer;">
+                    <td>
+                        <a href="{{ url_for('display_purchased_items', user_id=user_id, purchased_id=cart_id[0]) }}">{{ cart_id[1] }}</a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('display_purchased_items', user_id=user_id, purchased_id=cart_id[0]) }}">Cart {{ cart_id[0] }}</a>
+                    </td>
+                    <td>
+                        ${{ cart_id[2] }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+
+{% endblock %}
