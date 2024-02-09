@@ -171,7 +171,7 @@ def create_user():
             # id = User.User.get_userCount()
             # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
             # mycursor.execute(autoIncrement)
-            print(id)
+            
             form = CreateUserForm()
             check_query = "SELECT COUNT(*) FROM users WHERE username = %s"
             mycursor.execute(check_query, (create_user_form.username.data,))
