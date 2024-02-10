@@ -1,6 +1,124 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<p>USER page</p>
+
+<style>
+    .container {
+        padding-left: 75px;
+        padding-right: 75px;
+    }
+
+    .profile-container {
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .profile-card {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column; /* Align items vertically */
+    }
+
+    .profile-card .profile-info {
+        margin-bottom: auto; /* Push the profile info to the bottom */
+    }
+
+    .profile-picture {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background-color: #ddd; /* Placeholder background color */
+        margin: 0 auto 20px auto; /* Center horizontally, no margin on top, 20px margin on bottom */
+        text-align: center;
+    }
+
+    .profile-info h2 {
+        margin: 0 0 10px 0;
+    }
+
+    .profile-info h4 {
+        margin: 0;
+        color: #666;
+    }
+
+    /* Styles for other cards */
+    .other-cards {
+        margin-left: 20px; /* Space between profile and other cards */
+        flex: 1; /* Occupy remaining space */
+    }
+
+    .card {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .card h2 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    /* Styles for links */
+    a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="container">
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-picture"></div>
+            <div class="profile-info">
+                <h2>Profile Information</h2>
+                {% for user in users %}
+                    <h4>Username:   {{ User.User.get_username_by_id(session['user_id']) }}</h4>
+                    <h4>Email:   {{ user[3] }}</h4>
+                    <h4>Gender:   {{ user[4] }}</h4>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="other-cards">
+            <div class="card">
+                <h2>Reviews</h2>
+                <p>This is where other profile content can be displayed.</p>
+            </div>
+            <div class="card">
+                <h2>Membership Tier BLAKAJKSDHASD</h2>
+                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+            </div>
+            <div class="card">
+                <h2>OTher sutff </h2>
+                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+            </div>
+            <div class="card">
+                <h2>OTher sutff </h2>
+                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+            </div>
+            <div class="card">
+                <h2>OTher sutff </h2>
+                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+            </div>
+            <div class="card">
+                <h2>OTher sutff </h2>
+                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <a href="/createUser">Sign Up (incomplete)</a>
 <br>
 <a href="display-purchased">Purchase History</a>

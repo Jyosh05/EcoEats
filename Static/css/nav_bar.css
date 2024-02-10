@@ -149,3 +149,59 @@ display: block;
 background-color: #96C087;
 font-weight: bolder;
 }
+
+#mySidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  text-align: left; /* Align links to the left */
+}
+
+#mySidenav .username-container {
+  padding: 20px;
+}
+
+#mySidenav .username-container p {
+  color: #fff; /* Change color to white */
+  font-size: 30px; /* Change font size to bigger */
+}
+
+#mySidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 20px; /* Change font size to smaller */
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+#mySidenav a:hover {
+  color: #f1f1f1;
+}
+
+#mySidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  #mySidenav {padding-top: 15px;}
+  #mySidenav a {font-size: 16px;} /* Adjust smaller font size for smaller screens */
+}
+
+#logout {
+  border-top: 1px solid #818181;
+}
+
+
+
