@@ -14,7 +14,7 @@
     {% for product in products %}
         <div class="product-item">
             {% if product[4] %}
-                <!-- Add a data-bs-toggle and data-bs-target attributes to the image to trigger the modal -->
+
                 <img class="product-img" src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}" width="200" height="200"
                     data-bs-toggle="modal" data-bs-target="#myModal_{{product[0]}}">
             {% else %}
@@ -45,6 +45,7 @@
                             </div>
                             <p> {{ product[5] }} </p>
                             <hr>
+                            <h4>Ingredients Info</h4>
                             <p>{{ product[6] }}</p>
 
                         </div>

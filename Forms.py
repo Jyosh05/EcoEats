@@ -95,6 +95,7 @@ class CreateProductForm(Form):
             field.data = field.data.lower()
 
 
+
 class DineInForm(Form):
     time = StringField('Approximated Dine-in Timing',[validators.Length(min=1, max=4), validators.DataRequired()])
     pax = StringField('No. of People Dining-In', [validators.Length(min=1, max=150), validators.DataRequired()])
