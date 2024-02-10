@@ -3,6 +3,7 @@ import datetime
 
 from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 import User, Membership
 
 import random
@@ -45,7 +46,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
@@ -325,6 +326,7 @@ def login():
         if user:
             user_id = user[0]
             session['user_id'] = user_id
+            session.modified = True
 
             if is_admin(user_id):
                 #admin login
@@ -1030,7 +1032,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!',
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1131,7 +1133,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1415,7 +1417,20 @@ def display_purchased_items(purchased_id):
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html', User=User)
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    user_id = session.get('user_id')
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
+    users = mycursor.fetchall()
+
+    return render_template('profile.html', users=users ,User=User)
 
 
 @app.route('/reviews')
@@ -1469,7 +1484,7 @@ def retrieve_reviews():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )

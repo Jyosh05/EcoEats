@@ -1,15 +1,16 @@
 import mysql.connector
+from flask_login import UserMixin
 
 mydb= mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
 
 mycursor = mydb.cursor()
-class User:
+class User():
     id = 0 # this is the id_count
     def __init__(self,username, password, email=None, gender=None,postal_code = 0,profilePic=None, accountStatus='Active'):
         User.id += 1
@@ -107,14 +108,11 @@ class User:
     def set_remarks(self, remarks):
         self.__remarks = remarks
 
-    @staticmethod
     def get_username_by_id(user_id):
-        # Implement the logic to retrieve the username from your database
-
-            select= ("SELECT username FROM users WHERE id = %s")
-            mycursor.execute(select, (user_id,))
-            result = mycursor.fetchone()[0]
-            return result
+        select= ("SELECT username FROM users WHERE id = %s")
+        mycursor.execute(select, (user_id,))
+        result = mycursor.fetchone()[0]
+        return result
         #     if result:
         #         result[0]
         #     else:
@@ -125,6 +123,3 @@ class User:
 
         # Example: return User.query.get(user_id).get_username()
 
-
-print("Hello")
-print('cb')

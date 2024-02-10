@@ -15,6 +15,16 @@
 
 <!-- javascript for cart -->
 <script src="{{ url_for('static', filename='javascript/cart.js') }}" defer></script>
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "350px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+</script>
 
 <div class="welcome-bar">
         <img src="/static/img/Logo1.png">
@@ -80,11 +90,41 @@
 </div>
 
 
-    <a href="/profile">
-      <div class="profile">
-        <i class="fa-solid fa-user"></i>
-      </div>
-    </a>
+<!--    <a href="/profile">-->
+<!--      <div class="profile">-->
+<!--        <i class="fa-solid fa-user"></i>-->
+<!--      </div>-->
+<!--    </a>-->
+    <div onclick="openNav()" class="profile">
+      <i class="fa-solid fa-user"></i>
+    </div>
 
   </div>
 </nav>
+
+<!--<div id="mySidenav" class="sidenav">-->
+<!--  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>-->
+<!--  <a href="/profile">Profile</a>-->
+<!--  <a href="/display-purchased">Purchase History</a>-->
+<!--  <a href="#">Settings</a>-->
+<!--  <a href="/logout">Logout</a>-->
+<!--</div>-->
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="username-container">
+    {% if 'user_id' in session %}
+      {% if User is defined %}
+        <p>Welcome, {{ User.User.get_username_by_id(session['user_id']) }}!</p>
+      {% else %}
+        <p>Welcome, User is not defined. </p>
+      {% endif %}
+    {% else %}
+      <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
+    {% endif %}
+  </div>
+  <a href="/profile" id="profile">Profile</a>
+  <a href="/display-purchased" id="purchase-history">Purchase History</a>
+  <a href="#" id="settings">Settings</a>
+  <a href="/logout" id="logout">Logout</a>
+</div>
