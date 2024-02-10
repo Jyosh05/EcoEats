@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 
 from werkzeug.utils import secure_filename
 import os
-from Forms import CreateProductForm, DineInForm, DeliveryForm
+from Forms import CreateProductForm, SearchForm, DineInForm, DeliveryForm
 from Product import Product
 from cart import CartItem
 from order_type import DineIn, Delivery
@@ -861,7 +861,7 @@ def create_product():
             mycursor.execute(insert_query, product_data)
 
             mydb.commit()
-            # Use url_for to generate the URL for the 'home' endpoint
+
             return redirect(url_for('retrieve_product'))
 
         except Exception as e:
@@ -869,13 +869,28 @@ def create_product():
             mydb.rollback()
             return "Error Occurred. Check logs for details"
 
-    # Handle the case when the method is GET or the form validation fails
+
     return render_template('create_product.html', form=create_product_form)
+
 
 
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
-    select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    search_form = SearchForm(request.args)
+
+    if request.method == 'GET' and search_form.validate():
+        search_query = search_form.search_query.data
+        # Check if a search query is provided
+        if search_query:
+            select_query = f"SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products WHERE name LIKE '%{search_query}%'"
+        else:
+            # If no search query, retrieve all products
+            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    else:
+        # If no search query, retrieve all products
+        select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+
+
     mycursor.execute(select_query)
     rows = mycursor.fetchall()
 
@@ -886,7 +901,8 @@ def retrieve_product():
     # Calculate the count of products
     count = len(products)
 
-    return render_template('retrieve_product.html', products=products, count=count)
+    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form)
+
 
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
@@ -947,6 +963,7 @@ def update_product(id):
             product_details = mycursor.fetchone()
 
             if product_details:
+                update_product_form.idproducts.data = product_details[0]  # Set the product ID in the form
                 update_product_form.name.data = product_details[1]
                 update_product_form.price.data = product_details[2]
                 update_product_form.image.data = product_details[4]
@@ -955,9 +972,11 @@ def update_product(id):
                 update_product_form.ingredients_info.data = product_details[6]
                 update_product_form.is_recommended.data = product_details[7]
 
-                return render_template('update_product.html', form=update_product_form)
+                return render_template('update_product.html', form=update_product_form, product_id_error=None,
+                                       product_details=product_details)
             else:
-                return "Product not found"
+                return render_template('update_product.html', form=update_product_form,
+                                       product_id_error="Product not found", product_details=None)
 
         except Exception as e:
             print('Error:', e)
@@ -1054,12 +1073,12 @@ def add_to_cart(product_id):
         mycursor.execute(total_quantity_query)
         total_quantity = mycursor.fetchone()[0] or 0  # handle None result
 
-        # Get the referring page (referer) or use a default page if not available
+
         referring_page = request.referrer or url_for('home')
 
         session['cart_quantity'] = total_quantity
 
-        # Redirect to the referring page
+
         return redirect(referring_page)
 
 
