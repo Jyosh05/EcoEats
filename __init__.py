@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 
 from werkzeug.utils import secure_filename
 import os
-from Forms import CreateProductForm, DineInForm, DeliveryForm
+from Forms import CreateProductForm, SearchForm, DineInForm, DeliveryForm
 from Product import Product
 from cart import CartItem
 from order_type import DineIn, Delivery
@@ -871,9 +871,24 @@ def create_product():
     return render_template('create_product.html', form=create_product_form)
 
 
+
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
-    select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    search_form = SearchForm(request.args)
+
+    if request.method == 'GET' and search_form.validate():
+        search_query = search_form.search_query.data
+        # Check if a search query is provided
+        if search_query:
+            select_query = f"SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products WHERE name LIKE '%{search_query}%'"
+        else:
+            # If no search query, retrieve all products
+            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    else:
+        # If no search query, retrieve all products
+        select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+
+
     mycursor.execute(select_query)
     rows = mycursor.fetchall()
 
@@ -884,7 +899,7 @@ def retrieve_product():
     # Calculate the count of products
     count = len(products)
 
-    return render_template('retrieve_product.html', products=products, count=count)
+    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form)
 
 
 
@@ -1061,7 +1076,7 @@ def add_to_cart(product_id):
 
         session['cart_quantity'] = total_quantity
 
-        
+
         return redirect(referring_page)
 
 
