@@ -45,7 +45,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
@@ -1011,7 +1011,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!'
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1112,7 +1112,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!'
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1418,15 +1418,15 @@ def create_reviews():
             )
 
             mycursor = mydb.cursor()
-            # mycursor.execute(
-            #     "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
-            #     "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
-            #     "`name` VARCHAR(100) DEFAULT NULL,"
-            #     "`email` VARCHAR(100) DEFAULT NULL,"
-            #     "`stars` INT DEFAULT NULL,"
-            #     "`feedback` VARCHAR(1000) DEFAULT NULL"
-            #     ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
-            # )
+            mycursor.execute(
+                "CREATE TABLE IF NOT EXISTS `ecoeatsusers`.`reviews` ("
+                "`user_id` INT AUTO_INCREMENT PRIMARY KEY,"
+                "`name` VARCHAR(100) DEFAULT NULL,"
+                "`email` VARCHAR(100) DEFAULT NULL,"
+                "`stars` INT DEFAULT NULL,"
+                "`feedback` VARCHAR(1000) DEFAULT NULL"
+                ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;"
+            )
 
             # Insert data into the reviews table
             insert_query = "INSERT INTO reviews (name, email, stars, feedback) VALUES (%s, %s, %s, %s)"
@@ -1450,7 +1450,7 @@ def retrieve_reviews():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1591,7 +1591,7 @@ def cart():
 # routing for all membership pages
 @app.route('/membership')
 def membership():
-    return render_template('membershipHome.html')
+    return render_template('membershipHome.html', User=User)
 
 
 @app.route('/membershipShop')
@@ -1622,13 +1622,14 @@ for a in tableCheck:
 
     if not tableExist:
         mycursor.execute(
-            "CREATE TABLE `memberships` ("
+          "CREATE TABLE `memberships` ("
           "`membership_id` int NOT NULL,"
           "`currentBalance` float DEFAULT '0',"
           "`totalBalance` float DEFAULT '0',"
           "`date_joined` date DEFAULT NULL,"
           "`address` varchar(45) DEFAULT NULL,"
           "`email` varchar(45) DEFAULT NULL,"
+          "`tier` varchar(45) DEFAULT NULL,"
           "PRIMARY KEY (`membership_id`),"
           "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
           ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
@@ -1642,13 +1643,14 @@ print(f"Using table 'memberships' ")
 
 
 @app.route('/retrieveMembershipAdmin')
+@login_required(role='admin')
 def retrieve_membership_admin():
     # retrieve from membership table
     select_query = "SELECT * FROM memberships"
     mycursor.execute(select_query)
     memberships = mycursor.fetchall()
 
-    return render_template('retrieveMembershipAdmin.html', memberships=memberships)
+    return render_template('retrieveMembershipAdmin.html', memberships=memberships, User=User)
 
 
 @app.route('/retrieveMembership/<int:user_id>', methods=['GET'])
@@ -1660,62 +1662,9 @@ def retrieve_membership(user_id):
     return render_template('retrieveMembership.html', membershipUser=membershipUser)
 
 @app.route('/createMembership', methods=['GET', 'POST'])
+@login_required()
 def create_membership():
     create_membership_form = CreateMembershipForm(request.form)
-    # Check if a user is logged in
-    # if 'user_id' not in session:
-    #     return redirect(url_for('create_user'))  # Redirect to the login page if the user is not logged in
-    #
-    # user_id = session['user_id']
-    #
-    # # Check if the user already has a membership
-    # mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
-    # membership = mycursor.fetchone()
-    # # If the user already has a membership, redirect to retrieve_membershipInfo
-    # if membership:
-    #     return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
-
-    if request.method == 'POST' and create_membership_form.validate():
-        try:
-            mydb = mysql.connector.connect(
-                host='localhost',
-                user='root',
-                password='ecoeats',
-                port='3306',
-                database='ecoeatsusers'
-            )
-
-            mycursor = mydb.cursor()
-            # Update or insert rewards into memberships table
-            insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance) VALUES (%s, %s, %s)"
-            # Prepare membership data
-            memberships = Membership.Membership(create_membership_form.date_joined.data,
-                                                create_membership_form.address.data,
-                                                create_membership_form.email.data)
-            print(insert_query)
-            now = datetime.datetime(2009, 5, 5)
-            user_id = 1
-            data = (user_id, 300, 0)
-
-            mycursor.execute(insert_query, data)
-            mydb.commit()
-            print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
-                  f"was stored in the database successfully.")
-            return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
-            # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
-            #       f"was stored in the database successfully.")
-            # return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred. Check logs for details."
-
-    return render_template('createMembership.html', form=create_membership_form)
-
-
-#to display membership info and getting user first name for membership home
-@app.route('/membershipInfo/<int:user_id>', methods=['GET'])
-def retrieve_membershipInfo(user_id):
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
@@ -1723,18 +1672,129 @@ def retrieve_membershipInfo(user_id):
         port='3306',
         database='ecoeatsusers'
     )
-
     mycursor = mydb.cursor()
+
+    user_id = session['user_id']
+
+    # Check if the user already has a membership
     mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
-    membershipUser = mycursor.fetchone()
-    print("membershipUser: ", membershipUser)
+    membership = mycursor.fetchone()
+    # If the user already has a membership, redirect to retrieve_membershipInfo
+    if membership:
+        return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+    else:
 
-    mycursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
-    membershipUsername = mycursor.fetchone()
-    print("membershipUsername: ", membershipUsername)
+        if request.method == 'POST' and create_membership_form.validate():
+            try:
+                # Update or insert rewards into memberships table
+                insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance," \
+                               "date_joined, address, email, tier) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                # Prepare membership data
+                memberships = Membership.Membership(create_membership_form.date_joined.data,
+                                                    create_membership_form.address.data,
+                                                    create_membership_form.email.data)
+                print(insert_query)
+                data = (user_id, 300, 240, memberships.get_date_joined(), memberships.get_address(), memberships.get_email(), 'seed')
 
-    return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername)
+                mycursor.execute(insert_query, data)
+                mydb.commit()
+                print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+                      f"was stored in the database successfully.")
+                return redirect(url_for('retrieve_membershipInfo', user_id=user_id, User=User))
+                # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+                #       f"was stored in the database successfully.")
+                # return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+            except Exception as e:
+                print("Error:", e)
+                mydb.rollback()
+                return "Error occurred. Check logs for details."
 
+    return render_template('createMembership.html', form=create_membership_form, User=User, user_id=user_id)
+
+# @app.route('/updateMembershipTier', methods=['GET', 'POST'])
+# @login_required()
+# def update_membership_tier():
+#     user_id = session['user_id']
+#     try:
+#         select_query = ("SELECT totalBalance, tier from memberships WHERE membership_id = %s")
+#         mycursor.execute(select_query, (user_id,))
+#         data = mycursor.fetchone()[0]
+#         if data[0] < 100:
+#             data[1] = 'Seed'
+#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#             mycursor.execute(update_query, (data, user_id,))
+#             mydb.commit()
+#             print(f"Membership ID: {user_id} membership tier updated successfully.")
+#         elif data[0] > 100 and data[0] < 300:
+#             data[1] = 'Sprout'
+#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#             mycursor.execute(update_query, (data, user_id,))
+#             mydb.commit()
+#             print(f"Membership ID: {user_id} membership tier updated successfully.")
+#         else:
+#             data[1] = 'Bloom'
+#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#             mycursor.execute(update_query, (data, user_id,))
+#             mydb.commit()
+#             print(f"Membership ID: {user_id} membership tier updated successfully.")
+#     except Exception as e:
+#         print("Error:", e)
+#         mydb.rollback()
+#         return "Error occurred while updating tier."
+#     mycursor.execute("SELECT tier FROM memberships WHERE membership_id = %s", (user_id,))
+#     membershipTier = mycursor.fetchone()
+#     print("membershipTier: ", membershipTier)
+#     return redirect(url_for('retrieve_membershipInfo', user_id=user_id, membershipTier=membershipTier))
+
+
+#to display membership info and getting user first name for membership home
+@app.route('/membershipInfo', methods=['GET'])
+@login_required()
+def retrieve_membershipInfo():
+   mydb = mysql.connector.connect(
+       host='localhost',
+       user='root',
+       password='ecoeats',
+       port='3306',
+       database='ecoeatsusers'
+   )
+   user_id = session['user_id']
+   mycursor = mydb.cursor()
+   print(user_id) # see if correct
+   try:
+       select_query = ("SELECT * from memberships WHERE membership_id = %s")
+       mycursor.execute(select_query, (user_id,))
+       membershipUser = mycursor.fetchone()
+       print("membershipUser: ", membershipUser)
+
+       # Check and update the 'tier' attribute based on the 'totalBalance' attribute
+       if membershipUser[2] < 100:
+           tier = 'Seed'
+       elif membershipUser[2] > 100 and membershipUser[2] < 300:
+           tier = 'Sprout'
+       else:
+           tier = 'Bloom'
+       update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+       mycursor.execute(update_query, (tier, user_id,))
+       mydb.commit()
+       print(f"Membership ID: {user_id} membership tier updated successfully.")
+
+   except Exception as e:
+       print("Error:", e)
+       mydb.rollback()
+
+
+   mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+   membershipUser = mycursor.fetchone()
+   print("membershipUser: ", membershipUser)
+
+
+   mycursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
+   membershipUsername = mycursor.fetchone()
+   print("membershipUsername: ", membershipUsername)
+
+
+   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername, user_id=user_id, User=User)
 
 @app.route('/updateMembership/<int:membership_id>/', methods=['GET', 'POST'])
 def update_membership(membership_id):
@@ -1868,7 +1928,49 @@ def redeem_rewards(user_id):
             return "Error occurred while redeeming reward."
     return render_template('redeemRewards.html', form=redeem_rewards_form)
 
-mycursor = mydb.cursor()
+# @app.route('/retrieveMbrshipTier/<int:user_id>', methods=['GET', 'POST'])
+# def membership_tier(user_id):
+#         mydb = mysql.connector.connect(
+#             host='localhost',
+#             user='root',
+#             password='ecoeats',
+#             port='3306',
+#             database='ecoeatsusers'
+#         )
+#         mycursor = mydb.cursor()
+#         try:
+#             select_query = ("SELECT totalBalance, tier from memberships WHERE membership_id = %s")
+#             mycursor.execute(select_query, (user_id,))
+#             data = mycursor.fetchone()[0]
+#             if data[0] < 100:
+#                 data[1] = 'Seed'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#             elif data[0] > 100 and data[0] < 300:
+#                 data[1] = 'Sprout'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#             else:
+#                 data[1] = 'Bloom'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred while updating tier."
+#
+#         mycursor.execute("SELECT tier FROM memberships WHERE membership_id = %s", (user_id,))
+#         membershipTier = mycursor.fetchone()
+#         print("membershipTier: ", membershipTier)
+#
+#         return render_template('membershipHome.html', membershipTier=membershipTier, user_id=user_id)
+
 
 def create_staff_table():
     try:

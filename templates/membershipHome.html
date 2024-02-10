@@ -25,8 +25,14 @@
 
     <div class="container-contents-left">
         <div class="container-membership-status">
-            <h3>Membership Status:</h3>
-            <p class="membershipTier">*Insert Tier*</p>
+            <h3>Membership Status:
+                    {% if membershipUser %}
+                <span class="membershipTier">{{ membershipUser[6] }}</span>
+                {% elif membershipUser is none %}
+                    <span class="membershipTier">No membership data found for user {{ user_id }}.</span>
+                {% endif %}
+                </span>
+            </h3>
             {% if membershipUser %}
             <p><span class="TotalEarned">{{ membershipUser[2] }}<img src="static/img/membership/leaf.png" class="leaf-icon"></span>Leaves Earned</p>
             {% elif membershipUser is none %}
