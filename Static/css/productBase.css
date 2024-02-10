@@ -81,8 +81,8 @@ h1{
 .button-container {
     display: flex;
     flex-direction: column;  /* Stack the buttons vertically */
-    align-items: center;     /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
+    align-items: center;
+    justify-content: center;
 }
 
 .button-container a {

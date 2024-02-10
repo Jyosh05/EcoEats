@@ -859,7 +859,7 @@ def create_product():
             mycursor.execute(insert_query, product_data)
 
             mydb.commit()
-            # Use url_for to generate the URL for the 'home' endpoint
+
             return redirect(url_for('retrieve_product'))
 
         except Exception as e:
@@ -867,7 +867,7 @@ def create_product():
             mydb.rollback()
             return "Error Occurred. Check logs for details"
 
-    # Handle the case when the method is GET or the form validation fails
+
     return render_template('create_product.html', form=create_product_form)
 
 
@@ -885,6 +885,7 @@ def retrieve_product():
     count = len(products)
 
     return render_template('retrieve_product.html', products=products, count=count)
+
 
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
@@ -1055,12 +1056,12 @@ def add_to_cart(product_id):
         mycursor.execute(total_quantity_query)
         total_quantity = mycursor.fetchone()[0] or 0  # handle None result
 
-        # Get the referring page (referer) or use a default page if not available
+
         referring_page = request.referrer or url_for('home')
 
         session['cart_quantity'] = total_quantity
 
-        # Redirect to the referring page
+        
         return redirect(referring_page)
 
 
