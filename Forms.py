@@ -95,6 +95,11 @@ class CreateProductForm(Form):
             field.data = field.data.lower()
 
 
+class SearchForm(Form):
+    search_query = StringField('Search for a product')
+    submit = SubmitField('Search')
+
+
 
 class DineInForm(Form):
     time = StringField('Approximated Dine-in Timing',[validators.Length(min=1, max=4), validators.DataRequired()])
