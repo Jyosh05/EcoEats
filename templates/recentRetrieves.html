@@ -1,8 +1,7 @@
 {% extends "base.html" %}
-{% block title %}Library Loan System - Retrieve Users{% endblock %}
+{% block title %}Library Loan System - Retrieve Recent Reviews{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveReviews.css')}}">
-<p class="header">YOUR FEEDBACKS</p>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recentRetrieves.css')}}">
 <div class="reviews-container">
     {% for review in reviews %}
     <div class="review">
@@ -14,11 +13,6 @@
             <span class="checked-star">&#9733;</span>
         {% endfor %}
         <p><strong>Feedback:</strong> {{ review[4] }}</p>
-
-        <div class="actionButtons">
-            <a href="/updateReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-pen-to-square"></i></a>
-            <a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-trash"></i></a>
-        </div>
     </div>
     {% endfor %}
 </div>

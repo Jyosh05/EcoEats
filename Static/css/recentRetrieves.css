@@ -25,24 +25,12 @@ color: gold;
 font-size: 30px;
 }
 
-.actionButtons{
-position: relative;
-left: 88%;
-top: 5%;
-font-size: 20px;
-}
-
 .reviews-container {
 display: flex;
 flex-direction: column;
 align-items: center;
 justify-content: center;
 z-index: 1000;
-}
-
-.actionButton{
-color: black;
-margin-right: 30px;
 }
 
 .header{

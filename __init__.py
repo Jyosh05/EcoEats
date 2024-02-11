@@ -1312,6 +1312,21 @@ def retrieve_reviews():
 
     return render_template('retrieveReviews.html', reviews=reviews)
 
+@app.route('/recentRetrieves')
+def recent_retrieves():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
+    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 3"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+    return render_template('recentRetrieves.html', reviews=reviews)
 
 @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
 def update_reviews(user_id):
