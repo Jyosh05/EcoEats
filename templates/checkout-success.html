@@ -1,0 +1,15 @@
+{% extends "base.html" %} <!-- to call the parent class-->
+{% block title %}Library Loan System - Home{% endblock %} <!--when calling parent class,parent class title block will look for this code to get the title to display on the browser-->
+
+{% block content %}
+{% from "includes/_formHelper.html" import render_field %}
+<form id="formPopUp" method="POST" action="">
+<div class="form-group">
+        {{ render_field(form.option, class="form-control") }}
+
+    </div>
+
+    <input style="width:100%; margin-top:25px;" id="submitButton" type="submit" value="Submit"
+           class="btn btn-primary"/>
+</form>
+{% endblock %}

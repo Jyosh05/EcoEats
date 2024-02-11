@@ -1,10 +1,10 @@
 import mysql.connector
-from flask_login import UserMixin
+
 
 mydb= mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )

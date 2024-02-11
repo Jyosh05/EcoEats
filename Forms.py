@@ -119,3 +119,6 @@ class CreateStaffForm(Form):
     gender = SelectField('Gender', [validators.DataRequired()], choices=[('', 'Select'), ('F', 'Female'), ('M', 'Male')], default='')
     role = RadioField('Role', choices=[('A', 'Admin'), ('M', 'Manager'), ('S', 'Staff')], default='S')
     email = EmailField('Email', [validators.DataRequired()])
+
+class deliveryOptionForm(Form):
+    option = RadioField('Delivery Options', choices=[('Delivery', 'Delivery'), ('Dine-In', 'Dine-In'), ('Pick-Up', 'Pick-Up')],)
