@@ -93,7 +93,20 @@
         <div class="other-cards">
             <div class="card">
                 <h2>Reviews</h2>
-                <p>This is where other profile content can be displayed.</p>
+                <div class="reviews-container">
+                {% for review in reviews %}
+                    <div class="review">
+                        <p><strong>Review:</strong> {{ review[0] }}</p>
+                        <p><strong>Name:</strong> {{ review[1] }}</p>
+                        <p><strong>Email:</strong> {{ review[2] }}</p>
+                        <p><strong>Stars (1-5):</strong></p>
+                            {% for i in range(1, review[3]+1) %}
+                                <span class="checked-star">&#9733;</span>
+                            {% endfor %}
+                        <p><strong>Feedback:</strong> {{ review[4] }}</p>
+                    </div>
+                {% endfor %}
+                </div>
             </div>
             <div class="card">
                 <h2>Membership Tier BLAKAJKSDHASD</h2>

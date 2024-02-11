@@ -2,8 +2,7 @@
 import datetime
 
 from Staff import Staff
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask import Flask, render_template, request, url_for
 import User, Membership
 
 import random
@@ -1430,7 +1429,9 @@ def profile():
     mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
     users = mycursor.fetchall()
 
-    return render_template('profile.html', users=users ,User=User)
+    recent_reviews = recent_retrieves()
+
+    return render_template('profile.html', users=users ,User=User, recent_reviews = recent_retrieves())
 
 
 @app.route('/reviews')

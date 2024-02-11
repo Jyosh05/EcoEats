@@ -1,5 +1,5 @@
 import mysql.connector
-from flask_login import UserMixin
+# from flask_login import UserMixin
 
 mydb= mysql.connector.connect(
     host='localhost',
