@@ -3,18 +3,19 @@
 {% block content %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveReviews.css')}}">
 <p class="header">YOUR FEEDBACKS</p>
-<div class="reviews-container">
-    {% for review in reviews %}
-    <div class="review">
-        <p><strong>Review:</strong> {{ review[0] }}</p>
-        <p><strong>Name:</strong> {{ review[1] }}</p>
-        <p><strong>Email:</strong> {{ review[2] }}</p>
-        <p><strong>Stars (1-5):</strong></p>
-        {% for i in range(1, review[3]+1) %}
-            <span class="checked-star">&#9733;</span>
-        {% endfor %}
-        <p><strong>Feedback:</strong> {{ review[4] }}</p>
-
+<div class="review-box">
+    <div class="reviews-container">
+        {% for review in reviews %}
+        <div class="review">
+            <p><strong>No. of Reviews:</strong> {{ review[0] }}</p>
+            <p><strong>Name:</strong> {{ review[1] }}</p>
+            <p><strong>Email:</strong> {{ review[2] }}</p>
+            <p><strong>Stars (1-5):</strong></p>
+                {% for i in range(1, review[3]+1) %}
+                    <span class="checked-star">&#9733;</span>
+                {% endfor %}
+            <p><strong>Feedback:</strong> {{ review[4] }}</p>
+        </div>
         <div class="actionButtons">
             <a href="/updateReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-pen-to-square"></i></a>
             <a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-trash"></i></a>

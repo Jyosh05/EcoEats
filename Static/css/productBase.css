@@ -81,8 +81,8 @@ h1{
 .button-container {
     display: flex;
     flex-direction: column;  /* Stack the buttons vertically */
-    align-items: center;     /* Center items horizontally */
-    justify-content: center; /* Center items vertically */
+    align-items: center;
+    justify-content: center;
 }
 
 .button-container a {
@@ -117,21 +117,23 @@ h1{
     background: #F4874A;
 }
 
+
+
 .quantity-input {
-        flex-grow: 1;
-        margin-right: 10px;
-    }
+    flex-grow: 1;
+    margin-right: 10px;
+}
 
-    label[for="quantity"] {
-        display: block;
-        margin-bottom: 5px;
-    }
+.quantity-input label {
+    display: block;
+    margin-bottom: 5px;
+}
 
-    input#quantity {
-        width: 30px;
-        padding: 5px;
-        font-size: 16px;
-    }
+.quantity-input input {
+    width: 45px;
+    padding: 5px;
+    font-size: 16px;
+}
 
 /* Override Bootstrap button background color to be transparent */
 .custom-sm-button {

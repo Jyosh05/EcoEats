@@ -14,7 +14,7 @@
     {% for product in products %}
         <div class="product-item">
             {% if product[4] %}
-                <!-- Add a data-bs-toggle and data-bs-target attributes to the image to trigger the modal -->
+
                 <img class="product-img" src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}" width="200" height="200"
                     data-bs-toggle="modal" data-bs-target="#myModal_{{product[0]}}">
             {% else %}
@@ -44,20 +44,21 @@
                                 <h4>S${{ product[2] }}</h4>
                             </div>
                             <p> {{ product[5] }} </p>
+                            <hr>
+                            <h4>Ingredients Info</h4>
+                            <p>{{ product[6] }}</p>
 
                         </div>
                         <div class="modal-footer">
-                            <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post">
-                                <!-- Include other product information if needed -->
+                            <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post" style="display: flex; align-items: center;">
                                 <div class="quantity-input">
-                                    <label for="quantity_{{ product[0] }}">Quantity:</label>
-                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1">
+                                    <label for="quantity_{{ product[0] }}" style="display: inline-block;">Quantity:</label>
+                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1" style="display: inline-block;">
                                 </div>
-                                <button type="submit" class="btn btn-secondary">Add to Cart</button>
+                                <button type="submit" class="btn btn-secondary" style="display: inline-block; margin-left: 220px;">Add to Cart</button>
                             </form>
+                        </div>
 
-
-                            </div>
                     </div>
                 </div>
             </div>
@@ -72,3 +73,8 @@
 
 
 {% endblock %}
+
+<!--<div class="button-container">-->
+<!--    <a href="/create_product" class="btn btn-warning">Create Food Item</a>-->
+<!--    <a href="/retrieve_product" class="btn btn-warning">Update Food Item</a>-->
+<!--</div>-->

@@ -1,7 +1,6 @@
 class Product:
     count_id = 0
 
-    # initializer method
     def __init__(self, name, price, category, image, description, ingredients_info, is_recommended, idproducts=None):
         Product.count_id += 1
         self.__product_id = idproducts if idproducts is not None else Product.count_id
@@ -14,7 +13,6 @@ class Product:
         self.__is_recommended = is_recommended
 
 
-    # accessor methods
     def get_product_id(self):
         return self.__product_id
 
@@ -41,7 +39,6 @@ class Product:
 
 
 
-    # mutator methods
     def set_product_id(self, id):
         self.__product_id = id
 
@@ -62,11 +59,9 @@ class Product:
 
     def set_ingredients_info(self, ingredients_info):
         self.__ingredients_info = ingredients_info
-
+        
     def set_is_recommended(self, is_recommended):
         self.__is_recommended = is_recommended
 
 
-
-
-
+        

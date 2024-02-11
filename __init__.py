@@ -3,6 +3,7 @@ import datetime
 
 from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 import User, Membership
 
 import random
@@ -29,7 +30,7 @@ import matplotlib.pyplot as plt
 
 from werkzeug.utils import secure_filename
 import os
-from Forms import CreateProductForm, DineInForm, DeliveryForm
+from Forms import CreateProductForm, SearchForm, DineInForm, DeliveryForm
 from Product import Product
 from cart import CartItem
 from order_type import DineIn, Delivery
@@ -104,10 +105,14 @@ for a in users:
 
 
 
+# @app.route('/')
+# def home():
+#     return render_template("home.html")
 
 
 tableCheck = ['products']
 for a in tableCheck:
+
     mycursor.execute(f"SHOW TABLES LIKE 'products'")
     tableExist = mycursor.fetchone()
 
@@ -126,6 +131,7 @@ for a in tableCheck:
 
 mycursor.execute('SELECT * FROM products')
 print(f"Using table 'products' ")
+
 
 # tableCheck = ['cart']
 # for a in tableCheck:
@@ -150,6 +156,7 @@ print(f"Using table 'products' ")
 
 
 
+
 products = mycursor.fetchall()
 cart = mycursor.fetchall()
 # order_info = mycursor.fetchall()
@@ -165,7 +172,7 @@ def create_user():
             # id = User.User.get_userCount()
             # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
             # mycursor.execute(autoIncrement)
-            print(id)
+            
             form = CreateUserForm()
             check_query = "SELECT COUNT(*) FROM users WHERE username = %s"
             mycursor.execute(check_query, (create_user_form.username.data,))
@@ -319,6 +326,7 @@ def login():
         if user:
             user_id = user[0]
             session['user_id'] = user_id
+            session.modified = True
 
             if is_admin(user_id):
                 #admin login
@@ -759,6 +767,7 @@ def home():
     return render_template("home.html", User=User)
 
 
+
 @app.route('/productBase/<category>')
 def category(category):
     mycursor.execute('SELECT * FROM products WHERE category = %s', (category,))
@@ -852,7 +861,7 @@ def create_product():
             mycursor.execute(insert_query, product_data)
 
             mydb.commit()
-            # Use url_for to generate the URL for the 'home' endpoint
+
             return redirect(url_for('retrieve_product'))
 
         except Exception as e:
@@ -860,13 +869,28 @@ def create_product():
             mydb.rollback()
             return "Error Occurred. Check logs for details"
 
-    # Handle the case when the method is GET or the form validation fails
+
     return render_template('create_product.html', form=create_product_form)
+
 
 
 @app.route('/retrieve_product', methods=['GET'])
 def retrieve_product():
-    select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    search_form = SearchForm(request.args)
+
+    if request.method == 'GET' and search_form.validate():
+        search_query = search_form.search_query.data
+        # Check if a search query is provided
+        if search_query:
+            select_query = f"SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products WHERE name LIKE '%{search_query}%'"
+        else:
+            # If no search query, retrieve all products
+            select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+    else:
+        # If no search query, retrieve all products
+        select_query = "SELECT idproducts, name, price, category, image, description, ingredients_info, is_recommended FROM products"
+
+
     mycursor.execute(select_query)
     rows = mycursor.fetchall()
 
@@ -877,7 +901,8 @@ def retrieve_product():
     # Calculate the count of products
     count = len(products)
 
-    return render_template('retrieve_product.html', products=products, count=count)
+    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form)
+
 
 
 @app.route('/update_product/<int:id>/', methods=['GET', 'POST'])
@@ -938,6 +963,7 @@ def update_product(id):
             product_details = mycursor.fetchone()
 
             if product_details:
+                update_product_form.idproducts.data = product_details[0]  # Set the product ID in the form
                 update_product_form.name.data = product_details[1]
                 update_product_form.price.data = product_details[2]
                 update_product_form.image.data = product_details[4]
@@ -946,9 +972,11 @@ def update_product(id):
                 update_product_form.ingredients_info.data = product_details[6]
                 update_product_form.is_recommended.data = product_details[7]
 
-                return render_template('update_product.html', form=update_product_form)
+                return render_template('update_product.html', form=update_product_form, product_id_error=None,
+                                       product_details=product_details)
             else:
-                return "Product not found"
+                return render_template('update_product.html', form=update_product_form,
+                                       product_id_error="Product not found", product_details=None)
 
         except Exception as e:
             print('Error:', e)
@@ -1004,7 +1032,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!',
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1045,12 +1073,12 @@ def add_to_cart(product_id):
         mycursor.execute(total_quantity_query)
         total_quantity = mycursor.fetchone()[0] or 0  # handle None result
 
-        # Get the referring page (referer) or use a default page if not available
+
         referring_page = request.referrer or url_for('home')
 
         session['cart_quantity'] = total_quantity
 
-        # Redirect to the referring page
+
         return redirect(referring_page)
 
 
@@ -1105,7 +1133,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1132,6 +1160,147 @@ def view_cart():
     total_price = calculate_total_price(cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
+import stripe
+from flask import redirect
+
+purchasedTableCheck = ['purchased']
+for a in purchasedTableCheck:
+    mycursor.execute(f"SHOW TABLES LIKE 'purchased'")
+    tableExist = mycursor.fetchone()
+
+
+    if not tableExist:
+        mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
+        "`id` int NOT NULL AUTO_INCREMENT,"
+        "`total_amt` decimal(10,2) DEFAULT NULL,"
+        "`cart_data` json DEFAULT NULL,"
+        "`user_id` int DEFAULT NULL,"
+        "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+        "PRIMARY KEY (`id`)"
+        ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
+
+
+@app.route('/create-checkout-session', methods=['GET', 'POST'])
+def create_checkout_session():
+    try:
+        cart_items = get_cart_items()
+
+        # Create line items for the checkout session
+        line_items = []
+        for item in cart_items:
+            # Convert the price to an integer in cents
+            unit_amount_cents = int(item.get_price() * 100)
+
+            line_items.append({
+                'price_data': {
+                    'currency': 'sgd',
+                    'product_data': {
+                        'name': item.get_name(),
+                        'images': [item.get_image()],
+                    },
+                    'unit_amount': unit_amount_cents,
+                },
+                'quantity': item.get_quantity(),
+            })
+
+        #checkout session with line items
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',
+            success_url='http://localhost:5000/checkout-success',
+            cancel_url='http://localhost:5000/cart',
+        )
+
+
+        return redirect(session.url)
+        # return jsonify({'sessionId': session.id})
+    except Exception as e:
+        return str(e)
+
+
+
+
+stripe.api_key = 'sk_test_51OhFjILCE6DWXaJnZarhEhPjiONUxnuWTq7GvUS7NrOoH4NmnLwRQ2jEMjLIBBPegjRzOfzwqrbsLNk4pn7KwJGd00NhsOKbuy'
+
+
+@app.route('/checkout-success', methods=['GET', 'POST'])
+@login_required()
+def checkout_success():
+    try:
+        mycursor = mydb.cursor()
+
+        user_id = session['user_id']
+        cart = get_cart_items()
+        total_amt = calculate_total_price(cart)
+
+        # Convert cart data to JSON
+        cart_data = json.dumps([{'product_name': item.get_name(),
+        'product_price': float(item.get_price()),
+        'quantity': item.get_quantity()
+    } for item in cart])
+
+        print(cart_data)
+
+        query = 'INSERT INTO purchased (total_amt, cart_data, user_id ) VALUES (%s, %s, %s)'
+        value = (total_amt, cart_data, user_id)
+        mycursor.execute(query, value)
+        mydb.commit()
+
+
+
+        return redirect(url_for('home'))
+
+    except Exception as e:
+        return str(e)
+
+
+@app.route('/display-purchased', methods=['GET'])
+@login_required()
+def display_carts():
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT id, datetime, total_amt FROM purchased WHERE user_id = %s", (user_id,))
+    purchased_ids = mycursor.fetchall()
+
+
+
+    return render_template('order.html', purchased_ids=purchased_ids, user_id=user_id, User=User)
+
+
+
+@app.route('/display-purchased/<int:purchased_id>', methods=['GET'])
+@login_required()
+def display_purchased_items(purchased_id):
+    user_id = session.get('user_id')
+
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT cart_data FROM purchased WHERE user_id = %s AND id = %s", (user_id, purchased_id))
+    order_data = mycursor.fetchall()
+
+    formatted_order_data = []
+
+
+    for row in order_data:
+        cart_data = json.loads(row[0])  # Convert JSON string to Python dictionary
+        formatted_order_data.extend(cart_data)  # Add each item to the formatted list
+
+    print(formatted_order_data)
+
+    mycursor.execute('SELECT total_amt FROM purchased WHERE user_id = %s AND id = %s', (user_id, purchased_id))
+    total_amt = mycursor.fetchone()[0]
+    total_amt = float(total_amt)
+
+    return render_template('orderSpec.html', total_amt = total_amt, order_data=formatted_order_data, User=User)
+
+
+
+
+
+
+
+
 # tableCheck = ['order_info']
 # for a in tableCheck:
 #     mycursor.execute(f"SHOW TABLES LIKE 'order_info'")
@@ -1155,8 +1324,9 @@ def view_cart():
 #
 # mycursor.execute('SELECT * FROM order_info')
 # print(f"Using table 'order_info' ")
-#
-#
+
+
+
 # @app.route('/dine_in', methods=['GET', 'POST'])
 # def dine_in():
 #     cart_items = get_cart_items()
@@ -1247,7 +1417,20 @@ def view_cart():
 
 @app.route("/profile")
 def profile():
-    return render_template('profile.html')
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    user_id = session.get('user_id')
+    mycursor = mydb.cursor()
+
+    mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
+    users = mycursor.fetchall()
+
+    return render_template('profile.html', users=users ,User=User)
 
 
 @app.route('/reviews')

@@ -66,13 +66,17 @@ class RedeemForm(Form):
     rewards = SelectField('rewards', choices=[(1, '$5 off'), (2, '$10 off'), (3, '$15 off')])
 
 class CreateProductForm(Form):
+    idproducts = IntegerField('Product ID', render_kw={'readonly': True})
     name = StringField(' Name', [validators.Length(min=1, max=150), validators.DataRequired()])
     price = StringField('Price', [validators.Length(min=1, max=150),validators.DataRequired()])
     category = StringField('Category', [validators.Length(min=1, max=150), validators.DataRequired()])
     image = FileField('Image', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     description = TextAreaField('Description', [validators.Length(min=1, max=400), validators.DataRequired()])
     ingredients_info = TextAreaField('Ingredients Info', [validators.Length(min=1, max=600), validators.DataRequired()])
-    is_recommended = BooleanField('Recommended?')
+
+    
+    is_recommended = BooleanField('Display in Recommended?')
+
 
 
 
@@ -89,6 +93,12 @@ class CreateProductForm(Form):
         if field.name == 'category':
             # Convert the input to lowercase
             field.data = field.data.lower()
+
+
+class SearchForm(Form):
+    search_query = StringField('Search for a product')
+    submit = SubmitField('Search')
+
 
 
 class DineInForm(Form):
