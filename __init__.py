@@ -774,7 +774,7 @@ def category(category):
     mycursor.execute('SELECT * FROM products WHERE category = %s', (category,))
     data = mycursor.fetchall()
 
-    return render_template('productBase.html', category=category, products=data)
+    return render_template('productBase.html', category=category, products=data,  User=User)
 
 
 @app.route('/recommended')
@@ -782,7 +782,8 @@ def recommended():
     mycursor.execute('SELECT * FROM products WHERE is_recommended = true')
     recommended_products = mycursor.fetchall()
 
-    return render_template('recommended.html', recommended_products=recommended_products)
+
+    return render_template('recommended.html', recommended_products=recommended_products,  User=User)
 
 
 @app.route('/appetizers')
@@ -876,7 +877,9 @@ def create_product():
 
 
 @app.route('/retrieve_product', methods=['GET'])
+@login_required(role='admin')
 def retrieve_product():
+
     search_form = SearchForm(request.args)
 
     if request.method == 'GET' and search_form.validate():
@@ -902,7 +905,7 @@ def retrieve_product():
     # Calculate the count of products
     count = len(products)
 
-    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form)
+    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form, User=User)
 
 
 
@@ -1028,6 +1031,7 @@ print(f"Using table 'cart' ")
 
 
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
+@login_required()
 def add_to_cart(product_id):
     if request.method == 'POST':
         mydb = mysql.connector.connect(
@@ -1043,6 +1047,7 @@ def add_to_cart(product_id):
         select_query = "SELECT idproducts, name, price, image FROM products WHERE idproducts = %s"
         mycursor.execute(select_query, (product_id,))
         product_details = mycursor.fetchone()
+
 
         if product_details:
             product_name = product_details[1]
@@ -1156,10 +1161,11 @@ def calculate_total_price(cart_items):
 
 
 @app.route('/cart', methods=['GET'])
+@login_required()
 def view_cart():
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
-    return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+    return render_template('cart.html', cart_items=cart_items, total_price=total_price, User=User)
 
 import stripe
 from flask import redirect
@@ -1738,7 +1744,7 @@ def create_membership():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ecoeats',
+        password='JYOSHNA2006!',
         port='3306',
         database='ecoeatsusers'
     )
