@@ -17,8 +17,7 @@
 
         <h1>Report</h1>
     <div>
-        <h2>Product Prices Chart</h2>
-        <img src="{{ chart }}" alt="Product Prices Chart">
+
         <div>
         {% if chart %}
                 {{ chart | safe }}
@@ -27,14 +26,23 @@
             {% endif %}
         </div>
         <div>
-            <h2>Product Prices Chart</h2>
-            {{ chart_prices | safe }}
+            {{ chart1 | safe }}
         </div>
-
         <div>
-            <h2>Total Revenue by Product</h2>
-            {{ chart_revenues | safe }}
+            {{ chart2 | safe }}
         </div>
+        <div>
+            {{ chart3 | safe }}
+        </div>
+<!--        <div>-->
+<!--            <h2>Product Prices Chart</h2>-->
+<!--            {{ chart_prices | safe }}-->
+<!--        </div>-->
+
+<!--        <div>-->
+<!--            <h2>Total Revenue by Product</h2>-->
+<!--            {{ chart_revenues | safe }}-->
+<!--        </div>-->
     </div>
 
     </div>

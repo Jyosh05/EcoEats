@@ -519,12 +519,137 @@ def chart():
     html_chart_revenues = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Total Revenue Chart">'
     # Get base64 encoded image
 
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
+    print(purchased_data)
 
-    # Close MySQL Connection
-    mycursor.close()
-    mydb.close()
+    product_stats = {}
+    for entry in purchased_data:
+        json_data = entry[2]
+        cart_data = json.loads(json_data)
+        print(cart_data)
 
-    return render_template('chart.html' ,chart_prices=html_chart_prices, chart_revenues=html_chart_revenues, User=User)
+        for item in cart_data:
+            product_name = item['product_name']
+            quantity = item['quantity']
+            product_price = item['product_price']
+
+            if product_name in product_stats:
+                product_stats[product_name]['quantity'] += quantity
+                product_stats[product_name]['total_price'] += quantity * product_price
+            else:
+                product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+
+    for product_name, stats in product_stats.items():
+        total_quantity = stats['quantity']
+        total_price = stats['total_price']
+        print(f"Product: {product_name}, Total Quantity Sold: {total_quantity}, Total Revenue: {total_price}")
+
+    product_names = list(product_stats.keys())
+    total_quantities = [stats['quantity'] for stats in product_stats.values()]
+    total_revenues = [stats['total_price'] for stats in product_stats.values()]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(product_names, total_quantities, label='Total Quantity Sold', color='blue')
+    plt.xlabel('Product')
+    plt.ylabel('Quantity ')
+    plt.title('Total Quantity by Product')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    chart = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(product_names, total_revenues, label='Total Revenue', color='orange', alpha=0.7)
+    plt.xlabel('Product')
+    plt.ylabel('Revenue ')
+    plt.title('Total Revenue by Product')
+    plt.xticks(rotation=90)
+    plt.legend()
+    plt.tight_layout()
+    chart1 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+    #
+    purchase_dates = []
+    purchase_totalamt = []
+    #
+    for entry in purchased_data:
+        purchase_datetime = entry[4]
+        purchase_total = entry[1]
+        purchase_dates.append(purchase_datetime)
+        purchase_totalamt.append(purchase_total)
+    print(purchase_dates)
+    print(purchase_totalamt)
+
+    for date, total_amt in zip(purchase_dates, purchase_totalamt):
+        print(f"Purchase Date: {date}, Total Amount: {total_amt}")
+
+    plt.figure(figsize=(10, 6))
+    plt.scatter(purchase_dates, purchase_totalamt, label='Total Revenue', color='orange', alpha=0.7)
+    plt.xlabel('Date')
+    plt.ylabel('Total Amt ')
+    plt.title('Amt by Date')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    chart2 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    #total revenue for each hour
+    from collections import defaultdict
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = entry[0]
+        hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+        purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='orange', alpha=0.7)
+    plt.xlabel('Hour')
+    plt.ylabel('Total Amount')
+    plt.title('Total Revenue by Hour')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    chart3 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
+
+    # import matplotlib.dates as mdates
+    # from datetime import datetime
+    #
+    # # Assuming purchase_dates and purchase_totalamt are defined as in your code
+    #
+    # # Convert purchase_dates to matplotlib datetime format
+    # purchase_dates = mdates.date2num(purchase_dates)
+    #
+    # plt.figure(figsize=(10, 6))
+    # plt.plot_date(purchase_dates, purchase_totalamt, linestyle='-', marker='', color='orange', alpha=0.7)
+    #
+    # # Format the x-axis to display dates and times with hour and minute
+    # plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+    # plt.gca().xaxis.set_major_locator(mdates.HourLocator(interval=1))  # Set interval for hours if needed
+    #
+    # plt.xlabel('Date and Time')
+    # plt.ylabel('Total Amount')
+    # plt.title('Amount by Date and Time')
+    # plt.xticks(rotation=45)
+    # plt.tight_layout()
+    # plt.grid(True)  # Optionally add grid
+    #
+    # plt.show()
+
+
+
+
+
+
+
+    return render_template('chart.html' ,chart=chart, chart1=chart1, chart2=chart2,chart3=chart3, User=User)
 
 
 
