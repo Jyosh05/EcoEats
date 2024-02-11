@@ -96,7 +96,7 @@ class CreateProductForm(Form):
 
 
 class SearchForm(Form):
-    search_query = StringField('Search for a product')
+    search_query = StringField(render_kw={'placeholder':'Search for a product'})
     submit = SubmitField('Search')
 
 
