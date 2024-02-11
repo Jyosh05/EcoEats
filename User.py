@@ -4,7 +4,7 @@ from flask_login import UserMixin
 mydb= mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='JYOSHNA2006!',
     port='3306',
     database='ecoeatsusers'
 )

@@ -47,7 +47,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='JYOSHNA2006!',
     port='3306',
     database='ecoeatsusers'
 )
@@ -1033,7 +1033,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='ecoeats',
+            password='JYOSHNA2006!',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1134,7 +1134,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='ecoeats',
+        password='JYOSHNA2006!',
         port='3306',
         database='ecoeatsusers'
     )

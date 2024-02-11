@@ -5,14 +5,38 @@
 {% from "includes/_formHelper.html" import render_field %}
 
 
+<style>
+    .mb-3 .form-control{
+        display: inline-block;
+        width: 300px;
+
+    }
+
+    .mb-3 .btn-primary{
+        display: inline-block;
+        margin-left: 30px;
+
+    }
+
+    .product-count{
+        font-weight: bolder;
+
+    }
+
+
+</style>
+
+
 <!-- retrieve products and delete -->
 <h1 class="display-4">Products List</h1>
 <form method="get" action="{{ url_for('retrieve_product') }}" class="mb-3">
-    {{ search_form.search_query.label }} {{ search_form.search_query(class="form-control") }}
+    {{ search_form.search_query(class="form-control") }}
     {{ search_form.submit(class="btn btn-primary") }}
+
 </form>
 
-<div>
+
+<div class="count" style="font-weight: bolder;">
   {% if count == 0 %}
   <p>There are no products.</p>
   {% elif count == 1 %}
@@ -21,6 +45,9 @@
   <p>There are {{ count }} products.</p>
   {% endif %}
 </div>
+
+<a href="/create_product" class="btn btn-warning">Create Product</a>
+
 <div>
   <table class="table table-striped">
     <thead>
@@ -98,7 +125,6 @@
 </div>
 
 
-<a href="/create_product" class="btn btn-warning">Create Product</a>
 <a href="#top" class="btn btn-warning" >Go Top</a>
 
 
