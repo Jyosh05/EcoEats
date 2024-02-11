@@ -7,6 +7,26 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
+<style>
+    .order-type {
+    background: #96C087;
+    border: 2px solid #96C087;
+    border-radius: 4px;
+    width: 100%;
+}
+.order-type a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #000;
+        font-weight: bolder;
+}
+
+
+
+</style>
+
 <table class="table table-striped">
        <tbody>
         {% for item in cart_items %}
@@ -17,10 +37,13 @@
                 {% else %}
                     No Image
                 {% endif %}
-                {{ item.get_name() }}
+
             </td>
+
+                <td style="font-weight: bolder;">{{ item.get_name() }}</td>
+
                 {% if item.get_price() and item.get_quantity() %}
-                    <td>${{ item.get_price() * item.get_quantity() }}</td>
+                    <td style="font-weight: bolder;">${{ item.get_price() * item.get_quantity() }}</td>
                 {% else %}
                     <td>N/A</td>
                 {% endif %}
@@ -28,8 +51,7 @@
 
                     <form action="{{ url_for('update_cart', product_id=item.get_name()) }}" method="post">
                         <input type="hidden" name="product_id" value="{{ item.get_name() }}">
-                        <input type="number" name="quantity" value="{{ item.get_quantity() }}" min="1">
-                        <button type="submit" class="btn btn-warning">Update</button>
+                        <input style="width: 50px;" type="number" name="quantity" value="{{ item.get_quantity() }}" min="1">
                     </form>
 
                 </td>
@@ -37,7 +59,7 @@
                  <td>
                     <form action="{{ url_for('remove_from_cart') }}" method="post">
                         <input type="hidden" name="product_id" value="{{ item.get_name() }}">
-                        <button type="submit" class="btn btn-danger">Delete</button>
+                        <button type="submit" class="btn btn-danger">Delete Item</button>
                     </form>
                     </td>
 
@@ -46,12 +68,11 @@
     </tbody>
 </table>
 
-<a href="recommended">+ Add More Items</a>
-<p>Total Price: ${{ total_price }}</p>
+<a href="recommended" style="color: grey;">+ Add More Items</a>
+<h5 style="font-weight: bolder;">Total Price: ${{ total_price }}</h5>
 
 <div class="order-type">
-    <h4>Checkout Here</h4>
     <a href="create-checkout-session">CHECKOUT</a>
-
 </div>
+
 {% endblock %}
