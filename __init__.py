@@ -3,7 +3,6 @@ import datetime
 
 from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 import User, Membership
 
 import random
@@ -14,7 +13,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm, \
-    UpdateMembershipForm
+    UpdateMembershipForm, deliveryOptionForm
 import ReviewUser
 
 # 1:56pm
@@ -47,7 +46,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='JYOSHNA2006!',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
@@ -99,10 +98,10 @@ print(f"Using table 'users' ")
 
 users = mycursor.fetchall()
 # index 0 is used for count / unique id
-for a in users:
-    print(a)
-    print('Username: ', a[1])
-    print('Password: ', a[2])
+# for a in users:
+#     print(a)
+#     print('Username: ', a[1])
+#     print('Password: ', a[2])
 
 
 
@@ -608,16 +607,39 @@ def chart():
     consolidated_totalamt = list(purchase_totals_by_hour.values())
 
     plt.figure(figsize=(10, 6))
-    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='orange', alpha=0.7)
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]}', ha='center',
+                 va='bottom', rotation=0)
     plt.xlabel('Hour')
-    plt.ylabel('Total Amount')
+    plt.ylabel('Total Amount ($)')
     plt.title('Total Revenue by Hour')
     plt.xticks(rotation=45)
     plt.legend()
     plt.tight_layout()
     chart3 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
 
+    purchase_optionList = []
 
+    for entry in purchased_data:
+        purchase_option = entry[5]
+        purchase_optionList.append(purchase_option)
+    print(purchase_optionList)
+
+    option_counts = {}
+    for option in purchase_optionList:
+        option_counts[option] = option_counts.get(option, 0) + 1
+
+    # Extract labels and sizes for the pie chart
+    labels = list(option_counts.keys())
+    sizes = list(option_counts.values())
+
+    # Plotting the pie chart
+    plt.figure(figsize=(8, 6))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
+    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.title('Purchase Options Distribution')
+    plt.show()
 
     # import matplotlib.dates as mdates
     # from datetime import datetime
@@ -1162,7 +1184,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='JYOSHNA2006!',
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
@@ -1264,7 +1286,7 @@ def get_cart_items():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
@@ -1359,32 +1381,38 @@ stripe.api_key = 'sk_test_51OhFjILCE6DWXaJnZarhEhPjiONUxnuWTq7GvUS7NrOoH4NmnLwRQ
 @app.route('/checkout-success', methods=['GET', 'POST'])
 @login_required()
 def checkout_success():
-    try:
-        mycursor = mydb.cursor()
+    deliveryOption = deliveryOptionForm(request.form)
+    if request.method == 'POST' and deliveryOption.validate():
+        try:
+            mycursor = mydb.cursor()
 
-        user_id = session['user_id']
-        cart = get_cart_items()
-        total_amt = calculate_total_price(cart)
+            user_id = session['user_id']
+            cart = get_cart_items()
+            total_amt = calculate_total_price(cart)
+            option = deliveryOption.option.data
+            print(option)
 
-        # Convert cart data to JSON
-        cart_data = json.dumps([{'product_name': item.get_name(),
-        'product_price': float(item.get_price()),
-        'quantity': item.get_quantity()
-    } for item in cart])
+            # Convert cart data to JSON
+            cart_data = json.dumps([{'product_name': item.get_name(),
+                                     'product_price': float(item.get_price()),
+                                     'quantity': item.get_quantity()
+                                     } for item in cart])
 
-        print(cart_data)
+            print(cart_data)
 
-        query = 'INSERT INTO purchased (total_amt, cart_data, user_id ) VALUES (%s, %s, %s)'
-        value = (total_amt, cart_data, user_id)
-        mycursor.execute(query, value)
-        mydb.commit()
+            query = 'INSERT INTO purchased (total_amt, cart_data, user_id, deliveryOption ) VALUES (%s, %s, %s, %s)'
+            value = (total_amt, cart_data, user_id, option)
+            mycursor.execute(query, value)
+            mydb.commit()
+            return redirect(url_for('home'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details." +  str(e)
+
+    return render_template('checkout-success.html', form=deliveryOption)
 
 
-
-        return redirect(url_for('home'))
-
-    except Exception as e:
-        return str(e)
 
 
 @app.route('/display-purchased', methods=['GET'])
@@ -1400,14 +1428,14 @@ def display_carts():
     mycursor.execute("SELECT SUM(total_amt) as total_amt FROM purchased WHERE user_id = %s", (user_id,))
     total_amt = mycursor.fetchone()[0]
 
-    mycursor.execute("SELECT currentBalance, totalBalance FROM memberships WHERE user_id = %s", (user_id,))
+    mycursor.execute("SELECT currentBalance, totalBalance FROM memberships WHERE membership_id = %s", (user_id,))
     toAdd = mycursor.fetchone()
 
     try:
         addedCurrent = int(toAdd[0]) + int(total_amt)
         addedTotal = int(toAdd[1]) + int(total_amt)
-        update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE user_id = %s"
-        data = (addedCurrent, addedTotal)
+        update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE membership_id = %s"
+        data = (addedCurrent, addedTotal, user_id)
         mycursor.execute(update_query, data)
 
         mydb.commit()
@@ -1869,7 +1897,7 @@ def create_membership():
     mydb = mysql.connector.connect(
         host='localhost',
         user='root',
-        password='JYOSHNA2006!',
+        password='ecoeats',
         port='3306',
         database='ecoeatsusers'
     )
