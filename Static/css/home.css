@@ -14,7 +14,7 @@ body {
     margin: 0;
     padding: 0;
     color: #fff;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/home_bg_pic.png");
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("/static/img/homepage.png");
     background-size: cover;
     background-position: center;
     width: 104vw;
@@ -22,10 +22,15 @@ body {
     margin-left: -20px;
 }
 
-h1{
+.container-h1 h1{
    text-align: center;
    padding-top: 60px;
-   font-size: 80px;
+   font-size: 50px;
    font-weight: normal;
 
 }
+
+.bold{
+    font-weight: bolder;
+}
+
