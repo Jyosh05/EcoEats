@@ -3,15 +3,15 @@
 
 {% block content %}
 {% from "includes/_formHelper.html" import render_field %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/reviews.css')}}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/createMembership.css')}}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
 {% from "includes/_formHelper.html" import render_field %}
-
-<h1 class="display-4">Create Membership</h1>
-<form method="POST" action="">
+<form id="formPopUp" method="POST" action="">
+    <div class="intro">
+        <h1 id="h1bold">Create Membership</h1>
 
     <div class="form-group">
         {{render_field(form.email, class="form-control") }}
@@ -24,5 +24,6 @@
     </div>
 
     <input type="submit" name="Submit" value="Submit" class="btn btn-primary"/>
+    </div>
 </form>
 {% endblock %}

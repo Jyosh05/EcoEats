@@ -12,7 +12,8 @@ import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
-from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm
+from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm, \
+    UpdateMembershipForm
 import ReviewUser
 
 # 1:56pm
@@ -1243,7 +1244,27 @@ def display_carts():
     mycursor.execute("SELECT id, datetime, total_amt FROM purchased WHERE user_id = %s", (user_id,))
     purchased_ids = mycursor.fetchall()
 
+    mycursor = mydb.cursor()
+    mycursor.execute("SELECT SUM(total_amt) as total_amt FROM purchased WHERE user_id = %s", (user_id,))
+    total_amt = mycursor.fetchone()[0]
 
+    mycursor.execute("SELECT currentBalance, totalBalance FROM memberships WHERE user_id = %s", (user_id,))
+    toAdd = mycursor.fetchone()
+
+    try:
+        addedCurrent = int(toAdd[0]) + int(total_amt)
+        addedTotal = int(toAdd[1]) + int(total_amt)
+        update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE user_id = %s"
+        data = (addedCurrent, addedTotal)
+        mycursor.execute(update_query, data)
+
+        mydb.commit()
+
+        print(f"USER ID: {user_id} balances updated successfully.")
+    except Exception as e:
+        print("Error:", e)
+        mydb.rollback()
+        return "Error occurred while updating membership balances."
 
     return render_template('order.html', purchased_ids=purchased_ids, user_id=user_id, User=User)
 
@@ -1711,41 +1732,6 @@ def create_membership():
 
     return render_template('createMembership.html', form=create_membership_form, User=User, user_id=user_id)
 
-# @app.route('/updateMembershipTier', methods=['GET', 'POST'])
-# @login_required()
-# def update_membership_tier():
-#     user_id = session['user_id']
-#     try:
-#         select_query = ("SELECT totalBalance, tier from memberships WHERE membership_id = %s")
-#         mycursor.execute(select_query, (user_id,))
-#         data = mycursor.fetchone()[0]
-#         if data[0] < 100:
-#             data[1] = 'Seed'
-#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#             mycursor.execute(update_query, (data, user_id,))
-#             mydb.commit()
-#             print(f"Membership ID: {user_id} membership tier updated successfully.")
-#         elif data[0] > 100 and data[0] < 300:
-#             data[1] = 'Sprout'
-#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#             mycursor.execute(update_query, (data, user_id,))
-#             mydb.commit()
-#             print(f"Membership ID: {user_id} membership tier updated successfully.")
-#         else:
-#             data[1] = 'Bloom'
-#             update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#             mycursor.execute(update_query, (data, user_id,))
-#             mydb.commit()
-#             print(f"Membership ID: {user_id} membership tier updated successfully.")
-#     except Exception as e:
-#         print("Error:", e)
-#         mydb.rollback()
-#         return "Error occurred while updating tier."
-#     mycursor.execute("SELECT tier FROM memberships WHERE membership_id = %s", (user_id,))
-#     membershipTier = mycursor.fetchone()
-#     print("membershipTier: ", membershipTier)
-#     return redirect(url_for('retrieve_membershipInfo', user_id=user_id, membershipTier=membershipTier))
-
 
 #to display membership info and getting user first name for membership home
 @app.route('/membershipInfo', methods=['GET'])
@@ -1796,30 +1782,29 @@ def retrieve_membershipInfo():
 
    return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername, user_id=user_id, User=User)
 
-@app.route('/updateMembership/<int:membership_id>/', methods=['GET', 'POST'])
-def update_membership(membership_id):
-    update_membership_form = CreateMembershipForm(request.form)
+@app.route('/updateMembership/<int:user_id>/', methods=['GET', 'POST'])
+def update_membership(user_id):
+    update_membership_form = UpdateMembershipForm(request.form)
 
     if request.method == 'POST' and update_membership_form.validate():
         try:
             # retrieve user data from db
-            select_query = "SELECT date_joined, address, email FROM memberships WHERE membership_id = %s"
-            mycursor.execute(select_query, (membership_id,))
+            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
+            mycursor.execute(select_query, (user_id,))
             membership_details = mycursor.fetchone()
 
             if membership_details:
-                date_joined = create_membership.date_joined.data
                 address = update_membership_form.address.data
                 email = update_membership_form.email.data
 
-                update_query = "UPDATE memberships SET date_joined = %s, address = %s, email = %s WHERE membership_id = %s"
-                data = (date_joined, address, email, membership_id)
+                update_query = "UPDATE memberships SET address = %s, email = %s WHERE membership_id = %s"
+                data = (address, email, user_id)
 
                 mycursor.execute(update_query, data)
                 mydb.commit()
 
-                print(f"Reward ID: {membership_id} updated successfully.")
-                return redirect(url_for('retrieve_membership'))
+                print(f"Membership ID: {user_id} updated successfully.")
+                return redirect(url_for('retrieve_membership', user_id=user_id))
             else:
                 return "User Membership not found."
         except Exception as e:
@@ -1831,15 +1816,14 @@ def update_membership(membership_id):
         try:
             # retrieve user data from mysql db
             select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
-            mycursor.execute(select_query, (membership_id,))
-            reward_details = mycursor.fetchone()
+            mycursor.execute(select_query, (user_id,))
+            membership_details = mycursor.fetchone()
 
-            if reward_details:
+            if membership_details:
+                update_membership_form.address.data = membership_details[0]
+                update_membership_form.email.data = membership_details[1]
 
-                update_membership_form.address.data = reward_details[0]
-                update_membership_form.email.data = reward_details[1]
-
-                return render_template('updateMembership.html', form=update_membership_form)
+                return render_template('updateMembership.html', form=update_membership_form, user_id=user_id)
             else:
                 return "User Membership not found."
         except Exception as e:
