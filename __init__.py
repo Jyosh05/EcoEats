@@ -2,8 +2,7 @@
 import datetime
 
 from Staff import Staff
-from flask import Flask, render_template, request, redirect, url_for, jsonify, session
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask import Flask, render_template, request, url_for
 import User, Membership
 
 import random
@@ -1445,7 +1444,11 @@ def profile():
     mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
     users = mycursor.fetchall()
 
-    return render_template('profile.html', users=users ,User=User)
+    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 1"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+    return render_template('profile.html', users=users ,User=User, reviews=reviews)
 
 
 @app.route('/reviews')
@@ -1510,21 +1513,21 @@ def retrieve_reviews():
 
     return render_template('retrieveReviews.html', reviews=reviews)
 
-@app.route('/recentRetrieves')
-def recent_retrieves():
-    mydb = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='ecoeats',
-        port='3306',
-        database='ecoeatsusers'
-    )
-    mycursor = mydb.cursor()
-    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 3"
-    mycursor.execute(select_query)
-    reviews = mycursor.fetchall()
-
-    return render_template('recentRetrieves.html', reviews=reviews)
+# @app.route('/recentRetrieves')
+# def recent_retrieves():
+#     mydb = mysql.connector.connect(
+#         host='localhost',
+#         user='root',
+#         password='ecoeats',
+#         port='3306',
+#         database='ecoeatsusers'
+#     )
+#     mycursor = mydb.cursor()
+#     select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 1"
+#     mycursor.execute(select_query)
+#     reviews = mycursor.fetchall()
+#
+#     return render_template('recentRetrieves.html', reviews=reviews)
 
 @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
 def update_reviews(user_id):

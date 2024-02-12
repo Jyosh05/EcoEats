@@ -17,10 +17,12 @@
             <p><strong>Feedback:</strong> {{ review[4] }}</p>
         </div>
         <div class="actionButtons">
-            <a href="/updateReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-pen-to-square"></i></a>
-            <a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-trash"></i></a>
+            <p>
+                <a href="/updateReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-pen-to-square"></i></a>
+                <a href="/deleteReviews/{{ review[0] }}" class="actionButton"><i class="fa-solid fa-trash"></i></a>
+            </p>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </div>
 {%endblock%}
