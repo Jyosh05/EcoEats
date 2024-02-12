@@ -2,47 +2,16 @@
 border: 3px solid #9CAF88;
 background: #f3f7f2;
 padding: 10px;
-margin: 20px;
+margin: 10px;
 border-radius: 5px;
-width: 800px;
+width: 600px;
 word-wrap: break-word;
-font-size: 20px;
-z-index: 1000;
-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
-}
-
-h4{
-text-align: center;
-font-size: 40px;
-}
-
-h5{
-text-align: center;
+font-size: 22px;
 }
 
 .checked-star{
 color: gold;
-font-size: 30px;
-}
-
-.actionButtons{
-position: relative;
-left: 88%;
-top: 5%;
-font-size: 20px;
-}
-
-.reviews-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-z-index: 1000;
-}
-
-.actionButton{
-color: black;
-margin-right: 30px;
+font-size: 27px;
 }
 
 .header{
@@ -51,4 +20,21 @@ letter-spacing: 2px;
 font-size: 30px;
 font-weight: 500;
 text-align: center;
+}
+
+.reviews-container{
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+
+.actionButtons{
+position: relative;
+left: 17%;
+font-size: 20px;
+}
+
+.actionButton{
+color: black;
 }
