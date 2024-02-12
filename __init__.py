@@ -1,8 +1,10 @@
 # first file to run when starting the web application
 import datetime
 
+from flask_sqlalchemy import SQLAlchemy
+
 from Staff import Staff
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import User, Membership
 
 import random
@@ -13,7 +15,7 @@ import nltk
 from nltk.stem import WordNetLemmatizer
 from tensorflow.keras.models import load_model
 from Forms import CreateUserForm, CreateMembershipForm, CreateReviewsForm, UpdateUserForm, RedeemForm, CreateStaffForm, \
-    UpdateMembershipForm
+    UpdateMembershipForm, deliveryOptionForm
 import ReviewUser
 
 # 1:56pm
@@ -31,7 +33,7 @@ import matplotlib.pyplot as plt
 from werkzeug.utils import secure_filename
 import os
 from Forms import CreateProductForm, SearchForm, DineInForm, DeliveryForm
-from Product import Product
+from database import db
 from cart import CartItem
 from order_type import DineIn, Delivery
 #
@@ -41,6 +43,13 @@ UPLOAD_FOLDER = 'static/img/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ecoeats@localhost/ecoeatsusers'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+
+from Product import ProductModel, Product
 
 # # mySql Credentials
 mydb = mysql.connector.connect(
@@ -85,7 +94,8 @@ for a in tableCheck:
 
     if not tableExist:
 
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        # mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        mycursor.execute("CREATE TABLE `users` (`id` int NOT NULL AUTO_INCREMENT,`username` varchar(45) DEFAULT NULL,`password` varchar(45) DEFAULT NULL,`email` varchar(45) DEFAULT NULL,`gender` varchar(45) DEFAULT NULL,`postal_code` varchar(45) DEFAULT NULL,`profilePic` varchar(45) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
         print(f"Table 'users' Created")
 
 
@@ -98,10 +108,10 @@ print(f"Using table 'users' ")
 
 users = mycursor.fetchall()
 # index 0 is used for count / unique id
-for a in users:
-    print(a)
-    print('Username: ', a[1])
-    print('Password: ', a[2])
+# for a in users:
+#     print(a)
+#     print('Username: ', a[1])
+#     print('Password: ', a[2])
 
 
 
@@ -172,7 +182,7 @@ def create_user():
             # id = User.User.get_userCount()
             # autoIncrement = "ALTER TABLE users ADD COLUMN id INT AUTO_INCREMENT PRIMARY KEY FIRST;"
             # mycursor.execute(autoIncrement)
-
+            
             form = CreateUserForm()
             check_query = "SELECT COUNT(*) FROM users WHERE username = %s"
             mycursor.execute(check_query, (create_user_form.username.data,))
@@ -206,12 +216,7 @@ def retrieve_user():
     select_query = "SELECT * FROM users"
     mycursor.execute(select_query)
     users = mycursor.fetchall()
-
-    select_query = "SELECT * FROM memberships"
-    mycursor.execute(select_query)
-    memberships = mycursor.fetchall()
-
-    return render_template('retrieveUser.html', users=users, memberships=memberships, User=User)
+    return render_template('retrieveUser.html', users=users, User=User)
 
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
@@ -373,43 +378,51 @@ def login_required(role=None):
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('cart_quantity', None)
 
     return redirect(url_for('login'))
 
 @app.route('/updateProfile', methods=['GET', 'POST'])
 @login_required()
 def update_profile():
-    user_id = session['user_id']  # Get the current user's ID from the session
+    user_id = session['user_id']
 
     update_user_form = UpdateUserForm(request.form)
 
     if request.method == 'POST' and update_user_form.validate() :
         try:
-            # Retrieve user data from the database
-            select_query = "SELECT username, password, email, gender, postal_code FROM users WHERE id = %s"
+
+            select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
 
             if user_details:
-                # Get the form data
+
                 username = update_user_form.username.data
                 password = update_user_form.password.data
                 email = update_user_form.email.data
                 gender = update_user_form.gender.data
                 postal_code = update_user_form.postal_code.data
+                profilePic = user_details[5]
+                if 'profilePic' in request.files:
+                    profilePic_file = request.files['profilePic']
+                    if profilePic_file.filename != '':
+                        filename = secure_filename(profilePic_file.filename)
+                        profilePicPath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                        profilePic_file.save(profilePicPath)
+                        profilePic = profilePicPath
 
-                # Check if form fields are empty, and use existing data if they are
+
                 username = username if username else user_details[0]
                 password = password if password else user_details[1]
                 email = email if email else user_details[2]
                 gender = gender if gender else user_details[3]
                 postal_code = postal_code if postal_code else user_details[4]
 
+                print(profilePic)
 
-
-                # Update user information in the database
-                update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s WHERE id = %s"
-                data = (username, password, email, gender, postal_code, user_id)
+                update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s, profilePic = %s WHERE id = %s"
+                data = (username, password, email, gender, postal_code, profilePic, user_id)
                 mycursor.execute(update_query, data)
                 mydb.commit()
 
@@ -424,8 +437,8 @@ def update_profile():
 
     else:
         try:
-            # Retrieve user data from the database
-            select_query = "SELECT username, password, email, gender, postal_code FROM users WHERE id = %s"
+
+            select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
             print(user_details)
@@ -439,6 +452,7 @@ def update_profile():
                 update_user_form.email.data = '' #user_details[2]
                 update_user_form.gender.data = ''
                 update_user_form.postal_code.data = ''
+                update_user_form.profilePic.data =''
 
                 return render_template('updateProfile.html', form=update_user_form, user=user, User=User)
             else:
@@ -473,7 +487,7 @@ def report():
 
 @app.route('/chart')
 def chart():
-    # Connect to MySQL
+
 
     mydb = mysql.connector.connect(
         host='localhost',
@@ -483,54 +497,236 @@ def chart():
         database='ecoeatsusers'
     )
 
-    mycursor = mydb.cursor()
-
-    # Execute SQL Query
-    mycursor.execute("SELECT `saleId`, `product_name`, `product_price` FROM `fakesales`")
-
-    # Fetch all the data
-    rows = mycursor.fetchall()
-
-    # Process the data for plotting
-    product_names = [row[1] for row in rows]
-    product_prices = [float(row[2]) for row in rows]
-
-
-
-    # Create the bar chart for product prices
-    plt.figure(figsize=(10, 6))
-    plt.bar(product_names, product_prices)
-    plt.xlabel('Product')
-    plt.ylabel('Total Revenue')
-    plt.title('Total Revenue by Product')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    html_chart_prices = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Product Prices Chart">'
-
-    # Execute SQL Query for total revenue by product
-    mycursor.execute(
-        "SELECT `product_name`, COUNT(*) * AVG(`product_price`) AS revenue FROM `fakesales` GROUP BY `product_name`")
-    rows = mycursor.fetchall()
-    product_names_rev = [row[0] for row in rows]
-    revenues = [float(row[1]) for row in rows]
-
-    # Create the bar chart for total revenue by product
-    plt.figure(figsize=(10, 6))
-    plt.bar(product_names_rev, revenues, color='orange')
-    plt.xlabel('Product')
-    plt.ylabel('Total Revenue')
-    plt.title('Total Revenue by Product')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    html_chart_revenues = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Total Revenue Chart">'
+    # mycursor = mydb.cursor()
+    #
+    # # Execute SQL Query
+    # mycursor.execute("SELECT `saleId`, `product_name`, `product_price` FROM `fakesales`")
+    #
+    # # Fetch all the data
+    # rows = mycursor.fetchall()
+    #
+    # # Process the data for plotting
+    # product_names = [row[1] for row in rows]
+    # product_prices = [float(row[2]) for row in rows]
+    #
+    #
+    #
+    # # Create the bar chart for product prices
+    # plt.figure(figsize=(10, 6))
+    # plt.bar(product_names, product_prices)
+    # plt.xlabel('Product')
+    # plt.ylabel('Total Revenue')
+    # plt.title('Total Revenue by Product')
+    # plt.xticks(rotation=45, ha='right')
+    # plt.tight_layout()
+    # html_chart_prices = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Product Prices Chart">'
+    #
+    # # Execute SQL Query for total revenue by product
+    # mycursor.execute(
+    #     "SELECT `product_name`, COUNT(*) * AVG(`product_price`) AS revenue FROM `fakesales` GROUP BY `product_name`")
+    # rows = mycursor.fetchall()
+    # product_names_rev = [row[0] for row in rows]
+    # revenues = [float(row[1]) for row in rows]
+    #
+    # # Create the bar chart for total revenue by product
+    # plt.figure(figsize=(10, 6))
+    # plt.bar(product_names_rev, revenues, color='orange')
+    # plt.xlabel('Product')
+    # plt.ylabel('Total Revenue')
+    # plt.title('Total Revenue by Product')
+    # plt.xticks(rotation=45, ha='right')
+    # plt.tight_layout()
+    # html_chart_revenues = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Total Revenue Chart">'
     # Get base64 encoded image
 
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
+    print(f"{purchased_data}")
 
-    # Close MySQL Connection
-    mycursor.close()
-    mydb.close()
+    product_stats = {}
+    for entry in purchased_data:
+        json_data = entry[2]
+        cart_data = json.loads(json_data)
+        print(cart_data)
 
-    return render_template('chart.html' ,chart_prices=html_chart_prices, chart_revenues=html_chart_revenues, User=User)
+        for item in cart_data:
+            product_name = item['product_name']
+            quantity = item['quantity']
+            product_price = item['product_price']
+
+            if product_name in product_stats:
+                product_stats[product_name]['quantity'] += quantity
+                product_stats[product_name]['total_price'] += quantity * product_price
+            else:
+                product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+
+    for product_name, stats in product_stats.items():
+        total_quantity = stats['quantity']
+        total_price = stats['total_price']
+        print(f"Product: {product_name}, Total Quantity Sold: {total_quantity}, Total Revenue: {total_price}")
+
+    product_names = list(product_stats.keys())
+    total_quantities = [stats['quantity'] for stats in product_stats.values()]
+    total_revenues = [stats['total_price'] for stats in product_stats.values()]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(product_names, total_quantities, label='Total Quantity Sold', color='blue')
+    plt.xlabel('Product')
+    plt.ylabel('Quantity ')
+    plt.title('Total Quantity by Product')
+    plt.xticks(rotation=90)
+    plt.legend()
+    plt.tight_layout()
+    chart = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(product_names, total_revenues, label='Total Revenue', color='orange', alpha=0.7)
+    plt.xlabel('Product')
+    plt.ylabel('Revenue ')
+    plt.title('Total Revenue by Product')
+    plt.xticks(rotation=90)
+    plt.legend()
+    plt.tight_layout()
+    chart1 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+    #
+    purchase_dates = []
+    purchase_totalamt = []
+    #
+    for entry in purchased_data:
+        purchase_datetime = entry[4]
+        purchase_total = entry[1]
+        purchase_dates.append(purchase_datetime)
+        purchase_totalamt.append(purchase_total)
+    print(purchase_dates)
+    print(purchase_totalamt)
+
+    for date, total_amt in zip(purchase_dates, purchase_totalamt):
+        print(f"Purchase Date: {date}, Total Amount: {total_amt}")
+
+    plt.figure(figsize=(10, 6))
+    plt.scatter(purchase_dates, purchase_totalamt, label='Total Revenue', color='orange', alpha=0.7)
+    plt.xlabel('Date')
+    plt.ylabel('Total Amt ')
+    plt.title('Amt by Date')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    chart2 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    #total revenue for each hour
+    from collections import defaultdict
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]),2)
+        hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+        purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
+                 va='bottom', rotation=0)
+    plt.xlabel('Hour')
+    plt.ylabel('Total Amount ($)')
+    plt.title('Total Revenue by Hour')
+    plt.xticks(rotation=45)
+    plt.legend()
+    plt.tight_layout()
+    chart3 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
+    purchase_optionList = []
+
+    for entry in purchased_data:
+        purchase_option = entry[5]
+        purchase_optionList.append(purchase_option)
+    print(purchase_optionList)
+
+    option_counts = {}
+    for option in purchase_optionList:
+        option_counts[option] = option_counts.get(option, 0) + 1
+
+    labels = list(option_counts.keys())
+    sizes = list(option_counts.values())
+
+    customColours = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
+    plt.figure(figsize=(8, 6))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140, colors= customColours)
+    plt.axis('equal')
+    plt.legend()
+    plt.title('Purchase Options Distribution')
+    chart4 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
+
+    today = datetime.datetime.today().date()
+
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]),2)
+        purchase_date = purchase_datetime.date()
+        if purchase_date == today:
+            hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+            purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+    print(consolidated_dates)
+    plt.figure(figsize=(10, 6))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
+                 va='bottom', rotation=0)
+
+    plt.xlabel('Hour')
+    plt.ylabel('Total Revenue')
+    plt.title('Total Revenue by Hour for Today')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    chart5 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
+    # import matplotlib.dates as mdates
+    # from datetime import datetime
+    #
+    # # Assuming purchase_dates and purchase_totalamt are defined as in your code
+    #
+    # # Convert purchase_dates to matplotlib datetime format
+    # purchase_dates = mdates.date2num(purchase_dates)
+    #
+    # plt.figure(figsize=(10, 6))
+    # plt.plot_date(purchase_dates, purchase_totalamt, linestyle='-', marker='', color='orange', alpha=0.7)
+    #
+    # # Format the x-axis to display dates and times with hour and minute
+    # plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M'))
+    # plt.gca().xaxis.set_major_locator(mdates.HourLocator(interval=1))  # Set interval for hours if needed
+    #
+    # plt.xlabel('Date and Time')
+    # plt.ylabel('Total Amount')
+    # plt.title('Amount by Date and Time')
+    # plt.xticks(rotation=45)
+    # plt.tight_layout()
+    # plt.grid(True)  # Optionally add grid
+    #
+    # plt.show()
+
+
+
+
+
+
+
+    return render_template('chart.html' ,chart=chart, chart1=chart1, chart2=chart2,chart3=chart3, chart4=chart4, chart5=chart5, User=User)
 
 
 
@@ -750,11 +946,83 @@ def get_bot_response():
 @app.route('/dashboard')
 @login_required(role='admin')
 def dashboard():
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
+    purchase_optionList = []
+
+    for entry in purchased_data:
+        purchase_option = entry[5]
+        purchase_optionList.append(purchase_option)
+    print(purchase_optionList)
+
+    option_counts = {}
+    for option in purchase_optionList:
+        option_counts[option] = option_counts.get(option, 0) + 1
+
+    labels = list(option_counts.keys())
+    sizes = list(option_counts.values())
+
+    customColours = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
+    plt.figure(figsize=(4, 3))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140, colors=customColours)
+    plt.axis('equal')
+    plt.legend(loc='upper right')
+    plt.title('Purchase Options Distribution')
+    chart4 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    chart4 = chart4
+
+
+    from collections import defaultdict
+    today = datetime.datetime.today().date()
+
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]), 2)
+        purchase_date = purchase_datetime.date()
+        if purchase_date == today:
+            hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+            purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+    print(consolidated_dates)
+    plt.figure(figsize=(5, 3))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
+                 va='bottom', rotation=0)
+
+    plt.xlabel('Hour')
+    plt.ylabel('Total Revenue')
+    plt.title('Total Revenue by Hour for Today')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    chart5 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
     select_query = "SELECT * FROM reviews"
     mycursor.execute(select_query)
     reviews = mycursor.fetchall()
     print('a')
-    return render_template("dashboard.html", User=User, reviews=reviews)
+    return render_template("dashboard.html", chart4 = chart4, chart5=chart5, User=User, reviews=reviews)
+# to redirect back to previous page
+# @app.route("/previous")
+# def previous():
+#     prev_route = session.get("prev_route")
+#     if prev_route:
+#         return redirect(url_for(prev_route))
+#     else:
+#         return "No previous route"
+#
+# @app.before_request
+# def before_request():
+#     session["prev_route"] = request.endpoint
+
 
 @app.route('/')
 def home():
@@ -767,7 +1035,7 @@ def category(category):
     mycursor.execute('SELECT * FROM products WHERE category = %s', (category,))
     data = mycursor.fetchall()
 
-    return render_template('productBase.html', category=category, products=data)
+    return render_template('productBase.html', category=category, products=data,  User=User)
 
 
 @app.route('/recommended')
@@ -775,7 +1043,8 @@ def recommended():
     mycursor.execute('SELECT * FROM products WHERE is_recommended = true')
     recommended_products = mycursor.fetchall()
 
-    return render_template('recommended.html', recommended_products=recommended_products)
+
+    return render_template('recommended.html', recommended_products=recommended_products,  User=User)
 
 
 @app.route('/appetizers')
@@ -869,7 +1138,9 @@ def create_product():
 
 
 @app.route('/retrieve_product', methods=['GET'])
+@login_required(role='admin')
 def retrieve_product():
+
     search_form = SearchForm(request.args)
 
     if request.method == 'GET' and search_form.validate():
@@ -895,7 +1166,7 @@ def retrieve_product():
     # Calculate the count of products
     count = len(products)
 
-    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form)
+    return render_template('retrieve_product.html', products=products, count=count, search_form=search_form, User=User)
 
 
 
@@ -1021,6 +1292,7 @@ print(f"Using table 'cart' ")
 
 
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
+@login_required()
 def add_to_cart(product_id):
     if request.method == 'POST':
         mydb = mysql.connector.connect(
@@ -1036,6 +1308,8 @@ def add_to_cart(product_id):
         select_query = "SELECT idproducts, name, price, image FROM products WHERE idproducts = %s"
         mycursor.execute(select_query, (product_id,))
         product_details = mycursor.fetchone()
+
+        user_id = session['user_id']
 
         if product_details:
             product_name = product_details[1]
@@ -1081,6 +1355,8 @@ def remove_from_cart():
     if request.method == 'POST':
         product_name = request.form.get('product_id')
 
+        user_id = session['user_id']
+
         # Remove the product from the cart
         delete_cart_query = "DELETE FROM cart WHERE product_name = %s"
         mycursor.execute(delete_cart_query, (product_name,))
@@ -1098,6 +1374,8 @@ def remove_from_cart():
 def update_cart():
     if request.method == 'POST':
         product_name = request.form.get('product_id')
+
+        user_id = session['user_id']
 
         # Fetch product details from the database
         select_query = "SELECT name, price FROM products WHERE name = %s"
@@ -1149,10 +1427,12 @@ def calculate_total_price(cart_items):
 
 
 @app.route('/cart', methods=['GET'])
+@login_required()
 def view_cart():
+    user_id = session['user_id']
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
-    return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+    return render_template('cart.html', cart_items=cart_items, total_price=total_price, user_id=user_id, User=User)
 
 import stripe
 from flask import redirect
@@ -1164,14 +1444,15 @@ for a in purchasedTableCheck:
 
 
     if not tableExist:
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
-        "`id` int NOT NULL AUTO_INCREMENT,"
-        "`total_amt` decimal(10,2) DEFAULT NULL,"
-        "`cart_data` json DEFAULT NULL,"
-        "`user_id` int DEFAULT NULL,"
-        "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-        "PRIMARY KEY (`id`)"
-        ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
+        mycursor.execute("CREATE TABLE `purchased` (`id` int NOT NULL AUTO_INCREMENT,`total_amt` decimal(10,2) DEFAULT NULL,`cart_data` json DEFAULT NULL,`user_id` int DEFAULT NULL,`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`deliveryOption` varchar(45) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+        # mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
+        # "`id` int NOT NULL AUTO_INCREMENT,"
+        # "`total_amt` decimal(10,2) DEFAULT NULL,"
+        # "`cart_data` json DEFAULT NULL,"
+        # "`user_id` int DEFAULT NULL,"
+        # "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+        # "PRIMARY KEY (`id`)"
+        # ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
 
 
 @app.route('/create-checkout-session', methods=['GET', 'POST'])
@@ -1221,32 +1502,37 @@ stripe.api_key = 'sk_test_51OhFjILCE6DWXaJnZarhEhPjiONUxnuWTq7GvUS7NrOoH4NmnLwRQ
 @app.route('/checkout-success', methods=['GET', 'POST'])
 @login_required()
 def checkout_success():
-    try:
-        mycursor = mydb.cursor()
+    deliveryOption = deliveryOptionForm(request.form)
+    if request.method == 'POST' and deliveryOption.validate():
+        try:
+            mycursor = mydb.cursor()
 
-        user_id = session['user_id']
-        cart = get_cart_items()
-        total_amt = calculate_total_price(cart)
+            user_id = session['user_id']
+            cart = get_cart_items()
+            total_amt = calculate_total_price(cart)
+            option = deliveryOption.option.data
+            print(option)
 
-        # Convert cart data to JSON
-        cart_data = json.dumps([{'product_name': item.get_name(),
-        'product_price': float(item.get_price()),
-        'quantity': item.get_quantity()
-    } for item in cart])
+            cart_data = json.dumps([{'product_name': item.get_name(),
+                                     'product_price': float(item.get_price()),
+                                     'quantity': item.get_quantity()
+                                     } for item in cart])
 
-        print(cart_data)
+            print(cart_data)
 
-        query = 'INSERT INTO purchased (total_amt, cart_data, user_id ) VALUES (%s, %s, %s)'
-        value = (total_amt, cart_data, user_id)
-        mycursor.execute(query, value)
-        mydb.commit()
+            query = 'INSERT INTO purchased (total_amt, cart_data, user_id, deliveryOption ) VALUES (%s, %s, %s, %s)'
+            value = (total_amt, cart_data, user_id, option)
+            mycursor.execute(query, value)
+            mydb.commit()
+            return redirect(url_for('home'))
+        except Exception as e:
+            print("Error:", e)
+            mydb.rollback()
+            return "Error occurred. Check logs for details." +  str(e)
+
+    return render_template('checkout-success.html', form=deliveryOption)
 
 
-
-        return redirect(url_for('home'))
-
-    except Exception as e:
-        return str(e)
 
 
 @app.route('/display-purchased', methods=['GET'])
@@ -1266,10 +1552,10 @@ def display_carts():
     toAdd = mycursor.fetchone()
 
     try:
-        addedCurrent = toAdd[0] + total_amt
-        addedTotal = toAdd[1] + total_amt
-        update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE user_id = %s"
-        data = (addedCurrent, addedTotal)
+        addedCurrent = int(toAdd[0]) + int(total_amt)
+        addedTotal = int(toAdd[1]) + int(total_amt)
+        update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE membership_id = %s"
+        data = (addedCurrent, addedTotal, user_id)
         mycursor.execute(update_query, data)
 
         mydb.commit()
@@ -1297,8 +1583,8 @@ def display_purchased_items(purchased_id):
 
 
     for row in order_data:
-        cart_data = json.loads(row[0])  # Convert JSON string to Python dictionary
-        formatted_order_data.extend(cart_data)  # Add each item to the formatted list
+        cart_data = json.loads(row[0])
+        formatted_order_data.extend(cart_data)
 
     print(formatted_order_data)
 
@@ -1444,11 +1730,7 @@ def profile():
     mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
     users = mycursor.fetchall()
 
-    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 1"
-    mycursor.execute(select_query)
-    reviews = mycursor.fetchall()
-
-    return render_template('profile.html', users=users ,User=User, reviews=reviews)
+    return render_template('profile.html', users=users ,User=User)
 
 
 @app.route('/reviews')
@@ -1513,21 +1795,21 @@ def retrieve_reviews():
 
     return render_template('retrieveReviews.html', reviews=reviews)
 
-# @app.route('/recentRetrieves')
-# def recent_retrieves():
-#     mydb = mysql.connector.connect(
-#         host='localhost',
-#         user='root',
-#         password='ecoeats',
-#         port='3306',
-#         database='ecoeatsusers'
-#     )
-#     mycursor = mydb.cursor()
-#     select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 1"
-#     mycursor.execute(select_query)
-#     reviews = mycursor.fetchall()
-#
-#     return render_template('recentRetrieves.html', reviews=reviews)
+@app.route('/recentRetrieves')
+def recent_retrieves():
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
+    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 3"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+    return render_template('recentRetrieves.html', reviews=reviews)
 
 @app.route('/updateReviews/<int:user_id>/', methods=['GET', 'POST'])
 def update_reviews(user_id):
@@ -1631,6 +1913,29 @@ def thankyou():
     return render_template('thankyou_page.html')
 
 
+@app.route("/cart")
+def cart():
+    return render_template('cart.html')
+
+#checking if user is logged in to access their membership
+
+# checking if user is logged in to access their membership
+# @app.route("/membership")
+# def membership(request):
+#     #check if logged in, redirect to membership
+#     if request.user.is_authenticated:
+#         return redirect(url_for('membershipHome'))
+#     else:
+#        return redirect(url_for('create_user'))
+#     #if not, redirect to create users/log in page
+#
+# #brings to membership home page
+# @app.route('/membershipHome')
+# def membershipHome():
+#     return render_template('membershipHome.html')
+
+
+
 
 # routing for all membership pages
 @app.route('/membership')
@@ -1671,10 +1976,9 @@ for a in tableCheck:
           "`currentBalance` float DEFAULT '0',"
           "`totalBalance` float DEFAULT '0',"
           "`date_joined` date DEFAULT NULL,"
-          "`birthdate` date DEFAULT NULL,"
-          "`phone_number` varchar(45) DEFAULT NULL,"
+          "`address` varchar(45) DEFAULT NULL,"
+          "`email` varchar(45) DEFAULT NULL,"
           "`tier` varchar(45) DEFAULT NULL,"
-          "`newsletter` enum('Y','N') DEFAULT NULL,"
           "PRIMARY KEY (`membership_id`),"
           "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
           ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
@@ -1704,7 +2008,7 @@ def retrieve_membership(user_id):
     membershipUser = mycursor.fetchall()
     print("membershipUser: ", membershipUser)
 
-    return render_template('retrieveMembership.html', membershipUser=membershipUser, User=User)
+    return render_template('retrieveMembership.html', membershipUser=membershipUser)
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 @login_required()
@@ -1733,20 +2037,17 @@ def create_membership():
             try:
                 # Update or insert rewards into memberships table
                 insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance," \
-                               "date_joined, birthdate, phone_number, tier, newsletter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+                               "date_joined, address, email, tier) VALUES (%s, %s, %s, %s, %s, %s, %s)"
                 # Prepare membership data
                 memberships = Membership.Membership(create_membership_form.date_joined.data,
-                                                    create_membership_form.birthdate.data,
-                                                    create_membership_form.phone_number.data,
-                                                    create_membership_form.newsletter.data)
+                                                    create_membership_form.address.data,
+                                                    create_membership_form.email.data)
                 print(insert_query)
-                data = (user_id, 0, 0, memberships.get_date_joined(), memberships.get_birthdate(),
-                        memberships.get_phone_number(), 'seed', memberships.get_newsletter())
+                data = (user_id, 300, 240, memberships.get_date_joined(), memberships.get_address(), memberships.get_email(), 'seed')
 
                 mycursor.execute(insert_query, data)
                 mydb.commit()
-                print(f"{memberships.get_date_joined()} {memberships.get_birthdate()} {memberships.get_phone_number()} "
-                      f"{memberships.get_newsletter()} "
+                print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
                       f"was stored in the database successfully.")
                 return redirect(url_for('retrieve_membershipInfo', user_id=user_id, User=User))
                 # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
@@ -1774,12 +2075,12 @@ def retrieve_membershipInfo():
    user_id = session['user_id']
    mycursor = mydb.cursor()
    print(user_id) # see if correct
-   select_query = ("SELECT * from memberships WHERE membership_id = %s")
-   mycursor.execute(select_query, (user_id,))
-   membershipUser = mycursor.fetchone()
-   print("membershipUser: ", membershipUser)
-
    try:
+       select_query = ("SELECT * from memberships WHERE membership_id = %s")
+       mycursor.execute(select_query, (user_id,))
+       membershipUser = mycursor.fetchone()
+       print("membershipUser: ", membershipUser)
+
        # Check and update the 'tier' attribute based on the 'totalBalance' attribute
        if membershipUser[2] < 100:
            tier = 'Seed'
@@ -1796,16 +2097,6 @@ def retrieve_membershipInfo():
        print("Error:", e)
        mydb.rollback()
 
-   if membershipUser[2] < 100:
-       toNextTier = 100 - membershipUser[2]
-       progress = membershipUser[2]
-
-   elif membershipUser[2] > 100 and membershipUser[2] < 300:
-       toNextTier = 300 - membershipUser[2]
-       progress = membershipUser[2]
-   else:
-       toNextTier = 0
-       progress = 300
 
    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
    membershipUser = mycursor.fetchone()
@@ -1817,8 +2108,7 @@ def retrieve_membershipInfo():
    print("membershipUsername: ", membershipUsername)
 
 
-   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername,
-                          toNextTier=toNextTier, progress=progress, user_id=user_id, User=User)
+   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername, user_id=user_id, User=User)
 
 @app.route('/updateMembership/<int:user_id>/', methods=['GET', 'POST'])
 def update_membership(user_id):
@@ -1827,17 +2117,16 @@ def update_membership(user_id):
     if request.method == 'POST' and update_membership_form.validate():
         try:
             # retrieve user data from db
-            select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
+            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
             mycursor.execute(select_query, (user_id,))
             membership_details = mycursor.fetchone()
 
             if membership_details:
-                birthdate = update_membership_form.birthdate.data
-                phone_number = update_membership_form.phone_number.data
-                newsletter = update_membership_form.newsletter.data
+                address = update_membership_form.address.data
+                email = update_membership_form.email.data
 
-                update_query = "UPDATE memberships SET birthdate = %s, phone_number = %s, newsletter = %s WHERE membership_id = %s"
-                data = (birthdate, phone_number, newsletter, user_id)
+                update_query = "UPDATE memberships SET address = %s, email = %s WHERE membership_id = %s"
+                data = (address, email, user_id)
 
                 mycursor.execute(update_query, data)
                 mydb.commit()
@@ -1854,14 +2143,13 @@ def update_membership(user_id):
     else:
         try:
             # retrieve user data from mysql db
-            select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
+            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
             mycursor.execute(select_query, (user_id,))
             membership_details = mycursor.fetchone()
 
             if membership_details:
-                update_membership_form.birthdate.data = membership_details[0]
-                update_membership_form.phone_number.data = membership_details[1]
-                update_membership_form.newsletter.data = membership_details[2]
+                update_membership_form.address.data = membership_details[0]
+                update_membership_form.email.data = membership_details[1]
 
                 return render_template('updateMembership.html', form=update_membership_form, user_id=user_id)
             else:
@@ -1912,18 +2200,18 @@ def redeem_rewards(user_id):
             select_query = ("SELECT currentBalance from memberships WHERE membership_id = %s")
             mycursor.execute(select_query, (user_id,))
             currentBalance = mycursor.fetchone()[0]
-            if redeem_rewards_form.rewards.data == '1':
+            if redeem_rewards_form.rewards.data == 1:
                 if currentBalance>=50:
                     newCurrentBalance = currentBalance - 50
+
                     update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $5 off voucher successfully.")
-                    reward = '5'
-                    return render_template('displayRewards.html', reward=reward, target="dblank")
+                    return redirect(url_for('display_reward1'))
                 else:
                     return "Balance not sufficient to redeem '$5 off voucher'."
-            elif redeem_rewards_form.rewards.data == '2':
+            elif redeem_rewards_form.rewards.data == 2:
                 if currentBalance >= 100:
                     newCurrentBalance = currentBalance - 100
 
@@ -1931,8 +2219,7 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $10 off voucher successfully.")
-                    reward = '10'
-                    return render_template('displayRewards.html', reward=reward, target="blank")
+                    return redirect(url_for('display_reward2'))
                 else:
                     return "Balance not sufficient to redeem '$10 off voucher'."
             else:
@@ -1943,8 +2230,7 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $15 off voucher successfully.")
-                    reward = '15'
-                    return render_template('displayRewards.html', reward=reward, target="blank")
+                    return redirect(url_for('display_reward2'))
                 else:
                     return "Balance not sufficient to redeem '$15 off voucher'."
 
@@ -1954,8 +2240,48 @@ def redeem_rewards(user_id):
             return "Error occurred while redeeming reward."
     return render_template('redeemRewards.html', form=redeem_rewards_form)
 
-
-
+# @app.route('/retrieveMbrshipTier/<int:user_id>', methods=['GET', 'POST'])
+# def membership_tier(user_id):
+#         mydb = mysql.connector.connect(
+#             host='localhost',
+#             user='root',
+#             password='ecoeats',
+#             port='3306',
+#             database='ecoeatsusers'
+#         )
+#         mycursor = mydb.cursor()
+#         try:
+#             select_query = ("SELECT totalBalance, tier from memberships WHERE membership_id = %s")
+#             mycursor.execute(select_query, (user_id,))
+#             data = mycursor.fetchone()[0]
+#             if data[0] < 100:
+#                 data[1] = 'Seed'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#             elif data[0] > 100 and data[0] < 300:
+#                 data[1] = 'Sprout'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#             else:
+#                 data[1] = 'Bloom'
+#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+#                 mycursor.execute(update_query, (data, user_id,))
+#                 mydb.commit()
+#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
+#         except Exception as e:
+#             print("Error:", e)
+#             mydb.rollback()
+#             return "Error occurred while updating tier."
+#
+#         mycursor.execute("SELECT tier FROM memberships WHERE membership_id = %s", (user_id,))
+#         membershipTier = mycursor.fetchone()
+#         print("membershipTier: ", membershipTier)
+#
+#         return render_template('membershipHome.html', membershipTier=membershipTier, user_id=user_id)
 
 
 def create_staff_table():
@@ -2005,7 +2331,7 @@ def retrieve_staff():
 
         users_list = [Staff(*user) for user in staff_list]
 
-        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list)
+        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list, User=User)
 
     except Exception as e:
         return f"Error: {str(e)}"
@@ -2048,6 +2374,19 @@ def delete_staff(id):
 
     except Exception as e:
         return f"Error: {str(e)}"
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        keyword = request.form.get('search_term')
+        results = ProductModel.search(keyword)
+        return render_template('search_results.html', results=results, keyword=keyword)
+    return redirect(url_for('home'))  # Redirect to the home page if the method is GET
+
+
+
+
 
 if __name__ == '__main__':
     app.run()
