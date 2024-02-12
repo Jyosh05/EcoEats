@@ -85,7 +85,8 @@ for a in tableCheck:
 
     if not tableExist:
 
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        # mycursor.execute("CREATE TABLE `ecoeatsusers`.`users` (`id` INT AUTO_INCREMENT NOT NULL, `username` VARCHAR(45) NULL, `password` VARCHAR(45) NULL, PRIMARY KEY (`id`)); ")
+        mycursor.execute("CREATE TABLE `users` (`id` int NOT NULL AUTO_INCREMENT,`username` varchar(45) DEFAULT NULL,`password` varchar(45) DEFAULT NULL,`email` varchar(45) DEFAULT NULL,`gender` varchar(45) DEFAULT NULL,`postal_code` varchar(45) DEFAULT NULL,`profilePic` varchar(45) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
         print(f"Table 'users' Created")
 
 
@@ -1427,14 +1428,15 @@ for a in purchasedTableCheck:
 
 
     if not tableExist:
-        mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
-        "`id` int NOT NULL AUTO_INCREMENT,"
-        "`total_amt` decimal(10,2) DEFAULT NULL,"
-        "`cart_data` json DEFAULT NULL,"
-        "`user_id` int DEFAULT NULL,"
-        "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
-        "PRIMARY KEY (`id`)"
-        ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
+        mycursor.execute("CREATE TABLE `purchased` (`id` int NOT NULL AUTO_INCREMENT,`total_amt` decimal(10,2) DEFAULT NULL,`cart_data` json DEFAULT NULL,`user_id` int DEFAULT NULL,`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`deliveryOption` varchar(45) DEFAULT NULL,PRIMARY KEY (`id`)) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+        # mycursor.execute("CREATE TABLE `ecoeatsusers`.`purchased` ("
+        # "`id` int NOT NULL AUTO_INCREMENT,"
+        # "`total_amt` decimal(10,2) DEFAULT NULL,"
+        # "`cart_data` json DEFAULT NULL,"
+        # "`user_id` int DEFAULT NULL,"
+        # "`datetime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,"
+        # "PRIMARY KEY (`id`)"
+        # ") ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;')")
 
 
 @app.route('/create-checkout-session', methods=['GET', 'POST'])
