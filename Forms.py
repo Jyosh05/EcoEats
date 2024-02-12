@@ -2,7 +2,7 @@ import wtforms.fields
 
 from wtforms import Form, StringField, PasswordField, RadioField, SelectField, TextAreaField, validators, EmailField, \
     ValidationError, FileField, IntegerField, BooleanField
-from wtforms.fields import EmailField, DateField, SubmitField
+from wtforms.fields import EmailField, DateField, SubmitField, TelField
 from wtforms.validators import DataRequired
 from flask_wtf.file import FileField, FileAllowed
 
@@ -53,17 +53,20 @@ class CreateReviewsForm(Form):
 
 class CreateMembershipForm(Form):
     date_joined = DateField('Date Joined', format='%Y-%m-%d')
-    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
+    birthdate = DateField('Birthdate', format='%Y-%m-%d')
+    phone_number = TelField('Phone Number', [validators.DataRequired()])
+    newsletter = SelectField('Want to be the first to hear from us?', choices=[('Y', 'Yes'), ('N', 'No')])
+
 
 
 class UpdateMembershipForm(Form):
-    email = EmailField('Email', [validators.Email(), validators.DataRequired()])
-    address = StringField('Mailing Address', [validators.length(max=200), validators.DataRequired()])
+    birthdate = DateField('Birthdate', format='%Y-%m-%d')
+    phone_number = TelField('Phone Number', [validators.DataRequired()])
+    newsletter = SelectField('Want to be the first to hear from us?', choices=[('Y', 'Yes'), ('N', 'No')])
 
 
 class RedeemForm(Form):
-    rewards = SelectField('rewards', choices=[(1, '$5 off'), (2, '$10 off'), (3, '$15 off')])
+    rewards = SelectField('rewards', choices=[('1', '$5 off'), ('2', '$10 off'), ('3', '$15 off')])
 
 class CreateProductForm(Form):
     idproducts = IntegerField('Product ID', render_kw={'readonly': True})

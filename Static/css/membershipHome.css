@@ -5,100 +5,186 @@
   font-family: 'Khula', sans-serif;
 }
 
-.container-h1-image{
-    margin: 0;
-    padding: 0;
-    color: #fff;
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("static/img/membership/OIP.jpeg");
-    background-size: cover;
-    background-position: center;
-    width: 104vw;
-    height: 30vh;
-    margin-left: -20px;
-    }
-
-#h1-image-title{
-    text-align: center;
-    font-weight: very bold;
+#mbrshipStatus{
+    text-align: center
 }
-
 
 .container-header-greeting{
     width: 100%;
  }
 
+#currentBalance{
+    width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 0px;
+    border-radius: 10px;
+     border: 0;
+    outline: 0;
+}
+
+#currentBalance-fetch {
+    width: 80px;
+  background-color: #83A68D;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  text-align: center;
+  border: 0;
+  outline: 0;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.p-css{
+    font-weight: bold
+}
+
+h3{
+   font-weight: bold
+}
+
  span{
-    font-weight: bold;
+    font-weight: 900;
  }
 
-.container-contents-left{
-    width: 50%
-    display: flex;
+.terms-container-left{
+    width: 45%;
     float: left;
     padding: 15px;
-    margin-bottom: 20px;
-    margin-right: 20px;
-    position: relative;
+    margin: 20px;
+    height: 200vh;
 
 }
 
-.container-contents-right{
-    width: 50%
-    display: flex;
-    float: right;
+.terms-container-right{
+    width: 45%;
+    float: left;
     padding: 15px;
-    margin-bottom: 20px;
-    margin-right: 20px;
-    position: relative;
-}
+    margin: 20px;
+    height: 200vh;
+    }
+
 
 .container-membership-status{
-    background: #C3E4C5;
+    background: #DBECDD;
     padding: 20px;
     border-radius: 10px;
+    height: 70vh
 }
 
 .membershipTier {
-    font-size: 20px;
+    font-size: 30px;
 }
 
 .TotalEarned{
-    font-size: 20px;
+    font-size: 25px;
 }
 
-.membership-tier-benefits{
-    padding: 5px;
+
+button.membership-tier-benefits, button.settings, button.redemption-shop-button{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding: 0px;
     border-radius: 10px;
-    background: #032700;
+     border: 0;
+    outline: 0;
     }
 
-a{
+a, a:hover {
     text-decoration:none;
+    color: #fff
 }
 
-a.membershipBenefits{
-    font-weight: bolder;
-        color: white;
+
+.membershipBenefits, .link-settings, #redeemRewards{
+  background-color: #83A68D;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 500;
+  font-size: 1.125rem;
+  text-align: center;
+  border: 0;
+  outline: 0;
+  width: 100%;
+  padding: 0.625em 0.75em;
+  text-decoration: none;
 }
 
+
+
+.membershipBenefits:hover, .membershipBenefits:focus , .link-settings:hover, .link-settings:focus, #redeemRewards:hover, #redeemRewards:focus{
+  background-color:  #60856b;
+
+}
 
 
 .membership-details-box{
-    padding: 5px;
     border-radius: 10px;
-    background: #C3E4C5;
+    background: #DBECDD;
+    padding: 20px 10px 20px 10px;
+    margin: 5px;
+}
+
+.mbrship-details-words1 {
+    positionL absolute;
+    top: 80%;
+    padding: 5px;
+    margin: 5px;
+}
+
+.mbrship-details-words2 {
+    positionL absolute;
+    top: 80%;
+    padding: 5px;
+    margin: 5px;
+}
+
+.mbrship-details-words3 {
+    positionL absolute;
+    top: 80%;
+    padding: 5px;
+    margin: 5px;
+}
+
+.arrow-icon {
+  width: 1rem;
+  height: 1rem;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+  position: absolute
+    left: 30
+    top: 0
+    padding: 5px;
+    margin: 5px;
+}
+
+a.membership-details{
+    padding-top: 10px
+    border: 5px;
+    border-color: #0A0706;
+    font-weight: 900;
+    color: #263238;
+    text-decoration: underline
+    text-decoration-colour: #032700
+    width: 100%;
+    margin: 10px;
 }
 
 .balance-text-container{
     padding: 5px;
     border-radius: 10px;
-    background: #C3E4C5;
+    background: #DBECDD;
 }
 
 .container-membership-balance{
-    padding: 5px;
+    padding: 20px;
     border-radius: 10px;
-    background: #C3E4C5;
+    background: #DBECDD;
 }
 
 .balance-text-container{
@@ -109,14 +195,7 @@ a.membershipBenefits{
     margin-right: 20px;
 }
 
-.Redemption-Shop-container{
-    width: 50%
-    float: left;
-    padding: 15px;
-    background: #032700;
-    border-radius: 10px;
-    margin: 30px;
-}
+
 
 #membershipShop{
     color: #ffffff;
@@ -147,24 +226,6 @@ a.membershipBenefits{
     color: #ffffff;
 }
 
-.membership-details{
-    border-bottom: 5px;
-    border-color: #0A0706;
-}
-
-a.membership-details{
-    font-weight: bold;
-    color: #263238;
-    text-decoration: underline
-    text-decoration-colour: #032700
-    width: 100%;
-    margin: 10px;
-}
-
-.membership-details-box{
-    padding: 10px;
-}
-
 .actionButton {
   display: inline-block;
   background-color: #333;
@@ -183,8 +244,17 @@ a.membership-details{
   margin-right: 0.5rem;
 }
 
-.settings {
-    background: #C3E4C5;
-    padding: 20px;
-    border-radius: 10px;
+.large-text {
+    font-size: 25px
 }
+
+ .progress-bar {
+    width: 100%;
+    border-radius: 10px;
+    color: #56765f
+  }
+
+  progress::-webkit-progress-bar {
+    width: 100%;
+    border-radius: 10px;
+  }

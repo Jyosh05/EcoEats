@@ -13,9 +13,11 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
 
-<h1 class="display-4">Redeem Rewards</h1>
-<form id="formPopUp" form method="POST" action="">
-
+<form id="formPopUp" method="POST" action="">
+    <div class="intro">
+        <h1 id="h1bold">Redeem Reward</h1>
+    </div>
+    <div class="form-group">
      {% if membershipUser %}
               <p>{{membershipUser[1]}} <img src="static/img/membership/leaf.png" class="leaf-icon"></p>
               <p>Leaves Available For Redemption</p>
@@ -23,17 +25,18 @@
               {% elif membershipUser is none %}
              <p>No membership data found for user {{ user_id }}.</p>
         {% endif %}
+    </div>
 
     <div class="form-group">
         {{render_field(form.rewards, class="form-control") }}
     </div>
 
-    <input type="submit" name="Redeem" value="Redeem" class="btn btn-primary"/>
-    {% for membership in membershipUser %}
-                <a href="/redeemRewards/{{ membership[0] }}" class="btn btn-labeled btn-success">
-                    <i  class="fa fa-check"></i>Redeem</a>
-                <a href="/membership/{{ membership[0] }}" class="btn btn-labeled btn-danger">
-                    <i  class="fa fa-remove"></i>Cancel</a>
-    {% endfor %}
+   <button type="submit" name="Redeem" class="btn btn-labeled btn-success">
+  <i class="fa fa-check"></i> Redeem
+</button>
+  <a href="/createMembership" id="cancel-button" class="btn btn-labeled btn-danger"><i class="fa fa-remove"></i>Cancel</a>
+
+
+
 </form>
 {% endblock %}

@@ -207,7 +207,12 @@ def retrieve_user():
     select_query = "SELECT * FROM users"
     mycursor.execute(select_query)
     users = mycursor.fetchall()
-    return render_template('retrieveUser.html', users=users, User=User)
+
+    select_query = "SELECT * FROM memberships"
+    mycursor.execute(select_query)
+    memberships = mycursor.fetchall()
+
+    return render_template('retrieveUser.html', users=users, memberships=memberships, User=User)
 
 
 @app.route('/updateUser/<int:id>/', methods=['GET', 'POST'])
@@ -400,6 +405,8 @@ def update_profile():
                 email = email if email else user_details[2]
                 gender = gender if gender else user_details[3]
                 postal_code = postal_code if postal_code else user_details[4]
+
+
 
                 # Update user information in the database
                 update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s WHERE id = %s"
@@ -749,19 +756,6 @@ def dashboard():
     reviews = mycursor.fetchall()
     print('a')
     return render_template("dashboard.html", User=User, reviews=reviews)
-# to redirect back to previous page
-# @app.route("/previous")
-# def previous():
-#     prev_route = session.get("prev_route")
-#     if prev_route:
-#         return redirect(url_for(prev_route))
-#     else:
-#         return "No previous route"
-#
-# @app.before_request
-# def before_request():
-#     session["prev_route"] = request.endpoint
-
 
 @app.route('/')
 def home():
@@ -1269,12 +1263,12 @@ def display_carts():
     mycursor.execute("SELECT SUM(total_amt) as total_amt FROM purchased WHERE user_id = %s", (user_id,))
     total_amt = mycursor.fetchone()[0]
 
-    mycursor.execute("SELECT currentBalance, totalBalance FROM memberships WHERE user_id = %s", (user_id,))
+    mycursor.execute("SELECT currentBalance, totalBalance FROM memberships WHERE membership_id = %s", (user_id,))
     toAdd = mycursor.fetchone()
 
     try:
-        addedCurrent = int(toAdd[0]) + int(total_amt)
-        addedTotal = int(toAdd[1]) + int(total_amt)
+        addedCurrent = toAdd[0] + total_amt
+        addedTotal = toAdd[1] + total_amt
         update_query = "UPDATE memberships SET currentBalance = %s, totalBalance = %s WHERE user_id = %s"
         data = (addedCurrent, addedTotal)
         mycursor.execute(update_query, data)
@@ -1697,9 +1691,10 @@ for a in tableCheck:
           "`currentBalance` float DEFAULT '0',"
           "`totalBalance` float DEFAULT '0',"
           "`date_joined` date DEFAULT NULL,"
-          "`address` varchar(45) DEFAULT NULL,"
-          "`email` varchar(45) DEFAULT NULL,"
+          "`birthdate` date DEFAULT NULL,"
+          "`phone_number` varchar(45) DEFAULT NULL,"
           "`tier` varchar(45) DEFAULT NULL,"
+          "`newsletter` enum('Y','N') DEFAULT NULL,"
           "PRIMARY KEY (`membership_id`),"
           "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
           ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
@@ -1729,7 +1724,7 @@ def retrieve_membership(user_id):
     membershipUser = mycursor.fetchall()
     print("membershipUser: ", membershipUser)
 
-    return render_template('retrieveMembership.html', membershipUser=membershipUser)
+    return render_template('retrieveMembership.html', membershipUser=membershipUser, User=User)
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 @login_required()
@@ -1758,17 +1753,20 @@ def create_membership():
             try:
                 # Update or insert rewards into memberships table
                 insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance," \
-                               "date_joined, address, email, tier) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                               "date_joined, birthdate, phone_number, tier, newsletter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
                 # Prepare membership data
                 memberships = Membership.Membership(create_membership_form.date_joined.data,
-                                                    create_membership_form.address.data,
-                                                    create_membership_form.email.data)
+                                                    create_membership_form.birthdate.data,
+                                                    create_membership_form.phone_number.data,
+                                                    create_membership_form.newsletter.data)
                 print(insert_query)
-                data = (user_id, 300, 240, memberships.get_date_joined(), memberships.get_address(), memberships.get_email(), 'seed')
+                data = (user_id, 10000000, 240, memberships.get_date_joined(), memberships.get_birthdate(),
+                        memberships.get_phone_number(), 'seed', memberships.get_newsletter())
 
                 mycursor.execute(insert_query, data)
                 mydb.commit()
-                print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+                print(f"{memberships.get_date_joined()} {memberships.get_birthdate()} {memberships.get_phone_number()} "
+                      f"{memberships.get_newsletter()} "
                       f"was stored in the database successfully.")
                 return redirect(url_for('retrieve_membershipInfo', user_id=user_id, User=User))
                 # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
@@ -1796,12 +1794,12 @@ def retrieve_membershipInfo():
    user_id = session['user_id']
    mycursor = mydb.cursor()
    print(user_id) # see if correct
-   try:
-       select_query = ("SELECT * from memberships WHERE membership_id = %s")
-       mycursor.execute(select_query, (user_id,))
-       membershipUser = mycursor.fetchone()
-       print("membershipUser: ", membershipUser)
+   select_query = ("SELECT * from memberships WHERE membership_id = %s")
+   mycursor.execute(select_query, (user_id,))
+   membershipUser = mycursor.fetchone()
+   print("membershipUser: ", membershipUser)
 
+   try:
        # Check and update the 'tier' attribute based on the 'totalBalance' attribute
        if membershipUser[2] < 100:
            tier = 'Seed'
@@ -1818,6 +1816,16 @@ def retrieve_membershipInfo():
        print("Error:", e)
        mydb.rollback()
 
+   if membershipUser[2] < 100:
+       toNextTier = 100 - membershipUser[2]
+       progress = membershipUser[2]
+
+   elif membershipUser[2] > 100 and membershipUser[2] < 300:
+       toNextTier = 300 - membershipUser[2]
+       progress = membershipUser[2]
+   else:
+       toNextTier = 0
+       progress = 300
 
    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
    membershipUser = mycursor.fetchone()
@@ -1829,7 +1837,8 @@ def retrieve_membershipInfo():
    print("membershipUsername: ", membershipUsername)
 
 
-   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername, user_id=user_id, User=User)
+   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername,
+                          toNextTier=toNextTier, progress=progress, user_id=user_id, User=User)
 
 @app.route('/updateMembership/<int:user_id>/', methods=['GET', 'POST'])
 def update_membership(user_id):
@@ -1838,16 +1847,17 @@ def update_membership(user_id):
     if request.method == 'POST' and update_membership_form.validate():
         try:
             # retrieve user data from db
-            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
+            select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
             mycursor.execute(select_query, (user_id,))
             membership_details = mycursor.fetchone()
 
             if membership_details:
-                address = update_membership_form.address.data
-                email = update_membership_form.email.data
+                birthdate = update_membership_form.birthdate.data
+                phone_number = update_membership_form.phone_number.data
+                newsletter = update_membership_form.newsletter.data
 
-                update_query = "UPDATE memberships SET address = %s, email = %s WHERE membership_id = %s"
-                data = (address, email, user_id)
+                update_query = "UPDATE memberships SET birthdate = %s, phone_number = %s, newsletter = %s WHERE membership_id = %s"
+                data = (birthdate, phone_number, newsletter, user_id)
 
                 mycursor.execute(update_query, data)
                 mydb.commit()
@@ -1864,13 +1874,14 @@ def update_membership(user_id):
     else:
         try:
             # retrieve user data from mysql db
-            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
+            select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
             mycursor.execute(select_query, (user_id,))
             membership_details = mycursor.fetchone()
 
             if membership_details:
-                update_membership_form.address.data = membership_details[0]
-                update_membership_form.email.data = membership_details[1]
+                update_membership_form.birthdate.data = membership_details[0]
+                update_membership_form.phone_number.data = membership_details[1]
+                update_membership_form.newsletter.data = membership_details[2]
 
                 return render_template('updateMembership.html', form=update_membership_form, user_id=user_id)
             else:
@@ -1921,18 +1932,18 @@ def redeem_rewards(user_id):
             select_query = ("SELECT currentBalance from memberships WHERE membership_id = %s")
             mycursor.execute(select_query, (user_id,))
             currentBalance = mycursor.fetchone()[0]
-            if redeem_rewards_form.rewards.data == 1:
+            if redeem_rewards_form.rewards.data == '1':
                 if currentBalance>=50:
                     newCurrentBalance = currentBalance - 50
-
                     update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $5 off voucher successfully.")
-                    return redirect(url_for('display_reward1'))
+                    reward = '5'
+                    return render_template('displayRewards.html', reward=reward, target="dblank")
                 else:
                     return "Balance not sufficient to redeem '$5 off voucher'."
-            elif redeem_rewards_form.rewards.data == 2:
+            elif redeem_rewards_form.rewards.data == '2':
                 if currentBalance >= 100:
                     newCurrentBalance = currentBalance - 100
 
@@ -1940,7 +1951,8 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $10 off voucher successfully.")
-                    return redirect(url_for('display_reward2'))
+                    reward = '10'
+                    return render_template('displayRewards.html', reward=reward, target="blank")
                 else:
                     return "Balance not sufficient to redeem '$10 off voucher'."
             else:
@@ -1951,7 +1963,8 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $15 off voucher successfully.")
-                    return redirect(url_for('display_reward2'))
+                    reward = '15'
+                    return render_template('displayRewards.html', reward=reward, target="blank")
                 else:
                     return "Balance not sufficient to redeem '$15 off voucher'."
 
@@ -1961,48 +1974,8 @@ def redeem_rewards(user_id):
             return "Error occurred while redeeming reward."
     return render_template('redeemRewards.html', form=redeem_rewards_form)
 
-# @app.route('/retrieveMbrshipTier/<int:user_id>', methods=['GET', 'POST'])
-# def membership_tier(user_id):
-#         mydb = mysql.connector.connect(
-#             host='localhost',
-#             user='root',
-#             password='ecoeats',
-#             port='3306',
-#             database='ecoeatsusers'
-#         )
-#         mycursor = mydb.cursor()
-#         try:
-#             select_query = ("SELECT totalBalance, tier from memberships WHERE membership_id = %s")
-#             mycursor.execute(select_query, (user_id,))
-#             data = mycursor.fetchone()[0]
-#             if data[0] < 100:
-#                 data[1] = 'Seed'
-#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#                 mycursor.execute(update_query, (data, user_id,))
-#                 mydb.commit()
-#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
-#             elif data[0] > 100 and data[0] < 300:
-#                 data[1] = 'Sprout'
-#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#                 mycursor.execute(update_query, (data, user_id,))
-#                 mydb.commit()
-#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
-#             else:
-#                 data[1] = 'Bloom'
-#                 update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-#                 mycursor.execute(update_query, (data, user_id,))
-#                 mydb.commit()
-#                 print(f"Membership ID: {user_id} membership tier updated successfully.")
-#         except Exception as e:
-#             print("Error:", e)
-#             mydb.rollback()
-#             return "Error occurred while updating tier."
-#
-#         mycursor.execute("SELECT tier FROM memberships WHERE membership_id = %s", (user_id,))
-#         membershipTier = mycursor.fetchone()
-#         print("membershipTier: ", membershipTier)
-#
-#         return render_template('membershipHome.html', membershipTier=membershipTier, user_id=user_id)
+
+
 
 
 def create_staff_table():

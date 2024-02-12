@@ -1,54 +1,36 @@
 {% extends 'base.html' %}
-{% block title %}Retrieve Rewards{% endblock %}
+{% block title %}Retrieve Membership Details{% endblock %}
 
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/Rewards.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/retrieveMembership.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
-    <h1 class="display-4">Retrieve Membership Details</h1>
-    <div>
-        {% if count == 0 %}
-        <p>There are no memberships.</p>
-        {% elif count == 1 %}
-        <p>There is 1 membership.</p>
-        {% else %}
-        <p>There are {{ count }} memberships.</p>
-        {% endif %}
-    </div>
+    <h1 class="display-4">Your Membership Details</h1>
 
-    <div>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Current Balance</th>
-                <th>Total Balance</th>
-                <th>Date Joined</th>
-                <th>Address</th>
-                <th>Email</th>
-                <th>Rewards</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-            </thead>
-            <tbody>
+    <div class="membership-box">
+        <div class="membership-container">
+
             {% for membership in membershipUser %}
-            <tr>
-                <td>{{ membership[0] }}</td>
-                <td>{{ membership[1] }}</td>
-                <td>{{ membership[2] }}</td>
-                <td>{{ membership[3] }}</td>
-                <td>{{ membership[4] }}</td>
-                <td>{{ membership[5] }}</td>
-                <td>{{ membership[6] }}</td>
-                <td><a href="/updateMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
-                <td><a href="/deleteMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
-            </tr>
+            <div class="membership">
+                <p>Your Membership ID: {{ membership[0] }}</p>
+                <p>Your Current Membership Balance: {{ membership[1] }}</p>
+                <p>Your Total Membership Balance: {{ membership[2] }}</p>
+                <p>Your Joining Date: {{ membership[3] }}</p>
+                <p>Your Birthday: {{ membership[4] }}</p>
+                <p>Your Phone Number: {{ membership[5] }}</p>
+                <p>Your Membership Tier: {{ membership[6] }}</p>
+                <p>Signed Up For Newsletters (Yes/No): {{ membership[7] }}</p>
+                <div class="actionButtons">
+                    <p>
+                        <a href="/updateMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="/deleteMembership/{{ membership[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a>
+                    </p>
+                </div>
+            </div>
             {% endfor %}
-            </tbody>
-        </table>
+        </div>
     </div>
 {% endblock %}
