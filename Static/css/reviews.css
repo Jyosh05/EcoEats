@@ -66,7 +66,7 @@ font-weight: 400;
 }
 
 .footer h4{
-font-size: 22px;
+font-size: 25px;
 font-weight: 900;
 margin-bottom: 16px;
 text-align: center;
@@ -95,7 +95,7 @@ top: 135%;
 .button{
 display: inline-block;
 padding: 10px 15px;
-font-size: 16px;
+font-size: 20px;
 font-weight: bolder;
 cursor: pointer;
 text-align: center;

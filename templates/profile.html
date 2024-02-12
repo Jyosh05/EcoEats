@@ -58,6 +58,7 @@
         border-radius: 5px;
         padding: 20px;
         margin-bottom: 20px;
+        height: 400px;
     }
 
     .card h2 {
@@ -73,6 +74,36 @@
 
     a:hover {
         text-decoration: underline;
+    }
+
+    .checked-star{
+        color: gold;
+        font-size: 25px;
+    }
+
+    .review{
+        border: 3px solid #9CAF88;
+        background: #f3f7f2;
+        padding: 10px;
+        margin: 10px;
+        border-radius: 5px;
+        width: 600px;
+        word-wrap: break-word;
+        font-size: 20px;
+        z-index: 1000;
+    }
+
+    .checked-star{
+        color: gold;
+        font-size: 30px;
+    }
+
+    .header{
+        margin-top: 30px;
+        letter-spacing: 2px;
+        font-size: 30px;
+        font-weight: 500;
+        text-align: center;
     }
 </style>
 
@@ -93,21 +124,20 @@
         <div class="other-cards">
             <div class="card">
                 <h2>Reviews</h2>
-                <div class="reviews-container">
                 {% for review in reviews %}
-                    <div class="review">
-                        <p><strong>Review:</strong> {{ review[0] }}</p>
-                        <p><strong>Name:</strong> {{ review[1] }}</p>
-                        <p><strong>Email:</strong> {{ review[2] }}</p>
-                        <p><strong>Stars (1-5):</strong></p>
-                            {% for i in range(1, review[3]+1) %}
-                                <span class="checked-star">&#9733;</span>
-                            {% endfor %}
-                        <p><strong>Feedback:</strong> {{ review[4] }}</p>
-                    </div>
-                {% endfor %}
+                <div class="review">
+                    <p><strong>No. of Reviews:</strong> {{ review[0] }}</p>
+                    <p><strong>Name:</strong> {{ review[1] }}</p>
+                    <p><strong>Email:</strong> {{ review[2] }}</p>
+                    <p><strong>Stars (1-5):</strong></p>
+                    {% for i in range(1, review[3]+1) %}
+                        <span class="checked-star">&#9733;</span>
+                    {% endfor %}
+                    <p><strong>Feedback:</strong> {{ review[4] }}</p>
                 </div>
+                {% endfor %}
             </div>
+        </div>
             <div class="card">
                 <h2>Membership Tier BLAKAJKSDHASD</h2>
                 <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
