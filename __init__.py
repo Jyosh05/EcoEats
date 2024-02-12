@@ -44,7 +44,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234@localhost/ecoeatsusers'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:ecoeats@localhost/ecoeatsusers'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
@@ -55,7 +55,7 @@ from Product import ProductModel, Product
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='1234',
+    password='ecoeats',
     port='3306',
     database='ecoeatsusers'
 )
@@ -1298,7 +1298,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='1234',
+            password='ecoeats',
             port='3306',
             database='ecoeatsusers'
         )
