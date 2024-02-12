@@ -375,25 +375,25 @@ def logout():
 @app.route('/updateProfile', methods=['GET', 'POST'])
 @login_required()
 def update_profile():
-    user_id = session['user_id']  # Get the current user's ID from the session
+    user_id = session['user_id']
 
     update_user_form = UpdateUserForm(request.form)
 
     if request.method == 'POST' and update_user_form.validate() :
         try:
-            # Retrieve user data from the database
+
             select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
 
             if user_details:
-                # Get the form data
+
                 username = update_user_form.username.data
                 password = update_user_form.password.data
                 email = update_user_form.email.data
                 gender = update_user_form.gender.data
                 postal_code = update_user_form.postal_code.data
-                profilePic = user_details[5]  # Use existing profile picture path by default
+                profilePic = user_details[5]
                 if 'profilePic' in request.files:
                     profilePic_file = request.files['profilePic']
                     if profilePic_file.filename != '':
@@ -402,7 +402,7 @@ def update_profile():
                         profilePic_file.save(profilePicPath)
                         profilePic = profilePicPath
 
-                # Check if form fields are empty, and use existing data if they are
+
                 username = username if username else user_details[0]
                 password = password if password else user_details[1]
                 email = email if email else user_details[2]
@@ -410,7 +410,7 @@ def update_profile():
                 postal_code = postal_code if postal_code else user_details[4]
 
                 print(profilePic)
-                # Update user information in the database
+
                 update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s, profilePic = %s WHERE id = %s"
                 data = (username, password, email, gender, postal_code, profilePic, user_id)
                 mycursor.execute(update_query, data)
@@ -427,7 +427,7 @@ def update_profile():
 
     else:
         try:
-            # Retrieve user data from the database
+
             select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
@@ -477,7 +477,7 @@ def report():
 
 @app.route('/chart')
 def chart():
-    # Connect to MySQL
+
 
     mydb = mysql.connector.connect(
         host='localhost',
@@ -1497,7 +1497,6 @@ def checkout_success():
             option = deliveryOption.option.data
             print(option)
 
-            # Convert cart data to JSON
             cart_data = json.dumps([{'product_name': item.get_name(),
                                      'product_price': float(item.get_price()),
                                      'quantity': item.get_quantity()
@@ -1568,8 +1567,8 @@ def display_purchased_items(purchased_id):
 
 
     for row in order_data:
-        cart_data = json.loads(row[0])  # Convert JSON string to Python dictionary
-        formatted_order_data.extend(cart_data)  # Add each item to the formatted list
+        cart_data = json.loads(row[0])
+        formatted_order_data.extend(cart_data)
 
     print(formatted_order_data)
 
