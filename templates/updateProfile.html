@@ -6,7 +6,7 @@
 
 
 
-<form id="formPopUp" method="POST" action="">
+<form id="formPopUp" method="POST" action="" enctype="multipart/form-data">
 
     <div class="intro">
         <h1 id="h1bold">Update User</h1>
@@ -43,6 +43,11 @@
 
     <div class="form-group">
         {{ render_field(form.postal_code, class="form-control") }}
+
+    </div>
+
+    <div class="form-group">
+        {{ render_field(form.profilePic, class="form-control") }}
 
     </div>
 

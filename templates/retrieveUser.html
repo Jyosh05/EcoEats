@@ -46,6 +46,7 @@
         <th scope="col">Email</th>
         <th scope="col">Gender</th>
         <th scope="col">Postal Code</th>
+        <th scope="col">Profile Pic</th>
         <th scope="col">Update</th>
         <th scope="col">Delete</th>
 
@@ -62,6 +63,15 @@
         <td>{{ user[3] }}</td>
         <td>{{ user[4] }}</td>
         <td>{{ user[5] }}</td>
+        <td>
+            {% if user[6] %}
+            <img src="{{ user[6] }}" style="max-width: 35px; max-height: 35px;">
+            {% else %}
+            <!-- Provide a default profile picture if no picture is available -->
+            <img src="{{ url_for('static', filename='img/Logo1.png') }}" alt="Default Profile Picture" style="max-width: 35px; max-height: 35px;">
+            {% endif %}
+        </td>
+
         <td><a href="/updateUser/{{ user[0] }}" class="actionButton"><i  class="fa-solid fa-pen-to-square"></i></a></td>
         <td><a href="/deleteUser/{{ user[0] }}" class="actionButton"><i  class="fa-solid fa-trash"></i></a></td>
 
