@@ -21,21 +21,28 @@
         padding: 20px;
         margin-bottom: 20px;
         display: flex;
-        flex-direction: column; /* Align items vertically */
+        flex-direction: column;
     }
 
     .profile-card .profile-info {
-        margin-bottom: auto; /* Push the profile info to the bottom */
+        margin-bottom: auto; /* push profile info to bottom of div */
     }
 
     .profile-picture {
         width: 200px;
         height: 200px;
         border-radius: 50%;
-        background-color: #ddd; /* Placeholder background color */
-        margin: 0 auto 20px auto; /* Center horizontally, no margin on top, 20px margin on bottom */
+<!--        background-color: #ddd; /* placeholdr background color */-->
+        display: flex;
+        justify-content:center;
+        align-items:center;
+        margin: 0 auto 20px auto; /*  , no margin top, 20px margin bottom */
         text-align: center;
     }
+
+    .profile-picture img{
+        border-radius:50%;
+        }
 
     .profile-info h2 {
         margin: 0 0 10px 0;
@@ -79,7 +86,21 @@
 <div class="container">
     <div class="profile-container">
         <div class="profile-card">
-            <div class="profile-picture"></div>
+
+            <div class="profile-picture">
+                {% if 'user_id' in session %}
+                {% set profile_pic_path = User.User.get_profilePic_by_id(session['user_id']) %}
+                {% if profile_pic_path %}
+                <img id="pfp" src="{{ profile_pic_path }}" style="max-width: 200px; max-height: 200px;">
+                {% else %}
+                <img src="{{ url_for('static', filename='img/Logo1.png') }}" alt="Default Profile Picture"
+                     style="max-width: 200px; max-height: 200px;">
+                {% endif %}
+                {% else %}
+                <img src="{{ url_for('static', filename='img/Logo1.png') }}" alt="Default Profile Picture"
+                     style="max-width: 200px; max-height: 200px;">
+                {% endif %}
+            </div>
             <div class="profile-info">
                 <h2>Profile Information</h2>
                 {% for user in users %}

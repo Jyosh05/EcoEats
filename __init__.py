@@ -381,7 +381,7 @@ def update_profile():
     if request.method == 'POST' and update_user_form.validate() :
         try:
             # Retrieve user data from the database
-            select_query = "SELECT username, password, email, gender, postal_code FROM users WHERE id = %s"
+            select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
 
@@ -392,6 +392,14 @@ def update_profile():
                 email = update_user_form.email.data
                 gender = update_user_form.gender.data
                 postal_code = update_user_form.postal_code.data
+                profilePic = user_details[5]  # Use existing profile picture path by default
+                if 'profilePic' in request.files:
+                    profilePic_file = request.files['profilePic']
+                    if profilePic_file.filename != '':
+                        filename = secure_filename(profilePic_file.filename)
+                        profilePicPath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                        profilePic_file.save(profilePicPath)
+                        profilePic = profilePicPath
 
                 # Check if form fields are empty, and use existing data if they are
                 username = username if username else user_details[0]
@@ -400,9 +408,10 @@ def update_profile():
                 gender = gender if gender else user_details[3]
                 postal_code = postal_code if postal_code else user_details[4]
 
+                print(profilePic)
                 # Update user information in the database
-                update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s WHERE id = %s"
-                data = (username, password, email, gender, postal_code, user_id)
+                update_query = "UPDATE users SET username = %s, password = %s, email = %s, gender = %s, postal_code = %s, profilePic = %s WHERE id = %s"
+                data = (username, password, email, gender, postal_code, profilePic, user_id)
                 mycursor.execute(update_query, data)
                 mydb.commit()
 
@@ -418,7 +427,7 @@ def update_profile():
     else:
         try:
             # Retrieve user data from the database
-            select_query = "SELECT username, password, email, gender, postal_code FROM users WHERE id = %s"
+            select_query = "SELECT username, password, email, gender, postal_code, profilePic FROM users WHERE id = %s"
             mycursor.execute(select_query, (user_id,))
             user_details = mycursor.fetchone()
             print(user_details)
@@ -432,6 +441,7 @@ def update_profile():
                 update_user_form.email.data = '' #user_details[2]
                 update_user_form.gender.data = ''
                 update_user_form.postal_code.data = ''
+                update_user_form.profilePic.data =''
 
                 return render_template('updateProfile.html', form=update_user_form, user=user, User=User)
             else:
@@ -476,51 +486,51 @@ def chart():
         database='ecoeatsusers'
     )
 
-    mycursor = mydb.cursor()
-
-    # Execute SQL Query
-    mycursor.execute("SELECT `saleId`, `product_name`, `product_price` FROM `fakesales`")
-
-    # Fetch all the data
-    rows = mycursor.fetchall()
-
-    # Process the data for plotting
-    product_names = [row[1] for row in rows]
-    product_prices = [float(row[2]) for row in rows]
-
-
-
-    # Create the bar chart for product prices
-    plt.figure(figsize=(10, 6))
-    plt.bar(product_names, product_prices)
-    plt.xlabel('Product')
-    plt.ylabel('Total Revenue')
-    plt.title('Total Revenue by Product')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    html_chart_prices = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Product Prices Chart">'
-
-    # Execute SQL Query for total revenue by product
-    mycursor.execute(
-        "SELECT `product_name`, COUNT(*) * AVG(`product_price`) AS revenue FROM `fakesales` GROUP BY `product_name`")
-    rows = mycursor.fetchall()
-    product_names_rev = [row[0] for row in rows]
-    revenues = [float(row[1]) for row in rows]
-
-    # Create the bar chart for total revenue by product
-    plt.figure(figsize=(10, 6))
-    plt.bar(product_names_rev, revenues, color='orange')
-    plt.xlabel('Product')
-    plt.ylabel('Total Revenue')
-    plt.title('Total Revenue by Product')
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    html_chart_revenues = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Total Revenue Chart">'
+    # mycursor = mydb.cursor()
+    #
+    # # Execute SQL Query
+    # mycursor.execute("SELECT `saleId`, `product_name`, `product_price` FROM `fakesales`")
+    #
+    # # Fetch all the data
+    # rows = mycursor.fetchall()
+    #
+    # # Process the data for plotting
+    # product_names = [row[1] for row in rows]
+    # product_prices = [float(row[2]) for row in rows]
+    #
+    #
+    #
+    # # Create the bar chart for product prices
+    # plt.figure(figsize=(10, 6))
+    # plt.bar(product_names, product_prices)
+    # plt.xlabel('Product')
+    # plt.ylabel('Total Revenue')
+    # plt.title('Total Revenue by Product')
+    # plt.xticks(rotation=45, ha='right')
+    # plt.tight_layout()
+    # html_chart_prices = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Product Prices Chart">'
+    #
+    # # Execute SQL Query for total revenue by product
+    # mycursor.execute(
+    #     "SELECT `product_name`, COUNT(*) * AVG(`product_price`) AS revenue FROM `fakesales` GROUP BY `product_name`")
+    # rows = mycursor.fetchall()
+    # product_names_rev = [row[0] for row in rows]
+    # revenues = [float(row[1]) for row in rows]
+    #
+    # # Create the bar chart for total revenue by product
+    # plt.figure(figsize=(10, 6))
+    # plt.bar(product_names_rev, revenues, color='orange')
+    # plt.xlabel('Product')
+    # plt.ylabel('Total Revenue')
+    # plt.title('Total Revenue by Product')
+    # plt.xticks(rotation=45, ha='right')
+    # plt.tight_layout()
+    # html_chart_revenues = f'<img src="data:image/png;base64,{plot_to_base64()}" alt="Total Revenue Chart">'
     # Get base64 encoded image
 
     mycursor.execute('SELECT * from purchased')
     purchased_data = mycursor.fetchall()
-    print(purchased_data)
+    print(f"{purchased_data}")
 
     product_stats = {}
     for entry in purchased_data:
@@ -553,7 +563,7 @@ def chart():
     plt.xlabel('Product')
     plt.ylabel('Quantity ')
     plt.title('Total Quantity by Product')
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=90)
     plt.legend()
     plt.tight_layout()
     chart = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
@@ -599,7 +609,7 @@ def chart():
 
     for entry in xxx:
         purchase_datetime = entry[4]
-        purchase_total = entry[0]
+        purchase_total = round(float(entry[1]),2)
         hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
         purchase_totals_by_hour[hour_key] += purchase_total
 
@@ -609,7 +619,7 @@ def chart():
     plt.figure(figsize=(10, 6))
     plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
     for i in range(len(consolidated_dates)):
-        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]}', ha='center',
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
                  va='bottom', rotation=0)
     plt.xlabel('Hour')
     plt.ylabel('Total Amount ($)')
@@ -618,6 +628,7 @@ def chart():
     plt.legend()
     plt.tight_layout()
     chart3 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
 
     purchase_optionList = []
 
@@ -630,16 +641,49 @@ def chart():
     for option in purchase_optionList:
         option_counts[option] = option_counts.get(option, 0) + 1
 
-    # Extract labels and sizes for the pie chart
     labels = list(option_counts.keys())
     sizes = list(option_counts.values())
 
-    # Plotting the pie chart
+    customColours = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
     plt.figure(figsize=(8, 6))
-    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
-    plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140, colors= customColours)
+    plt.axis('equal')
+    plt.legend()
     plt.title('Purchase Options Distribution')
-    plt.show()
+    chart4 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
+
+    today = datetime.datetime.today().date()
+
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]),2)
+        purchase_date = purchase_datetime.date()
+        if purchase_date == today:
+            hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+            purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+    print(consolidated_dates)
+    plt.figure(figsize=(10, 6))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
+                 va='bottom', rotation=0)
+
+    plt.xlabel('Hour')
+    plt.ylabel('Total Revenue')
+    plt.title('Total Revenue by Hour for Today')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    chart5 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
 
     # import matplotlib.dates as mdates
     # from datetime import datetime
@@ -671,7 +715,7 @@ def chart():
 
 
 
-    return render_template('chart.html' ,chart=chart, chart1=chart1, chart2=chart2,chart3=chart3, User=User)
+    return render_template('chart.html' ,chart=chart, chart1=chart1, chart2=chart2,chart3=chart3, chart4=chart4, chart5=chart5, User=User)
 
 
 
@@ -891,11 +935,70 @@ def get_bot_response():
 @app.route('/dashboard')
 @login_required(role='admin')
 def dashboard():
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
+    purchase_optionList = []
+
+    for entry in purchased_data:
+        purchase_option = entry[5]
+        purchase_optionList.append(purchase_option)
+    print(purchase_optionList)
+
+    option_counts = {}
+    for option in purchase_optionList:
+        option_counts[option] = option_counts.get(option, 0) + 1
+
+    labels = list(option_counts.keys())
+    sizes = list(option_counts.values())
+
+    customColours = ['#ff9999', '#66b3ff', '#99ff99', '#ffcc99']
+
+    plt.figure(figsize=(4, 3))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140, colors=customColours)
+    plt.axis('equal')
+    plt.legend(loc='upper right')
+    plt.title('Purchase Options Distribution')
+    chart4 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+    chart4 = chart4
+
+
+    from collections import defaultdict
+    today = datetime.datetime.today().date()
+
+    xxx = purchased_data
+    purchase_totals_by_hour = defaultdict(float)
+
+    for entry in xxx:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]), 2)
+        purchase_date = purchase_datetime.date()
+        if purchase_date == today:
+            hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+            purchase_totals_by_hour[hour_key] += purchase_total
+
+    consolidated_dates = list(purchase_totals_by_hour.keys())
+    consolidated_totalamt = list(purchase_totals_by_hour.values())
+    print(consolidated_dates)
+    plt.figure(figsize=(5, 3))
+    plt.bar(consolidated_dates, consolidated_totalamt, width=0.04, label='Total Revenue', color='#80c4a4', alpha=0.7)
+    for i in range(len(consolidated_dates)):
+        plt.text(consolidated_dates[i], consolidated_totalamt[i] + 0.5, f'${consolidated_totalamt[i]:.2f}', ha='center',
+                 va='bottom', rotation=0)
+
+    plt.xlabel('Hour')
+    plt.ylabel('Total Revenue')
+    plt.title('Total Revenue by Hour for Today')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    chart5 = f'<img src="data:image/png;base64,{plot_to_base64()}" alt =''>'
+
+
     select_query = "SELECT * FROM reviews"
     mycursor.execute(select_query)
     reviews = mycursor.fetchall()
     print('a')
-    return render_template("dashboard.html", User=User, reviews=reviews)
+    return render_template("dashboard.html", chart4 = chart4, chart5=chart5, User=User, reviews=reviews)
 # to redirect back to previous page
 # @app.route("/previous")
 # def previous():
@@ -2211,7 +2314,7 @@ def retrieve_staff():
 
         users_list = [Staff(*user) for user in staff_list]
 
-        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list)
+        return render_template('retrieveStaff.html', count=len(users_list), users_list=users_list, User=User)
 
     except Exception as e:
         return f"Error: {str(e)}"

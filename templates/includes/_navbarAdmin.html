@@ -14,6 +14,17 @@
         href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Marck+Script&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
         rel="stylesheet">
 
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "350px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+</script>
+
 <div class="header">
     <a href="{{ url_for('home') }}">
         <div class="welcome-bar">
@@ -25,11 +36,14 @@
     <div class="dashboardBar">
         <span>Staff Management System</span>
 
-        <a href="/profile">
-            <div class="profile">
-                <i class="fa-solid fa-user"></i>
-            </div>
-        </a>
+<!--        <a href="/profile">-->
+<!--            <div class="profile">-->
+<!--                <i class="fa-solid fa-user"></i>-->
+<!--            </div>-->
+<!--        </a>-->
+        <div onclick="openNav()" class="profile">
+            <i class="fa-solid fa-user"></i>
+        </div>
     </div>
 </div>
 
@@ -38,45 +52,43 @@
     <div class="sidebar">
 
         <div id="sidebarUser">
-            <span class="dot"></span>
-            {% if 'user_id' in session %}
-            <p>Welcome, {{ User.User.get_username_by_id(session['user_id']) }}! <a
-                    href="{{ url_for('logout') }}">Logout</a></p>
-            {% else %}
-            <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
-            {% endif %}
+<!--            <span class="dot"></span>-->
+            <div class="welcome-text">
+                {% if 'user_id' in session %}
+                <span><img id="pfp" src="{{ User.User.get_profilePic_by_id(session['user_id']) }}" ></span>
+                {% else %}
+                <span><img src="{{ url_for('static', filename='img/Logo1.png') }}" alt="Default Profile Picture" style="max-width: 35px; max-height: 35px;"></span>
+                {% endif %}
+            </div>
+            <div class="welcome-text">
+                {% if 'user_id' in session %}
+                <p>Welcome, <span>{{ User.User.get_username_by_id(session['user_id']) }}</span>! <a
+                        href="{{ url_for('logout') }}">Logout</a></p>
+                {% else %}
+                <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
+                {% endif %}
+            </div>
         </div>
 
         <hr>
 
         <div id="siderbarMain">
 
-            <ul>
-                <h2>Home</h2>
-                <li>
-                    <a href="/dashboard">Dashboard</a>
-                </li>
-                <li>
-                    <a href="/sales">Sales</a>
-                </li>
-                <li>
-                    <a href="/retrieve_product">Products</a>
-                </li>
 
+            <h2>Home</h2>
+            <br>
+            <a href="/dashboard">Dashboard</a>
+            <br>
+            <a href="/chart">Sales</a>
+            <br>
 
-            </ul>
+            <a href="/retrieve_product">Products</a>
 
             <hr>
-
-            <ul>
-                <h2>Others</h2>
-                <li>
-                    <a href="/retrieveUser">Customers</a>
-                </li>
-                <li>
-                    <a href="/retrieveStaff">Staff</a>
-                </li>
-            </ul>
+            <h2>Others</h2>
+            <a href="/retrieveUser">Customers</a>
+            <br>
+            <a href="/retrieveStaff">Staff</a>
         </div>
 
 
@@ -93,9 +105,28 @@
         <h3>sidebar</h3>
     </div>
 
-    <div class="mainBody">
-        <p>navbaradmin</p>
-        <h2>mainBody</h2>
-    </div>
+<!--    <div class="mainBody">-->
+<!--        <p>navbaradmin</p>-->
+<!--        <h2>mainBody</h2>-->
+<!--    </div>-->
+</div>
+
+<div id="mySidenav" class="sidenav">
+  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+  <div class="username-container">
+    {% if 'user_id' in session %}
+      {% if User is defined %}
+        <p>Welcome, {{ User.User.get_username_by_id(session['user_id']) }}!</p>
+      {% else %}
+        <p>Welcome, User is not defined. </p>
+      {% endif %}
+    {% else %}
+      <p>Not logged in. <a href="{{ url_for('login') }}">Login</a></p>
+    {% endif %}
+  </div>
+  <a href="/profile" id="profile">Profile</a>
+  <a href="/display-purchased" id="purchase-history">Purchase History</a>
+  <a href="#" id="settings">Settings</a>
+  <a href="/logout" id="logout">Logout</a>
 </div>
 </body>

@@ -123,3 +123,8 @@ class User():
 
         # Example: return User.query.get(user_id).get_username()
 
+    def get_profilePic_by_id(user_id):
+        select= ("SELECT profilePic FROM users WHERE id = %s")
+        mycursor.execute(select, (user_id,))
+        result = mycursor.fetchone()[0]
+        return result
