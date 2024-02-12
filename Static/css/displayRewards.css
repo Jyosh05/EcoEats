@@ -1,0 +1,23 @@
+.container-h1 {
+    position: absolute;
+    background: url("/static/img/membership/voucher.png");
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+    width: 794px;
+    height: 661px;
+    left: 0;
+    top: 0;
+}
+
+p{
+    text-align: center;
+    position: absolute;
+    padding-left: 60px;
+    padding-top: 150px;
+    color: #032700;
+   font-family: "Brush Script MT";
+   font-size: 80px;
+   font-weight: bold;
+}

@@ -9,12 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
 
 <br>
-<br>
-<div class="container-h1-image">
-    <h1 id="h1-image-title">Membership</h1>
-</div>
-
-<br>
+<div class="container-contents">
     <div class="container-header-greeting">
         {% if membershipUsername %}
         <h2>Welcome Back <span>{{ membershipUsername[0] }}</span>!</h2>
@@ -22,89 +17,107 @@
          <p>No membership data found for user {{ user_id }}.</p>
         {% endif %}
     </div>
-
-    <div class="container-contents-left">
+    <div class="terms-container-left">
         <div class="container-membership-status">
-            <h3>Membership Status:
+            <h3 id="mbrshipStatus">Membership Status:
                     {% if membershipUser %}
                 <span class="membershipTier">{{ membershipUser[6] }}</span>
                 {% elif membershipUser is none %}
                     <span class="membershipTier">No membership data found for user {{ user_id }}.</span>
                 {% endif %}
-                </span>
             </h3>
+            <hr>
+            <p class="p-css">Your leaf balance</p>
             {% if membershipUser %}
-            <p><span class="TotalEarned">{{ membershipUser[2] }}<img src="static/img/membership/leaf.png" class="leaf-icon"></span>Leaves Earned</p>
-            {% elif membershipUser is none %}
-            <p>No membership data found for user {{ user_id }}.</p>
-            {% endif %}
-            <div id="membership-progress-bar">
-                *insert progress bar*
-            </div>
-            <!--if they earn >=300 within 1 year as Bloom-->
-            {% if membershipUser %}
-            <p>*Membership Tier* Extended for 1 Year After <span>{{ membershipUser[3] }}</span>!</p>
+            <p class="large-text"><span class="TotalEarned">{{ membershipUser[2] }}<img src="static/img/membership/leaf.png" class="leaf-icon"></span>Leaves Earned</p>
             {% elif membershipUser is none %}
             <p>No membership data found for user {{ user_id }}.</p>
             {% endif %}
             <!--if they earn <=300 within 1 year-->
-            <p>Need *points needed maintain* points to upgrade to next tier!</p>
-
+            {% if membershipUser[6] == 'Seed' %}
+                        <progress class="progress-bar" value="{{progress}}" max="100"> </progress>
+            <br>
+            <p class="p-css">Need {{ toNextTier }} points to upgrade to next tier!</p>
+            {% elif membershipUser[6] == 'Sprout' %}
+                        <progress class="progress-bar" value="{{progress}}" max="300"> </progress>
+            <br>
+            <p class="p-css">Need {{ toNextTier }} points to upgrade to next tier!</p>
+            {% elif membershipUser[6] == 'Bloom' %}
+                        <progress class="progress-bar" value="{{progress}}" max="300"> </progress>
+            <br>
+            <p class="p-css">Congrats, Bloom tier extended!</p>
+            {% elif membershipUser is none %}
+            <p>{{ membershipUser[6] }} Extended for 1 Year After <span>{{ membershipUser[3] }}</span>!</p>
+            <p>No membership data found for user {{ user_id }}.</p>
+            {% endif %}
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
             <button class="membership-tier-benefits">
                 <a href="/membershipTiers" class="membershipBenefits">View Membership Benefits</a>
             </button>
         </div>
-
         <br>
-
-        <div class="container-membership-details">
-            <h3>Reward Membership Details</h3>
-            <div class="membership-details-box">
-                <a href="/membershipRewardHist" class="membership-details">View Rewards History</a>
-                <!--image of arrow-->
-                <br>
-                <a href="/membershipTerms" class="membership-details">Terms And Conditions</a>
-                <!--image of arrow-->
-                <br>
-                <a href="/membershipTiers" class="membership-details">View Membership Tiers</a>
-                <!--image of arrow-->
-            </div>
-            <br>
-            <div class="settings">
+        <br>
+        <br>
+        <button class="settings">
                 {% if membershipUser %}
-                <a href="/retrieveMembership/{{ membershipUser[0] }}">Go to Membership Settings</a>
+                <a href="/retrieveMembership/{{ membershipUser[0] }}" class="link-settings">Go to Membership Settings</a>
                 {% elif membershipUser is none %}
                  <p>No membership data found for user {{ user_id }}.</p>
                 {% endif %}
-            </div>
-        </div>
+        </button>
+        <br>
+
     </div>
-    <div class="container-contents-right">
+    <div class="terms-container-right">
         <div class="container-membership-balance">
             <div class="balance-text-container">
-                <h3>Current Leaf Balance:</h3>
           {% if membershipUser %}
-              <p>{{membershipUser[1]}} <img src="static/img/membership/leaf.png" class="leaf-icon"></p>
-              <p>Leaves Available For Redemption</p>
-              <p><span>{{membershipUser[1]}} Leave(s) Will Expire On *Joining date+1yr*</span></p>
+                <h3>Current Leaf Balance: <span id="currentBalance"><span id="currentBalance-fetch">{{ membershipUser[1]}} </span></span></h3>
+                <hr>
+              <p class="p-css">Leaves Available For Redemption</p>
+              <p><span>{{membershipUser[1]}} Leave(s) Will Expire 1 Year after {{ membershipUser[3] }}</span></p>
               {% elif membershipUser is none %}
-             <p>No membership data found for user {{ user_id }}.</p>
+             <p class="p-css">No membership data found for user {{ user_id }}.</p>
         {% endif %}
             </div>
             <!--button needs to go within container-mbrship-balance, beside text-->
-            <div class="Redemption-Shop-container">
-                <p class="redemption-shop-button">
+                <button class="redemption-shop-button">
                     {% if membershipUser %}
                     <a id="redeemRewards" href="/redeemRewards/{{ membershipUser[0] }}">Redeem Points</a>
                     {% elif membershipUser is none %}
                         <p>No membership data found for user {{ user_id }}.</p>
                     {% endif %}
-                </p>
+                </button>
+        </div>
+        <br>
+        <div class="container-membership-details">
+            <h3>Reward Membership Details</h3>
+            <div class="membership-details-box">
+                    <div class="mbrship-details-words1">
+                    <a href="/membershipRewardHist" class="membership-details">View Rewards History</a>
+                    <img src="/static/img/membership/rightArrow.png" alt="arrow png" class="arrow-icon">
+                    </div>
+                    <div>
+                        <hr>
+                    </div>
+                    <div class="mbrship-details-words2">
+                        <a href="/membershipTerms" class="membership-details">Terms And Conditions</a>
+                    <img src="/static/img/membership/rightArrow.png" alt="arrow png" class="arrow-icon">
+                    </div>
+                    <hr>
+                    <div class="mbrship-details-words3">
+                        <a href="/membershipTiers" class="membership-details">View Membership Tiers</a>
+                    <img src="/static/img/membership/rightArrow.png" alt="arrow png" class="arrow-icon">
+                    </div>
             </div>
         </div>
-
         <br>
-        </div>
+        <br>
     </div>
+</div>
 
 {% endblock %}
