@@ -1,0 +1,40 @@
+/* Add this CSS to your searchResult.css or create a new CSS file */
+
+/* Style for the back button */
+button {
+    margin-bottom: 20px;
+}
+
+/* Container for the product cards */
+.products-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Adjust the gap between cards as needed */
+}
+
+/* Individual product card */
+.product-item {
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 150px; /* Adjust the width of each card */
+}
+
+.product-img {
+    width: 100%;
+    height: auto;
+    border-bottom: 1px solid #ccc;
+}
+
+.product-details {
+    padding: 10px;
+}
+
+/* Style for the modal */
+.modal-content {
+    width: 100%;
+    max-width: 600px; /* Adjust the maximum width as needed */
+    margin: auto;
+}

@@ -1,6 +1,8 @@
 # first file to run when starting the web application
 import datetime
 
+from flask_sqlalchemy import SQLAlchemy
+
 from Staff import Staff
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import User, Membership
@@ -31,7 +33,7 @@ import matplotlib.pyplot as plt
 from werkzeug.utils import secure_filename
 import os
 from Forms import CreateProductForm, SearchForm, DineInForm, DeliveryForm
-from Product import Product
+from database import db
 from cart import CartItem
 from order_type import DineIn, Delivery
 #
@@ -42,11 +44,18 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = set(['jpg', 'jpeg', 'png', 'gif'])
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:1234@localhost/ecoeatsusers'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db.init_app(app)
+
+from Product import ProductModel, Product
+
 # # mySql Credentials
 mydb = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='ecoeats',
+    password='1234',
     port='3306',
     database='ecoeatsusers'
 )
@@ -1289,7 +1298,7 @@ def add_to_cart(product_id):
         mydb = mysql.connector.connect(
             host='localhost',
             user='root',
-            password='ecoeats',
+            password='1234',
             port='3306',
             database='ecoeatsusers'
         )
@@ -2359,6 +2368,19 @@ def delete_staff(id):
 
     except Exception as e:
         return f"Error: {str(e)}"
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if request.method == 'POST':
+        keyword = request.form.get('search_term')
+        results = ProductModel.search(keyword)
+        return render_template('search_results.html', results=results, keyword=keyword)
+    return redirect(url_for('home'))  # Redirect to the home page if the method is GET
+
+
+
+
 
 if __name__ == '__main__':
     app.run()

@@ -1,0 +1,72 @@
+{% extends 'productBase.html' %}
+
+
+<button onclick="goBack()">Back</button>
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/searchResult.css') }}">
+    <h2>Search Results for "{{ keyword }}"</h2>
+    <div class="products-container">
+        {% if results %}
+            {% for product in results %}
+                <div class="product-item">
+                    {% if product.image %}
+                        <img class="product-img" src="{{ url_for('static', filename='img/' + product.image) }}" alt="{{ product.name }}" width="200" height="200"
+                             data-bs-toggle="modal" data-bs-target="#myModal_{{ product.id }}">
+                    {% else %}
+                        No Image
+                    {% endif %}
+                    <div class="product-details">
+                        {% if product.name|length <= 21 %}
+                            <p>{{ product.name }}</p>
+                        {% else %}
+                            <p>{{ product.name[:21] }}</p>
+                            <p class="name">{{ product.name[21:] }}</p>
+                        {% endif %}
+                        <p class="price">S${{ product.price }}</p>
+                    </div>
+                    <!-- Modal -->
+                    <div class="modal fade" id="myModal_{{ product.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header" style="position: relative;">
+                                    <img src="{{ url_for('static', filename='img/' + product.image) }}" alt="{{ product.name }}" width="600" height="200">
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; top: 5px; right: 5px; z-index: 1;"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-info">
+                                        <h4>{{ product.name }}</h4>
+                                        <h4>S${{ product.price }}</h4>
+                                    </div>
+                                    <p> {{ product.description }} </p>
+                                    <hr>
+                                    <h4>Ingredients Info</h4>
+                                    <p>{{ product.ingredients_info }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post" style="display: flex; align-items: center;">
+                                        <div class="quantity-input">
+                                            <label for="quantity_{{ product.id }}" style="display: inline-block;">Quantity:</label>
+                                            <input type="number" id="quantity_{{ product.id }}" name="quantity_{{ product.id }}" value="1" min="1" step="1" style="display: inline-block;">
+                                        </div>
+                                        <button type="submit" class="btn btn-secondary" style="display: inline-block; margin-left: 220px;">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No items available.</p>
+        {% endif %}
+    </div>
+
+<script>
+function goBack() {
+  // Use the browser's history object to go back
+  window.history.back();
+}
+</script>
+
+{% endblock %}

@@ -148,3 +148,39 @@ h1{
     height: auto;
     margin-right: 5px;
 }
+
+/* Style the search form */
+.search-form {
+    position: absolute;
+    top: 320px; /* Adjust the top position as needed */
+    left: 820px; /* Adjust the left position as needed */
+    display: flex;
+    align-items: center;
+}
+
+/* Style the search input */
+.search-form input[type="text"] {
+    border: 0px solid #ccc;
+    border-radius: 5px;
+    padding: 8px;
+    margin-right: 5px;
+    outline: none; /* Remove the default outline on focus */
+    background-color: rgba(255, 255, 255, 0.25); /* Set the opacity here (0.7 in this example) */
+    width: 300px;
+    color: white;
+}
+
+/* Style the search button */
+.search-form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+/* Change button color on hover */
+.search-form button:hover {
+    background-color: #45a049;
+}

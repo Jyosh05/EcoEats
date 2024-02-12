@@ -1,3 +1,4 @@
+from database import db
 class Product:
     count_id = 0
 
@@ -64,4 +65,31 @@ class Product:
         self.__is_recommended = is_recommended
 
 
-        
+
+class ProductModel(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(255), nullable=False)
+    image = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    ingredients_info = db.Column(db.Text, nullable=True)
+    is_recommended = db.Column(db.Boolean, default=False)
+
+    @classmethod
+    def search(cls, keyword):
+        keyword = keyword.lower()
+
+        # Use SQLAlchemy query to search for products in the database
+        results = cls.query.filter(
+            db.or_(
+                cls.name.ilike(f'%{keyword}%'),
+                cls.description.ilike(f'%{keyword}%')
+            )
+        ).all()
+
+        return results
+
+    def __repr__(self):
+        return f'<ProductModel {self.name}>'
+
