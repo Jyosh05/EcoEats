@@ -1737,7 +1737,7 @@ def create_membership():
                                                     create_membership_form.phone_number.data,
                                                     create_membership_form.newsletter.data)
                 print(insert_query)
-                data = (user_id, 10000000, 240, memberships.get_date_joined(), memberships.get_birthdate(),
+                data = (user_id, 0, 0, memberships.get_date_joined(), memberships.get_birthdate(),
                         memberships.get_phone_number(), 'seed', memberships.get_newsletter())
 
                 mycursor.execute(insert_query, data)
