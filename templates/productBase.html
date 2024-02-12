@@ -8,75 +8,83 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap" rel="stylesheet">
-    <h1>{{ category }}</h1>
+<link href="https://fonts.googleapis.com/css2?family=Khula:wght@300&family=Nova+Square&family=Poppins&family=Roboto&display=swap"
+      rel="stylesheet">
+<h1>{{ category }}</h1>
 
 <form method="post" action="{{ url_for('search') }}" class="search-form">
     <input type="text" name="search_term" placeholder="Search...">
     <button type="submit"><i class="fa fa-search"></i></button>
 </form>
 
-        <div class="products-container">
+<div class="products-container">
     {% if products %}
     {% for product in products %}
-        <div class="product-item">
-            {% if product[4] %}
+    <div class="product-item">
+        {% if product[4] %}
 
-                <img class="product-img" src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}" width="200" height="200"
-                    data-bs-toggle="modal" data-bs-target="#myModal_{{product[0]}}">
+        <img class="product-img" src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}"
+             width="200" height="200"
+             data-bs-toggle="modal" data-bs-target="#myModal_{{product[0]}}">
+        {% else %}
+        No Image
+        {% endif %}
+        <div class="product-details">
+            {% if product[1]|length <= 21 %}
+            <p>{{ product[1] }}</p>
             {% else %}
-                No Image
+            <p>{{ product[1][:21] }}</p>
+            <p class="name">{{ product[1][21:] }}</p>
             {% endif %}
-            <div class="product-details">
-                {% if product[1]|length <= 21 %}
-                    <p>{{ product[1] }}</p>
-                {% else %}
-                    <p>{{ product[1][:21] }}</p>
-                    <p class="name">{{ product[1][21:] }}</p>
-                {% endif %}
-                <p class="price">S${{ product[2] }}</p>
-            </div>
-            <!-- Modal -->
-            <div class="modal fade" id="myModal_{{product[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header" style="position: relative;">
-                            <img src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}" width="600" height="200">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; top: 5px; right: 5px; z-index: 1;"></button>
-                        </div>
+            <p class="price">S${{ product[2] }}</p>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="myModal_{{product[0]}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="position: relative;">
+                        <img src="{{ url_for('static', filename='img/' + product[4]) }}" alt="{{ product[1] }}"
+                             width="600" height="200">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                                style="position: absolute; top: 5px; right: 5px; z-index: 1;"></button>
+                    </div>
 
-                        <div class="modal-body">
-                            <div class="modal-info">
-                                <h4>{{ product[1] }}</h4>
-                                <h4>S${{ product[2] }}</h4>
-                            </div>
-                            <p> {{ product[5] }} </p>
-                            <hr>
-                            <h4>Ingredients Info</h4>
-                            <p>{{ product[6] }}</p>
-
+                    <div class="modal-body">
+                        <div class="modal-info">
+                            <h4>{{ product[1] }}</h4>
+                            <h4>S${{ product[2] }}</h4>
                         </div>
-                        <div class="modal-footer">
-                            <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post" style="display: flex; align-items: center;">
-                                <div class="quantity-input">
-                                    <label for="quantity_{{ product[0] }}" style="display: inline-block;">Quantity:</label>
-                                    <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}" value="1" min="1" step="1" style="display: inline-block;">
-                                </div>
-                                <button type="submit" class="btn btn-secondary" style="display: inline-block; margin-left: 220px;">Add to Cart</button>
-                            </form>
-                        </div>
+                        <p> {{ product[5] }} </p>
+                        <hr>
+                        <h4>Ingredients Info</h4>
+                        <p>{{ product[6] }}</p>
 
                     </div>
+                    <div class="modal-footer">
+                        <form action="{{ url_for('add_to_cart', product_id=product[0]) }}" method="post"
+                              style="display: flex; align-items: center;">
+                            <div class="quantity-input">
+                                <label for="quantity_{{ product[0] }}" style="display: inline-block;">Quantity:</label>
+                                <input type="number" id="quantity_{{ product[0] }}" name="quantity_{{ product[0] }}"
+                                       value="1" min="1" step="1" style="display: inline-block;">
+                            </div>
+                            <button type="submit" class="btn btn-secondary"
+                                    style="display: inline-block; margin-left: 220px;">Add to Cart
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
+    </div>
     {% endfor %}
-{% else %}
+    {% else %}
     <p>No items available.</p>
-{% endif %}
+    {% endif %}
 
 </div>
-
 
 
 {% endblock %}

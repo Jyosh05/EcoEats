@@ -461,27 +461,224 @@ def update_profile():
             print("Error:", e)
             return "Error occurred while fetching user details."
 
-
 @app.route('/report')
 def report():
-    select_query = "SELECT * from fakeSales"
-    mycursor.execute(select_query)
+    from collections import defaultdict, Counter
 
-    compile = mycursor.fetchall()
+    mydb = mysql.connector.connect(
+        host='localhost',
+        user='root',
+        password='ecoeats',
+        port='3306',
+        database='ecoeatsusers'
+    )
+    mycursor = mydb.cursor()
 
-    compile_saleId = []
-    compile_product_name = []
-    compile_product_price = []
-    for saleId, product_name, product_price in compile:
-        compile_saleId.append(saleId)
-        compile_product_name.append(product_name)
-        compile_product_price.append(product_price)
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
 
-    dict = {'saleId' : compile_saleId, 'product_name' : compile_product_name, 'product_price':compile_product_price}
-    df = pd.DataFrame (dict)
-    df_csv = df.to_csv("C:/Users/dawin/Downloads/TestReport.csv")
+    # product_stats = {}
+    # for entry in purchased_data:
+    #     json_data = entry[2]
+    #     cart_data = json.loads(json_data)
+    #     for item in cart_data:
+    #         product_name = item['product_name']
+    #         quantity = item['quantity']
+    #         product_price = item['product_price']
+    #
+    #         if product_name in product_stats:
+    #
+    #             product_stats[product_name]['quantity'] += quantity
+    #             product_stats[product_name]['total_price'] += quantity * product_price
+    #         else:
+    #             product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+    #
+    # # Convert product_stats dictionary to DataFrame
+    # df_products = pd.DataFrame.from_dict(product_stats, orient='index', columns=['quantity', 'total_price'])
+    product_stats = {}
+    for entry in purchased_data:
+        json_data = entry[2]
+        cart_data = json.loads(json_data)
+        for item in cart_data:
+            product_name = item['product_name']
+            quantity = item['quantity']
+            product_price = item['product_price']
 
-    return "yes!"
+            if product_name in product_stats:
+                product_stats[product_name]['quantity'] += quantity
+                product_stats[product_name]['total_price'] += quantity * product_price
+            else:
+                product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+
+    # Convert product_stats dictionary to DataFrame with product name as index
+    df_products = pd.DataFrame.from_dict(product_stats, orient='index')
+    # Rename the index column to 'product_name'
+    df_products.index.name = 'product_name'
+    # Add 'quantity' and 'total_price' columns to the DataFrame
+    df_products['quantity'] = df_products.apply(lambda row: row['quantity'], axis=1)
+    df_products['total_price'] = df_products.apply(lambda row: row['total_price'], axis=1)
+
+    # Calculate total revenue by each hour
+    purchase_totals_by_hour = defaultdict(float)
+    for entry in purchased_data:
+        purchase_datetime = entry[4]
+        purchase_total = round(float(entry[1]), 2)
+        hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+        purchase_totals_by_hour[hour_key] += purchase_total
+
+    df_hourly_revenue = pd.DataFrame({'Hour': list(purchase_totals_by_hour.keys()),
+                                      'Total Revenue': list(purchase_totals_by_hour.values())})
+
+    # Calculate purchase options distribution
+    purchase_option_list = []
+    for entry in purchased_data:
+        purchase_option = entry[5]
+        purchase_option_list.append(purchase_option)
+
+    option_counts = Counter(purchase_option_list)
+    df_purchase_options = pd.DataFrame({'Purchase Option': list(option_counts.keys()),
+                                        'Frequency': list(option_counts.values())})
+
+    # Save dataframes to Excel
+    excel_writer = pd.ExcelWriter('sales_report.xlsx', engine='xlsxwriter')
+    df_hourly_revenue.to_excel(excel_writer, sheet_name='Hourly Revenue', index=False)
+    df_products.to_excel(excel_writer, sheet_name='Products', index=False)
+
+    df_purchase_options.to_excel(excel_writer, sheet_name='Purchase Options', index=False)
+    excel_writer.close()
+
+    return "Report generated and saved as sales_report.xlsx"
+
+# @app.route('/report')
+# def report():
+
+    mycursor = mydb.cursor()
+
+    mycursor.execute('SELECT * from purchased')
+    purchased_data = mycursor.fetchall()
+
+    # Product statistics
+    product_stats = {}
+    for entry in purchased_data:
+        json_data = entry[2]
+        cart_data = json.loads(json_data)
+        for item in cart_data:
+            product_name = item['product_name']
+            quantity = item['quantity']
+            product_price = item['product_price']
+
+            if product_name in product_stats:
+                product_stats[product_name]['quantity'] += quantity
+                product_stats[product_name]['total_price'] += quantity * product_price
+            else:
+                product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+
+    # Convert product_stats dictionary to DataFrame
+    df_products = pd.DataFrame.from_dict(product_stats, orient='index', columns=['quantity', 'total_price'])
+    df_products.index.name = 'product_name'
+
+    # Total revenue by each hour
+    # You need to implement this part based on your data structure and logic
+
+    # Purchase options
+    # You need to implement this part based on your data structure and logic
+
+    # Save dataframes to Excel
+    excel_writer = pd.ExcelWriter('sales_report1.xlsx', engine='xlsxwriter')
+    df_products.to_excel(excel_writer, sheet_name='Product Statistics')
+    # df_hourly_revenue.to_excel(excel_writer, sheet_name='Total Revenue by Hour')
+    # df_purchase_options.to_excel(excel_writer, sheet_name='Purchase Options')
+    excel_writer.close()
+
+    return "Report generated and saved as sales_report1.xlsx"
+
+
+
+
+
+# @app.route('/report')
+# def report():
+    # select_query = "SELECT * from fakeSales"
+    # mycursor.execute(select_query)
+    #
+    # compile = mycursor.fetchall()
+    #
+    # compile_saleId = []
+    # compile_product_name = []
+    # compile_product_price = []
+    # for saleId, product_name, product_price in compile:
+    #     compile_saleId.append(saleId)
+    #     compile_product_name.append(product_name)
+    #     compile_product_price.append(product_price)
+    #
+    # dict = {'saleId' : compile_saleId, 'product_name' : compile_product_name, 'product_price':compile_product_price}
+    # df = pd.DataFrame (dict)
+    # df_csv = df.to_csv("C:/Users/dawin/Downloads/TestReport.csv")
+    #
+    # return "yes!"
+
+    # from flask import Flask, send_file
+    # from io import BytesIO
+
+    # mycursor.execute('SELECT * from purchased')
+    # purchased_data = mycursor.fetchall()
+    #
+    # product_stats = {}
+    # for entry in purchased_data:
+    #     json_data = entry[2]
+    #     cart_data = json.loads(json_data)
+    #     for item in cart_data:
+    #         product_name = item['product_name']
+    #         quantity = item['quantity']
+    #         product_price = item['product_price']
+    #         if product_name in product_stats:
+    #             product_stats[product_name]['quantity'] += quantity
+    #             product_stats[product_name]['total_price'] += quantity * product_price
+    #         else:
+    #             product_stats[product_name] = {'quantity': quantity, 'total_price': quantity * product_price}
+    #
+    # # Create DataFrame for product statistics
+    # df_product_stats = pd.DataFrame(product_stats).transpose()
+    # df_product_stats.reset_index(inplace=True)
+    # df_product_stats.columns = ['Product', 'Total Quantity Sold', 'Total Revenue']
+    #
+    # from collections import defaultdict
+    #
+    # xxx = purchased_data
+    # purchase_totals_by_hour = defaultdict(float)
+    #
+    # for entry in xxx:
+    #     purchase_datetime = entry[4]
+    #     purchase_total = round(float(entry[1]), 2)
+    #     hour_key = purchase_datetime.replace(minute=0, second=0, microsecond=0)
+    #     purchase_totals_by_hour[hour_key] += purchase_total
+    #
+    # consolidated_dates = list(purchase_totals_by_hour.keys())
+    # consolidated_totalamt = list(purchase_totals_by_hour.values())
+    # # Create DataFrame for hourly revenue
+    # df_hourly_revenue = pd.DataFrame({'Hour': consolidated_dates, 'Total Revenue': consolidated_totalamt})
+    #
+    # # Create Excel writer object
+    # excel_writer = pd.ExcelWriter('sales_report.xlsx', engine='xlsxwriter')
+    #
+    # # Write DataFrames to Excel file
+    # df_product_stats.to_excel(excel_writer, sheet_name='Product Stats', index=False)
+    # df_hourly_revenue.to_excel(excel_writer, sheet_name='Hourly Revenue', index=False)
+    #
+    # # Save Excel file to BytesIO buffer
+    # buffer = BytesIO()
+    # excel_writer.save()
+    # buffer.seek(0)
+    #
+    # # Return Excel file as a response
+    # return send_file(buffer,
+    #                  as_attachment=True,
+    #                  attachment_filename='sales_report.xlsx',
+    #                  mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+
+
 
 
 
@@ -1044,7 +1241,7 @@ def recommended():
     recommended_products = mycursor.fetchall()
 
 
-    return render_template('recommended.html', recommended_products=recommended_products,  User=User)
+    return render_template('recommended.html', recommended_products=recommended_products, User=User  )
 
 
 @app.route('/appetizers')
@@ -1730,7 +1927,22 @@ def profile():
     mycursor.execute("SELECT * FROM users WHERE id = %s",(user_id,))
     users = mycursor.fetchall()
 
-    return render_template('profile.html', users=users ,User=User)
+
+    print(user_id)  # see if correct
+
+    select_query = ("SELECT * from memberships WHERE membership_id = %s ")
+    mycursor.execute(select_query, (user_id,))
+    membershipUser = mycursor.fetchall()
+    print("membershipUser: ", membershipUser)
+
+    select_query = "SELECT * FROM reviews ORDER BY user_id DESC LIMIT 1"
+    mycursor.execute(select_query)
+    reviews = mycursor.fetchall()
+
+
+
+
+    return render_template('profile.html', reviews=reviews, membershipUser=membershipUser , users=users ,User=User)
 
 
 @app.route('/reviews')
@@ -1966,24 +2178,28 @@ def membershipTiers():
 # Tables to check and create
 tableCheck = ['memberships']
 for a in tableCheck:
-    mycursor.execute(f"SHOW TABLES LIKE 'memberships'")
-    tableExist = mycursor.fetchone()
+   mycursor.execute(f"SHOW TABLES LIKE 'memberships'")
+   tableExist = mycursor.fetchone()
 
-    if not tableExist:
-        mycursor.execute(
-          "CREATE TABLE `memberships` ("
-          "`membership_id` int NOT NULL,"
-          "`currentBalance` float DEFAULT '0',"
-          "`totalBalance` float DEFAULT '0',"
-          "`date_joined` date DEFAULT NULL,"
-          "`address` varchar(45) DEFAULT NULL,"
-          "`email` varchar(45) DEFAULT NULL,"
-          "`tier` varchar(45) DEFAULT NULL,"
-          "PRIMARY KEY (`membership_id`),"
-          "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
-          ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
 
-        print(f"Table 'memberships' Created")
+   if not tableExist:
+       mycursor.execute(
+         "CREATE TABLE `memberships` ("
+         "`membership_id` int NOT NULL,"
+         "`currentBalance` float DEFAULT '0',"
+         "`totalBalance` float DEFAULT '0',"
+         "`date_joined` date DEFAULT NULL,"
+         "`birthdate` date DEFAULT NULL,"
+         "`phone_number` varchar(45) DEFAULT NULL,"
+         "`tier` varchar(45) DEFAULT NULL,"
+         "`newsletter` enum('Y','N') DEFAULT NULL,"
+         "PRIMARY KEY (`membership_id`),"
+         "CONSTRAINT `id` FOREIGN KEY (`membership_id`) REFERENCES `users` (`id`)"
+         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;")
+
+
+       print(f"Table 'memberships' Created")
+
 
 mycursor.execute('SELECT * FROM memberships')
 print(f"Using table 'memberships' ")
@@ -1991,80 +2207,38 @@ print(f"Using table 'memberships' ")
 
 
 
+
+
+
+
 @app.route('/retrieveMembershipAdmin')
 @login_required(role='admin')
 def retrieve_membership_admin():
-    # retrieve from membership table
-    select_query = "SELECT * FROM memberships"
-    mycursor.execute(select_query)
-    memberships = mycursor.fetchall()
+   # retrieve from membership table
+   select_query = "SELECT * FROM memberships"
+   mycursor.execute(select_query)
+   memberships = mycursor.fetchall()
 
-    return render_template('retrieveMembershipAdmin.html', memberships=memberships, User=User)
+
+   return render_template('retrieveMembershipAdmin.html', memberships=memberships, User=User)
+
+
 
 
 @app.route('/retrieveMembership/<int:user_id>', methods=['GET'])
 def retrieve_membership(user_id):
-    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
-    membershipUser = mycursor.fetchall()
-    print("membershipUser: ", membershipUser)
+   mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+   membershipUser = mycursor.fetchall()
+   print("membershipUser: ", membershipUser)
 
-    return render_template('retrieveMembership.html', membershipUser=membershipUser)
+
+   return render_template('retrieveMembership.html', membershipUser=membershipUser, User=User)
+
 
 @app.route('/createMembership', methods=['GET', 'POST'])
 @login_required()
 def create_membership():
-    create_membership_form = CreateMembershipForm(request.form)
-    mydb = mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='ecoeats',
-        port='3306',
-        database='ecoeatsusers'
-    )
-    mycursor = mydb.cursor()
-
-    user_id = session['user_id']
-
-    # Check if the user already has a membership
-    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
-    membership = mycursor.fetchone()
-    # If the user already has a membership, redirect to retrieve_membershipInfo
-    if membership:
-        return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
-    else:
-
-        if request.method == 'POST' and create_membership_form.validate():
-            try:
-                # Update or insert rewards into memberships table
-                insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance," \
-                               "date_joined, address, email, tier) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                # Prepare membership data
-                memberships = Membership.Membership(create_membership_form.date_joined.data,
-                                                    create_membership_form.address.data,
-                                                    create_membership_form.email.data)
-                print(insert_query)
-                data = (user_id, 300, 240, memberships.get_date_joined(), memberships.get_address(), memberships.get_email(), 'seed')
-
-                mycursor.execute(insert_query, data)
-                mydb.commit()
-                print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
-                      f"was stored in the database successfully.")
-                return redirect(url_for('retrieve_membershipInfo', user_id=user_id, User=User))
-                # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
-                #       f"was stored in the database successfully.")
-                # return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
-            except Exception as e:
-                print("Error:", e)
-                mydb.rollback()
-                return "Error occurred. Check logs for details."
-
-    return render_template('createMembership.html', form=create_membership_form, User=User, user_id=user_id)
-
-
-#to display membership info and getting user first name for membership home
-@app.route('/membershipInfo', methods=['GET'])
-@login_required()
-def retrieve_membershipInfo():
+   create_membership_form = CreateMembershipForm(request.form)
    mydb = mysql.connector.connect(
        host='localhost',
        user='root',
@@ -2072,115 +2246,212 @@ def retrieve_membershipInfo():
        port='3306',
        database='ecoeatsusers'
    )
-   user_id = session['user_id']
    mycursor = mydb.cursor()
-   print(user_id) # see if correct
-   try:
-       select_query = ("SELECT * from memberships WHERE membership_id = %s")
-       mycursor.execute(select_query, (user_id,))
-       membershipUser = mycursor.fetchone()
-       print("membershipUser: ", membershipUser)
-
-       # Check and update the 'tier' attribute based on the 'totalBalance' attribute
-       if membershipUser[2] < 100:
-           tier = 'Seed'
-       elif membershipUser[2] > 100 and membershipUser[2] < 300:
-           tier = 'Sprout'
-       else:
-           tier = 'Bloom'
-       update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
-       mycursor.execute(update_query, (tier, user_id,))
-       mydb.commit()
-       print(f"Membership ID: {user_id} membership tier updated successfully.")
-
-   except Exception as e:
-       print("Error:", e)
-       mydb.rollback()
 
 
+   user_id = session['user_id']
+
+
+   # Check if the user already has a membership
    mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
-   membershipUser = mycursor.fetchone()
-   print("membershipUser: ", membershipUser)
+   membership = mycursor.fetchone()
+   # If the user already has a membership, redirect to retrieve_membershipInfo
+   if membership:
+       return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+   else:
 
 
-   mycursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
-   membershipUsername = mycursor.fetchone()
-   print("membershipUsername: ", membershipUsername)
+       if request.method == 'POST' and create_membership_form.validate():
+           try:
+               # Update or insert rewards into memberships table
+               insert_query = "INSERT INTO ecoeatsusers.memberships (membership_id, currentBalance, totalBalance," \
+                              "date_joined, birthdate, phone_number, tier, newsletter) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+               # Prepare membership data
+               memberships = Membership.Membership(create_membership_form.date_joined.data,
+                                                   create_membership_form.birthdate.data,
+                                                   create_membership_form.phone_number.data,
+                                                   create_membership_form.newsletter.data)
+               print(insert_query)
+               data = (user_id, 0, 0, memberships.get_date_joined(), memberships.get_birthdate(),
+                       memberships.get_phone_number(), 'seed', memberships.get_newsletter())
 
 
-   return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername, user_id=user_id, User=User)
+               mycursor.execute(insert_query, data)
+               mydb.commit()
+               print(f"{memberships.get_date_joined()} {memberships.get_birthdate()} {memberships.get_phone_number()} "
+                     f"{memberships.get_newsletter()} "
+                     f"was stored in the database successfully.")
+               return redirect(url_for('retrieve_membershipInfo', user_id=user_id, User=User))
+               # print(f"{memberships.get_date_joined()} {memberships.get_address()} {memberships.get_email()} "
+               #       f"was stored in the database successfully.")
+               # return redirect(url_for('retrieve_membershipInfo', user_id=user_id))
+           except Exception as e:
+               print("Error:", e)
+               mydb.rollback()
+               return "Error occurred. Check logs for details."
+
+
+   return render_template('createMembership.html', form=create_membership_form, User=User, user_id=user_id)
+
+
+
+
+#to display membership info and getting user first name for membership home
+@app.route('/membershipInfo', methods=['GET'])
+@login_required()
+def retrieve_membershipInfo():
+  mydb = mysql.connector.connect(
+      host='localhost',
+      user='root',
+      password='ecoeats',
+      port='3306',
+      database='ecoeatsusers'
+  )
+  user_id = session['user_id']
+  mycursor = mydb.cursor()
+  print(user_id) # see if correct
+  select_query = ("SELECT * from memberships WHERE membership_id = %s")
+  mycursor.execute(select_query, (user_id,))
+  membershipUser = mycursor.fetchone()
+  print("membershipUser: ", membershipUser)
+
+
+  try:
+      # Check and update the 'tier' attribute based on the 'totalBalance' attribute
+      if membershipUser[2] < 100:
+          tier = 'Seed'
+      elif membershipUser[2] > 100 and membershipUser[2] < 300:
+          tier = 'Sprout'
+      else:
+          tier = 'Bloom'
+      update_query = "UPDATE memberships SET tier = %s WHERE membership_id = %s"
+      mycursor.execute(update_query, (tier, user_id,))
+      mydb.commit()
+      print(f"Membership ID: {user_id} membership tier updated successfully.")
+
+
+  except Exception as e:
+      print("Error:", e)
+      mydb.rollback()
+
+
+  if membershipUser[2] < 100:
+      toNextTier = 100 - membershipUser[2]
+      progress = membershipUser[2]
+
+
+  elif membershipUser[2] > 100 and membershipUser[2] < 300:
+      toNextTier = 300 - membershipUser[2]
+      progress = membershipUser[2]
+  else:
+      toNextTier = 0
+      progress = 300
+
+
+  mycursor.execute("SELECT * FROM memberships WHERE membership_id = %s", (user_id,))
+  membershipUser = mycursor.fetchone()
+  print("membershipUser: ", membershipUser)
+
+
+
+
+  mycursor.execute("SELECT username FROM users WHERE id = %s", (user_id,))
+  membershipUsername = mycursor.fetchone()
+  print("membershipUsername: ", membershipUsername)
+
+
+
+
+  return render_template('membershipHome.html', membershipUser=membershipUser, membershipUsername=membershipUsername,
+                         toNextTier=toNextTier, progress=progress, user_id=user_id, User=User)
+
 
 @app.route('/updateMembership/<int:user_id>/', methods=['GET', 'POST'])
 def update_membership(user_id):
-    update_membership_form = UpdateMembershipForm(request.form)
+   update_membership_form = UpdateMembershipForm(request.form)
 
-    if request.method == 'POST' and update_membership_form.validate():
-        try:
-            # retrieve user data from db
-            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
-            mycursor.execute(select_query, (user_id,))
-            membership_details = mycursor.fetchone()
 
-            if membership_details:
-                address = update_membership_form.address.data
-                email = update_membership_form.email.data
+   if request.method == 'POST' and update_membership_form.validate():
+       try:
+           # retrieve user data from db
+           select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
+           mycursor.execute(select_query, (user_id,))
+           membership_details = mycursor.fetchone()
 
-                update_query = "UPDATE memberships SET address = %s, email = %s WHERE membership_id = %s"
-                data = (address, email, user_id)
 
-                mycursor.execute(update_query, data)
-                mydb.commit()
+           if membership_details:
+               birthdate = update_membership_form.birthdate.data
+               phone_number = update_membership_form.phone_number.data
+               newsletter = update_membership_form.newsletter.data
 
-                print(f"Membership ID: {user_id} updated successfully.")
-                return redirect(url_for('retrieve_membership', user_id=user_id))
-            else:
-                return "User Membership not found."
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred while updating User Membership."
 
-    else:
-        try:
-            # retrieve user data from mysql db
-            select_query = "SELECT address, email FROM memberships WHERE membership_id = %s"
-            mycursor.execute(select_query, (user_id,))
-            membership_details = mycursor.fetchone()
+               update_query = "UPDATE memberships SET birthdate = %s, phone_number = %s, newsletter = %s WHERE membership_id = %s"
+               data = (birthdate, phone_number, newsletter, user_id)
 
-            if membership_details:
-                update_membership_form.address.data = membership_details[0]
-                update_membership_form.email.data = membership_details[1]
 
-                return render_template('updateMembership.html', form=update_membership_form, user_id=user_id)
-            else:
-                return "User Membership not found."
-        except Exception as e:
-            print("Error:", e)
-            mydb.rollback()
-            return "Error occurred while updating User Membership."
+               mycursor.execute(update_query, data)
+               mydb.commit()
+
+
+               print(f"Membership ID: {user_id} updated successfully.")
+               return redirect(url_for('retrieve_membership', user_id=user_id))
+           else:
+               return "User Membership not found."
+       except Exception as e:
+           print("Error:", e)
+           mydb.rollback()
+           return "Error occurred while updating User Membership."
+
+
+   else:
+       try:
+           # retrieve user data from mysql db
+           select_query = "SELECT birthdate, phone_number, newsletter FROM memberships WHERE membership_id = %s"
+           mycursor.execute(select_query, (user_id,))
+           membership_details = mycursor.fetchone()
+
+
+           if membership_details:
+               update_membership_form.birthdate.data = membership_details[0]
+               update_membership_form.phone_number.data = membership_details[1]
+               update_membership_form.newsletter.data = membership_details[2]
+
+
+               return render_template('updateMembership.html', form=update_membership_form, user_id=user_id)
+           else:
+               return "User Membership not found."
+       except Exception as e:
+           print("Error:", e)
+           mydb.rollback()
+           return "Error occurred while updating User Membership."
+
+
 
 
 @app.route('/deleteMembership/<int:membership_id>/', methods=['GET', 'POST'])
 def delete_membership(membership_id):
-    try:
-        # Check if the user exists before attempting deletion
-        select_query = "SELECT * FROM memberships WHERE membership_id = %s"
-        mycursor.execute(select_query, (membership_id,))
-        membership = mycursor.fetchone()
+   try:
+       # Check if the user exists before attempting deletion
+       select_query = "SELECT * FROM memberships WHERE membership_id = %s"
+       mycursor.execute(select_query, (membership_id,))
+       membership = mycursor.fetchone()
 
-        if membership:
-            delete_query = "DELETE FROM memberships WHERE membership_id = %s"
-            mycursor.execute(delete_query, (membership_id,))
-            mydb.commit()
 
-            print(f"MEMBERSHIP ID: {membership_id} deleted successfully.")
-            return redirect(url_for('create_membership'))
-        else:
-            return "User Membership not found."
-    except Exception as e:
-        print("Error:", e)
-        mydb.rollback()
-        return "Error occurred while deleting User Membership."
+       if membership:
+           delete_query = "DELETE FROM memberships WHERE membership_id = %s"
+           mycursor.execute(delete_query, (membership_id,))
+           mydb.commit()
+
+
+           print(f"MEMBERSHIP ID: {membership_id} deleted successfully.")
+           return redirect(url_for('create_membership'))
+       else:
+           return "User Membership not found."
+   except Exception as e:
+       print("Error:", e)
+       mydb.rollback()
+       return "Error occurred while deleting User Membership."
+
 
 
 @app.route('/redeemRewards/<int:user_id>', methods=['GET', 'POST'])
@@ -2201,17 +2472,17 @@ def redeem_rewards(user_id):
             mycursor.execute(select_query, (user_id,))
             currentBalance = mycursor.fetchone()[0]
             if redeem_rewards_form.rewards.data == 1:
-                if currentBalance>=50:
+                if currentBalance >= 50:
                     newCurrentBalance = currentBalance - 50
-
                     update_query = "UPDATE memberships SET currentBalance = %s WHERE membership_id = %s"
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $5 off voucher successfully.")
-                    return redirect(url_for('display_reward1'))
+                    reward = '5'
+                    return render_template('displayRewards.html', reward=reward, target="dblank")
                 else:
                     return "Balance not sufficient to redeem '$5 off voucher'."
-            elif redeem_rewards_form.rewards.data == 2:
+            elif redeem_rewards_form.rewards.data == '2':
                 if currentBalance >= 100:
                     newCurrentBalance = currentBalance - 100
 
@@ -2219,7 +2490,8 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $10 off voucher successfully.")
-                    return redirect(url_for('display_reward2'))
+                    reward = '10'
+                    return render_template('displayRewards.html', reward=reward, target="blank")
                 else:
                     return "Balance not sufficient to redeem '$10 off voucher'."
             else:
@@ -2230,7 +2502,8 @@ def redeem_rewards(user_id):
                     mycursor.execute(update_query, (newCurrentBalance, user_id))
                     mydb.commit()
                     print(f"Membership ID: {user_id} redeemed $15 off voucher successfully.")
-                    return redirect(url_for('display_reward2'))
+                    reward = '15'
+                    return render_template('displayRewards.html', reward=reward, target="blank")
                 else:
                     return "Balance not sufficient to redeem '$15 off voucher'."
 

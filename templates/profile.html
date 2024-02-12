@@ -160,30 +160,24 @@
             </div>
         </div>
             <div class="card">
-                <h2>Membership Tier BLAKAJKSDHASD</h2>
-                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
+                <h2>Membership Tier </h2>
+                {% for membership in membershipUser %}
+                    <div class="membership">
+                        <p>Your Membership ID: {{ membership[0] }}</p>
+                        <p>Your Current Membership Balance: {{ membership[1] }}</p>
+                        <p>Your Total Membership Balance: {{ membership[2] }}</p>
+                        <p>Your Joining Date: {{ membership[3] }}</p>
+                        <p>Your Birthday: {{ membership[4] }}</p>
+                        <p>Your Phone Number: {{ membership[5] }}</p>
+                        <p>Your Membership Tier: {{ membership[6] }}</p>
+
+                    </div>
+                    {% endfor %}
             </div>
-            <div class="card">
-                <h2>OTher sutff </h2>
-                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
-            </div>
-            <div class="card">
-                <h2>OTher sutff </h2>
-                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
-            </div>
-            <div class="card">
-                <h2>OTher sutff </h2>
-                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
-            </div>
-            <div class="card">
-                <h2>OTher sutff </h2>
-                <p>This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed. This is where other profile content can be displayed.</p>
-            </div>
+
         </div>
     </div>
 </div>
 
-<a href="/createUser">Sign Up (incomplete)</a>
-<br>
-<a href="display-purchased">Purchase History</a>
+
 {% endblock %}

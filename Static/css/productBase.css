@@ -150,14 +150,15 @@ h1{
 }
 
 /* Style the search form */
+
 .search-form {
     position: absolute;
-    top: 320px; /* Adjust the top position as needed */
-    left: 820px; /* Adjust the left position as needed */
+    top: 36%;
+    left: 52%;
+    transform: translate(-50%, -50%);
     display: flex;
     align-items: center;
 }
-
 /* Style the search input */
 .search-form input[type="text"] {
     border: 0px solid #ccc;
