@@ -1300,6 +1300,7 @@ def add_to_cart(product_id):
         mycursor.execute(select_query, (product_id,))
         product_details = mycursor.fetchone()
 
+        user_id = session['user_id']
 
         if product_details:
             product_name = product_details[1]
@@ -1345,6 +1346,8 @@ def remove_from_cart():
     if request.method == 'POST':
         product_name = request.form.get('product_id')
 
+        user_id = session['user_id']
+
         # Remove the product from the cart
         delete_cart_query = "DELETE FROM cart WHERE product_name = %s"
         mycursor.execute(delete_cart_query, (product_name,))
@@ -1362,6 +1365,8 @@ def remove_from_cart():
 def update_cart():
     if request.method == 'POST':
         product_name = request.form.get('product_id')
+
+        user_id = session['user_id']
 
         # Fetch product details from the database
         select_query = "SELECT name, price FROM products WHERE name = %s"
@@ -1415,9 +1420,10 @@ def calculate_total_price(cart_items):
 @app.route('/cart', methods=['GET'])
 @login_required()
 def view_cart():
+    user_id = session['user_id']
     cart_items = get_cart_items()
     total_price = calculate_total_price(cart_items)
-    return render_template('cart.html', cart_items=cart_items, total_price=total_price, User=User)
+    return render_template('cart.html', cart_items=cart_items, total_price=total_price, user_id=user_id, User=User)
 
 import stripe
 from flask import redirect
