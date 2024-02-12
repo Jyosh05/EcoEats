@@ -369,6 +369,7 @@ def login_required(role=None):
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('cart_quantity', None)
 
     return redirect(url_for('login'))
 
